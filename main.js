@@ -33,6 +33,7 @@ view.set_scroll_mode(Champlain.ScrollMode.KINETIC);
 
 layer = new Champlain.SelectionLayer();
 m = new Champlain.Marker();
+m.set_text("Test Marker");
 m.set_position(39.9417267, -80.7543844);
 layer.add_marker(m);
 view.add_layer(layer);
