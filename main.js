@@ -65,7 +65,7 @@ server.add_handler("/", function(server, message, path, query, client, data) {
 	    ui.update_uri('http://maps.google.com');
 	    break;
 	case 'news':
-	    ui.update_uri('htt[://news.google.com');
+	    ui.update_uri('http://news.google.com');
 	    break;
 	case 'slashdot':
 	    ui.update_uri('http://www.slashdot.org');
