@@ -11,27 +11,27 @@ class OpenGovComponentManager
     @vc_mutex = Mutex.new
   end
 
-  def register_data_component(component)
+  def register_data_component(socket)
     @dc_mutex.synchronize do
       @data_components << component
     end
   end
 
-  def register_view_component(component)
+  def register_view_component(socket)
     @vc_mutex.synchronize do
       @view_components << component
     end
   end
 
-  def unregister_data_component(component)
+  def unregister_data_component(socket)
     @dc_mutex.synchronize do
-      @data_components.delete(component)
+      @data_components.delete(socket)
     end
   end
 
-  def unregister_view_component(component)
+  def unregister_view_component(socket)
     @vc_mutex.synchronize do
-      @view_components.delete(component)
+      @view_components.delete(socket)
     end
   end
 
