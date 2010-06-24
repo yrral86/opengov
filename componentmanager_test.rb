@@ -11,9 +11,7 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   end
 
   def test_data_components_register_unregister
-    p 'one'
     OpenGovPersonComponent.new(Person)
-    p 'two'
     assert_equal('Person', @component_manager.list_data_components)
     
     @component_manager.unregister_data_component('Person')

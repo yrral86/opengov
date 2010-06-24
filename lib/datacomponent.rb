@@ -17,6 +17,6 @@ class OpenGovDataComponent
   end
 
   def model_name
-    @model.class.to_s
+    @model.name.to_s
   end
 end
