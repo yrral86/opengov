@@ -13,7 +13,7 @@ class OpenGovComponentManager
 
   def register_data_component(socket)
     @dc_mutex.synchronize do
-      component = DRbObject.net nil, socket
+      component = DRbObject.new nil, socket
       @data_components[component.model_name] = component
     end
   end

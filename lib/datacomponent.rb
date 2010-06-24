@@ -14,11 +14,9 @@ class OpenGovDataComponent
       DRb.stop_service
     }
     @component_manager.register_data_component(socket)
-    
-    DRb.thread.join
   end
 
   def model_name
-    @model.class
+    @model.class.to_s
   end
 end
