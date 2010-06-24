@@ -10,7 +10,7 @@ class OpenGovDataComponent
 
     DRb.start_service socket, self
     trap("INT") {
-      @component_manager.unregister_data_component(socket)
+      @component_manager.unregister_data_component(self.model_name)
       DRb.stop_service
     }
     @component_manager.register_data_component(socket)
