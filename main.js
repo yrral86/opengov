@@ -72,7 +72,10 @@ server.add_handler("/", function(server, message, path, query, client, data) {
 	    break;
 	case 'pgo':
 	    ui.update_uri('http://planet.gnome.org');
-	    break
+	    break;
+	case 'fb':
+	    ui.update_uri('http://facebook.com');
+	    break;
 	case 'google':
 	default:
 	    ui.update_uri('http://www.google.com');
