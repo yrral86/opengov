@@ -48,6 +48,10 @@ class OpenGovComponentManager
   def get_data_component_model(name)
     @data_components[name].model
   end
+
+  def get_data_component_socket(name)
+    @data_components[name].__drburi
+  end
 end
 
 DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', OpenGovComponentManager.new

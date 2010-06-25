@@ -20,12 +20,17 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   def test_data_components_register_unregister
     assert_equal('Person', @component_manager.list_data_components)
 
-    person = @component_manager.get_data_component_model("Person")
+#    person = @component_manager.get_data_component_model("Person")
     
+    person = DRbObject.new(nil, @component_manager.get_data_component_socket("Person")).model
+
+
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
     larry.save
 
     assert_equal('Larry', person.find_by_lname('Reaves').fname)
+
+    larry.delete
      
     `./personcomponent_control.rb stop`
     assert_equal('', @component_manager.list_data_components)
