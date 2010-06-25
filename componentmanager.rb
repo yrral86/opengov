@@ -44,6 +44,10 @@ class OpenGovComponentManager
   def list_view_components
     @view_components.keys.join(" ")
   end
+
+  def get_data_component_model(name)
+    @data_components[name].model
+  end
 end
 
 DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', OpenGovComponentManager.new
