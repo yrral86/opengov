@@ -2,14 +2,14 @@
 
 require 'test/unit'
 require 'test/unit/ui/console/testrunner'
-require 'drb'
+require 'lib/componenthelper'
 
 class OpenGovComponentManagerTest < Test::Unit::TestCase
   def setup
     `./componentmanager_control.rb start`
     `./personcomponent_control.rb start`
     sleep 0.3 # give the daemons time to start and register themselves
-    @component_manager = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
+    @ch = OpenGovComponentHelper.new
   end
 
   def teardown
@@ -18,12 +18,9 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   end
 
   def test_data_components_register_unregister
-    assert_equal('Person', @component_manager.list_data_components)
+    assert_equal('Person', @ch.cm.list_data_components)
 
-#    person = @component_manager.get_data_component_model("Person")
-    
-    person = DRbObject.new(nil, @component_manager.get_data_component_socket("Person")).model
-
+    person = @ch.get_model("Person")
 
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
     larry.save
@@ -33,7 +30,7 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     larry.delete
      
     `./personcomponent_control.rb stop`
-    assert_equal('', @component_manager.list_data_components)
+    assert_equal('', @ch.cm.list_data_components)
   end
 end
 
