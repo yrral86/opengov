@@ -15,6 +15,7 @@ class OpenGovDataComponent
                                             )
 
     @model = model
+    Class.send(:include, DRbUndumped)
     @component_manager = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
     socket = 'drbunix://tmp/opengov_' + self.model_name + '_datacomponent.sock'
 
