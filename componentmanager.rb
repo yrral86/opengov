@@ -48,6 +48,6 @@ end
 
 DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', OpenGovComponentManager.new
 
-trap("INT") { DRb.stop_service }
+at_exit { DRb.stop_service }
 
 DRb.thread.join
