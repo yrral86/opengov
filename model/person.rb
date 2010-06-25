@@ -1,7 +1,4 @@
-require 'rubygems'
-require 'active_record'
-require 'drb'
+require 'lib/model'
 
-class Person < ActiveRecord::Base
-  include DRbUndumped
+class Person < OpenGovModel
 end
