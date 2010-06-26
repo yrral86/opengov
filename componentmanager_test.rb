@@ -6,18 +6,17 @@ require 'lib/componenthelper'
 
 class OpenGovComponentManagerTest < Test::Unit::TestCase
   def setup
-    `./componentmanager_control.rb start`
-    `./personlocatorcomponent_control.rb start`
+    `./componentmanager.rb start`
+    `./components/personlocatorcomponent.rb start`
     sleep 0.3 # give the daemons time to start and register themselves
     @ch = OpenGovComponentHelper.new
   end
 
   def teardown
-    `./personlocatorcomponent_control.rb stop` # in case an assert fails
-    `./componentmanager_control.rb stop`
+    `./componentmanager.rb stop` # will shut down all components
   end
 
-  def test_data_components_register_unregister
+  def test_components_register_unregister
     assert_equal(
                  ['PersonLocator::Address','PersonLocator::Person'],
                  @ch.cm.available_models.sort
@@ -32,7 +31,7 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
 
     larry.delete
      
-    `./personlocatorcomponent_control.rb stop`
+    `./components/personlocatorcomponent.rb stop`
     assert_equal('', @ch.cm.available_models.join(''))
   end
 end
