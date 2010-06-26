@@ -33,7 +33,7 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     larry.delete
      
     `./personlocatorcomponent_control.rb stop`
-    assert_equal('', @ch.cm.list_data_components)
+    assert_equal('', @ch.cm.available_models.join(''))
   end
 end
 

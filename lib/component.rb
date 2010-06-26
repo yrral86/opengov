@@ -3,7 +3,7 @@ require 'drb/unix'
 require 'rubygems'
 require 'active_record'
 
-class OpenGovDataComponent
+class OpenGovComponent
   # model: The active record class
   def initialize(name, *model)
     ActiveRecord::Base.establish_connection(
@@ -26,11 +26,11 @@ class OpenGovDataComponent
 
     DRb.start_service socket, self
     at_exit {
-      @component_manager.unregister_data_component(@name)
+      @component_manager.unregister_component(@name)
       DRb.stop_service
     }
 
-    @component_manager.register_data_component(socket)
+    @component_manager.register_component(socket)
     DRb.thread.join
   end
 
