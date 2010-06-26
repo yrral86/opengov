@@ -1,5 +1,5 @@
 require 'lib/model'
 
 class Person < OpenGovModel
-#  has_many :addresses
+  has_many :addresses
 end

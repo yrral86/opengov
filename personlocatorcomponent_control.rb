@@ -3,4 +3,4 @@
 require 'rubygems'
 require 'daemons'
 
-Daemons.run('components/addresscomponent.rb')
+Daemons.run('components/personlocatorcomponent.rb')

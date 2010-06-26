@@ -14,7 +14,7 @@ class OpenGovComponentManager
   def register_data_component(socket)
     @dc_mutex.synchronize do
       component = DRbObject.new nil, socket
-      @data_components[component.model_name] = component
+      @data_components[component.name] = component
     end
   end
 
@@ -37,6 +37,14 @@ class OpenGovComponentManager
     end
   end
 
+  def available_models
+    models = []
+    @data_components.each_value do |c|
+      models = c.model_names.collect {|n| c.name + '::' + n}
+    end
+    models
+  end
+
   def list_data_components
     @data_components.keys.join(" ")
   end
@@ -45,8 +53,9 @@ class OpenGovComponentManager
     @view_components.keys.join(" ")
   end
 
-  def get_data_component_model(name)
-    @data_components[name].model
+  def get_model(name)
+    component, model = name.split '::'
+    @data_components[component].model(model)
   end
 
   def get_data_component_socket(name)

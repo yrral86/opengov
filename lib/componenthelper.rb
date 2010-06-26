@@ -6,7 +6,8 @@ class OpenGovComponentHelper
   end
 
   def get_model(name)
-    DRbObject.new(nil, @cm.get_data_component_socket(name)).model
+    component, model = name.split '::'
+    DRbObject.new(nil, @cm.get_data_component_socket(component)).model(model)
   end
 
   def cm

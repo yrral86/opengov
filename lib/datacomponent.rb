@@ -5,7 +5,7 @@ require 'active_record'
 
 class OpenGovDataComponent
   # model: The active record class
-  def initialize(model)
+  def initialize(name, *model)
     ActiveRecord::Base.establish_connection(
                                             :adapter => 'mysql',
                                             :host => '127.0.0.1',
@@ -13,15 +13,20 @@ class OpenGovDataComponent
                                             :username => 'opengov',
                                             :password => 'crappass'
                                             )
+    @name = name
 
-    @model = model
+    @models = {}
+    model.each do |m|
+      @models[m.name.to_s] = m
+    end
+
     Class.send(:include, DRbUndumped)
     @component_manager = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
-    socket = 'drbunix://tmp/opengov_' + self.model_name + '_datacomponent.sock'
+    socket = 'drbunix://tmp/opengov_' + @name + '_datacomponent.sock'
 
     DRb.start_service socket, self
     at_exit {
-      @component_manager.unregister_data_component(self.model_name)
+      @component_manager.unregister_data_component(@name)
       DRb.stop_service
     }
 
@@ -29,11 +34,15 @@ class OpenGovDataComponent
     DRb.thread.join
   end
 
-  def model_name
-    @model.name.to_s
+  def model_names
+    @models.keys
   end
 
-  def model
-    @model
+  def model(name)
+    @models[name]
+  end
+
+  def name
+    @name
   end
 end
