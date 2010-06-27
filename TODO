@@ -1,0 +1,54 @@
+better testing
+script/generate
+better configuration handling(DRY)
+
+Background:
+Components have 0-N each of models, and views
+and 0 - 1 controller
+
+
+controller class
+Option 1
+-subclass ActionController::Base
+-see if rails can support attaching and detatching controller objects at runtime
+
+Option 2
+-use sinatra for controller (CRUD)
+
+-Create:
+  POST /modelname/id
+  form params
+
+-Read:
+  GET /viewname?id=value returns the view as html/json/xml
+-Update:
+  PUT /modelname/id
+  form params
+
+-Delete
+  DELETE /modelname/id
+
+-Then we have a simple http receiver that routes requests to the right component
+-
+-Component forks a thread to handle the request, returns
+-Coponent responds to client directly
+
+
+
+
+view list: erb most likely for html... json will also probably be useful
+
+
+dependencies:
+
+# here's a list of what we need... return what you don't have
+need = ComponentManagerObject.need(["PersonLocator","AddressConverter"])
+if need eq nil then
+   ComponentManagerObject.register_component("PersonMapper",[],['person_marker.json','people_markers.json'])
+else
+  p "Dependecies not met: ' + need.join ","
+end
+
+
+PersonMapper returns json for client side javascript that does the mapping
+

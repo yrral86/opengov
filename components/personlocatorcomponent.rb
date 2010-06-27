@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby1.8
 
 require 'lib/component'
-require 'model/person'
-require 'model/address'
+require 'components/personlocatorcomponent/m/person'
+require 'components/personlocatorcomponent/m/address'
 
 class OpenGovPersonLocatorComponent < OpenGovComponent
 
