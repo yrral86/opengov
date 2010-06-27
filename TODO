@@ -7,48 +7,113 @@ Components have 0-N each of models, and views
 and 0 - 1 controller
 
 
+view class:
+	filename, render (to_s)... json, erb(html), xml
+
+
 controller class
 Option 1
 -subclass ActionController::Base
 -see if rails can support attaching and detatching controller objects at runtime
 
 Option 2
--use sinatra for controller (CRUD)
+-We have a simple http receiver that routes requests to the right component
+-When a component is registered with the component manager, it's available
+- methods/urls are registered with the router, along with the sockets... router
+- maintains active connections to all available components (SocketManager)
+- On request:
 
--Create:
-  POST /modelname/id
-  form params
+class RequestHandler
+      @routes {
+      '/personlocator' => 'PersonLocator'
+      '/addressconverter' => 'AddressConverter'
+      }     
+      
+      def handle(request)
+ # threading only makes since assuming the thread shares the sockets
+        Thread.new do
+	  name = route(request)
+	  ConnectionManager.handle(name, request)
+	end
+      end
+end
+
+
+class ConnectionManager
+      def handle(name, request)
+          Components[name].handle(request) # sends it over the wire
+      end
+end
+
+
+class DataComponent
+def handle(request)
+    Thread.new do
+      _handle(request)
+    end
+end
+
+def _handle(request)
+# @models[name] is the AR class, so find and friends are all there
+switch(request.method)
+Create:
+POST /modelname
+form params
+=> @models[modelname].create(params) or maybe update if form submission...
+   or _method = put form variable might work
+return: Status OK for js call/html for form submission
 
 -Read:
-  GET /viewname?id=value returns the view as html/json/xml
+GET /viewname?id=value
+=> @views[viewname].render(id)
+return: the view as html/json/xml
+
 -Update:
-  PUT /modelname/id
-  form params
+PUT /modelname/id
+form params
+=> @models[modelname].update(params)
+return: status code, maybe json
 
 -Delete
-  DELETE /modelname/id
+DELETE /modelname/id
+=> @model[modelname].delete(id)
+return 
 
--Then we have a simple http receiver that routes requests to the right component
--
--Component forks a thread to handle the request, returns
+end
 -Coponent responds to client directly
-
-
-
-
-view list: erb most likely for html... json will also probably be useful
 
 
 dependencies:
 
 # here's a list of what we need... return what you don't have
-need = ComponentManagerObject.need(["PersonLocator","AddressConverter"])
-if need eq nil then
+doesnt_have = ComponentManagerObject.need(["PersonLocator","AddressConverter"])
+if doesnt_have eq nil then
    ComponentManagerObject.register_component("PersonMapper",[],['person_marker.json','people_markers.json'])
 else
   p "Dependecies not met: ' + need.join ","
 end
 
-
+PersonLocator has people and addresses
+# we probably just want to do this once for each address and store in the
+# address model, but it's an example of webservices as components
+AddressConverter tunrs addresses into latitude/longitude
 PersonMapper returns json for client side javascript that does the mapping
+ based on requests of people ids
 
+
+
+Messages component:
+-Triggers for data updates
+ Pushes, like a new marker for the map
+  New call... push to dispatcher, who pushes it an officer officer
+   (computer offers distance info, and unobtrusively defaults to closest
+    unocupied officer)
+ RSS/XML/JSON feeds of updated information:
+ <event>
+	<text>Suspect #535 for case #495 pulled over for speeding</text>
+        <date>timestamp</date>
+	<id>13</id> # used for 'more info' link
+	<lat>80</lat>
+	<long>-130</long>
+ </event>
+read/unread
