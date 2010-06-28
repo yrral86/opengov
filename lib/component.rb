@@ -3,6 +3,7 @@ require 'drb/unix'
 require 'rubygems'
 require 'active_record'
 require 'daemons'
+require 'erb'
 require 'rack/request'
 require 'rack/response'
 
@@ -88,41 +89,35 @@ class OpenGovComponent
 
     if model then
       if r.post? then # CREATE
-        object = model.new(r.params)
+        obj = model.new(r.params)
+        # MODEL NEEDS VALIDATION OF SOME SORT OTHERWIsE WE
+        # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
+        # INSTEAD OF DISPLAYING THE FORM
         if obj.save then
-          response = Rack::Response.new
-          response.redirect('/' + @name.downcase +
-                            '/' + model.name.to_s +
-                            '/' + obj.id)
-          response.finish
+          redirect('/' + @name.downcase +
+                            '/' + model.name.downcase +
+                            '/' + obj.id.to_s)
         else
-          [200,
-           {'Content-Type' => 'text/html'},
-           ['Component ' +
-            @name +
-            ' serving edit form for a new record for the model ' +
-            model.name]]
+          string_view('Component ' +
+                      @name +
+                      ' serving edit form for a new record for the model ' +
+                      model.name)
         end
       elsif r.get? then # READ
-        p 'before'
         obj = model.find_by_id(id)
-        p 'after'
         if obj then
-          [200,
-           {'Content-Type' => 'text/html'},
-           ['Component ' +
-            @name +
-            ' serving record #' +
-            id +
-            ' for model ' +
-            model.name.to_s]]
+          string_view('Component ' +
+                      @name +
+                      ' serving record #' +
+                      id +
+                      ' for model ' +
+                      model.name)
         else
-          [200,
-           {'Content-Type' => 'text/html'},
-           ['Component ' +
-            @name +
-            ' serving list of records for model ' +
-            model.name]]
+          string_view('Component ' +
+                      @name +
+                      ' serving list of records for model ' +
+                      model.name +
+                      '<form method="POST"><input type="hidden" name="fname" value="Larry" /><input type="hidden" name="lname" value="Reaves" /><input type="submit"/></form>')
         end
       elsif r.put? then # UPDATE
         obj = model.find_by_id(id)
@@ -131,35 +126,31 @@ class OpenGovComponent
           # should either display form, or update object
           # maybe we need a url bifurcation here
           # unless Bill knows the magical incantation
-          [200,
-           {'Content-Type' => 'text/html'},
-           ['Component ' +
-            @name +
-            ' serving edit form for an existing record for the model ' +
-            model.name]]
+          string_view('Component ' +
+                      @name +
+                      ' serving edit form for an existing record for ' +
+                      'the model ' + model.name)
         else
-          [404, {'Content-Type' => 'text/html'}, ['Record # ' +
-                                                  id +
-                                                  ' not found for model ' +
-                                                  model.name +
-                                                  'in component ' +
-                                                  @name]]      
+          not_found('Record # ' +
+                    id +
+                    ' not found for model ' +
+                    model.name +
+                    'in component ' +
+                    @name)
         end
       elsif r.delete? then # DELETE
         obj = model.find(id)
         if obj then
           obj.delete
-          response = Rack::Response.new
-          response.redirect('/' + @name.downcase +
-                            '/' + model.name.to_s)
-          response.finish
+          redirect('/' + @name.downcase +
+                   '/' + model.name.to_s)
         else
-          [404, {'Content-Type' => 'text/html'}, ['Record # ' +
-                                                  id +
-                                                  ' not found for model ' +
-                                                  model.name +
-                                                  'in component ' +
-                                                  @name]]
+          not_found('Record # ' +
+                    id +
+                    ' not found for model ' +
+                    model.name +
+                    'in component ' +
+                    @name)
         end
       else
         [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
@@ -169,10 +160,41 @@ class OpenGovComponent
       unless model_name then
         model_name = 'Nil'
       end
-      [404, {'Content-Type' => 'text/html'}, ['Model ' +
-                                              model_name +
-                                              ' not found in component ' +
-                                              @name]]      
+      not_found('Model ' +
+                model_name +
+                ' not found in component ' +
+                @name)
     end
+  end
+
+  def redirect(url)
+    response = Rack::Response.new
+    response.redirect(url)
+    response.finish
+  end
+
+  def not_found(msg)
+    [404, {'Content-Type' => 'text/html'}, [msg]]
+  end
+
+  def string_view(msg)
+          [200,
+           {'Content-Type' => 'text/html'},
+           [msg]]
+  end
+
+  def html_view(name, env)
+    [200,
+     {'Content-Type' => 'text/html'},
+     [render_template(name, env.params)]
+    ]
+  end
+
+  def render_template(name, params)
+    template = File.read('components' + '/' +
+                         @name.downcase + '/' +
+                         'v' + '/' +
+                         name + '.rhtml')
+    ERB.new(template).result(params)
   end
 end
