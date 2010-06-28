@@ -10,6 +10,10 @@ class OpenGovComponentHelper
     DRbObject.new(nil, @cm.get_component_socket(component)).model(model)
   end
 
+  def get_component(name)
+    DRbObject.new(nil, @cm.get_component_socket(name))
+  end
+
   def cm
     @cm
   end

@@ -44,7 +44,7 @@ class OpenGovComponent
       DRb.stop_service
       ActiveRecord::Base.remove_connection
     }
-    @self
+    self
   end
 
   def unregistered
@@ -70,5 +70,13 @@ class OpenGovComponent
 
   def daemonize
     DRb.thread.join
+  end
+
+  def routes
+    [@name.downcase]
+  end
+
+  def call(env)
+    [200, {'Content-Type' => 'text/html'}, ['Component ' + @name + ' handled the request']]
   end
 end
