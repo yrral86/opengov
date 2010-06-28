@@ -9,6 +9,11 @@ require 'rack/response'
 
 require 'lib/componenthelper'
 
+# SHOULD BE IN A CONFIG FILE SOMEWHERE
+module Config
+  RootDir = "/home/larry/Projects/opengov"
+end  
+
 class OpenGovComponent
   # model: The active record class
   def initialize(name, models, views)
@@ -106,12 +111,14 @@ class OpenGovComponent
       elsif r.get? then # READ
         obj = model.find_by_id(id)
         if obj then
-          string_view('Component ' +
-                      @name +
-                      ' serving record #' +
-                      id +
-                      ' for model ' +
-                      model.name)
+#          string_view('Component ' +
+#                      @name +
+#                      ' serving record #' +
+#                      id +
+#                      ' for model ' +
+#                      model.name)
+          object = obj
+          html_view(model.name.downcase,binding)
         else
           string_view('Component ' +
                       @name +
@@ -183,18 +190,19 @@ class OpenGovComponent
            [msg]]
   end
 
-  def html_view(name, env)
+  def html_view(name, binding)
     [200,
      {'Content-Type' => 'text/html'},
-     [render_template(name, env.params)]
+     [render_template(name, binding)]
     ]
   end
 
-  def render_template(name, params)
-    template = File.read('components' + '/' +
+  def render_template(name, binding)
+    template = File.read(Config::RootDir + '/' +
+                         'components' + '/' +
                          @name.downcase + '/' +
                          'v' + '/' +
                          name + '.rhtml')
-    ERB.new(template).result(params)
+    ERB.new(template).result(binding)
   end
 end
