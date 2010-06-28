@@ -94,14 +94,14 @@ class OpenGovComponent
 
     if model then
       if r.post? then # CREATE
-        obj = model.new(r.params)
+        object = model.new(r.params)
         # MODEL NEEDS VALIDATION OF SOME SORT OTHERWIsE WE
         # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
         # INSTEAD OF DISPLAYING THE FORM
-        if obj.save then
+        if object.save then
           redirect('/' + @name.downcase +
                             '/' + model.name.downcase +
-                            '/' + obj.id.to_s)
+                            '/' + object.id.to_s)
         else
           string_view('Component ' +
                       @name +
@@ -109,15 +109,8 @@ class OpenGovComponent
                       model.name)
         end
       elsif r.get? then # READ
-        obj = model.find_by_id(id)
-        if obj then
-#          string_view('Component ' +
-#                      @name +
-#                      ' serving record #' +
-#                      id +
-#                      ' for model ' +
-#                      model.name)
-          object = obj
+        object = model.find_by_id(id)
+        if object then
           html_view(model.name.downcase,binding)
         else
           string_view('Component ' +
@@ -127,8 +120,8 @@ class OpenGovComponent
                       '<form method="POST"><input type="hidden" name="fname" value="Larry" /><input type="hidden" name="lname" value="Reaves" /><input type="submit"/></form>')
         end
       elsif r.put? then # UPDATE
-        obj = model.find_by_id(id)
-        if obj
+        object = model.find_by_id(id)
+        if object
           # need help here
           # should either display form, or update object
           # maybe we need a url bifurcation here
@@ -146,9 +139,9 @@ class OpenGovComponent
                     @name)
         end
       elsif r.delete? then # DELETE
-        obj = model.find(id)
-        if obj then
-          obj.delete
+        object = model.find_by_id(id)
+        if object then
+          object.delete
           redirect('/' + @name.downcase +
                    '/' + model.name.to_s)
         else
