@@ -18,11 +18,11 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
 
   def test_components_register_unregister
     assert_equal(
-                 ['PersonLocator::Address','PersonLocator::Person'],
+                 ['PersonLocator::address','PersonLocator::person'],
                  @ch.cm.available_models.sort
                  )
 
-    person = @ch.get_model("PersonLocator::Person")
+    person = @ch.get_model("PersonLocator::person")
 
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
     larry.save

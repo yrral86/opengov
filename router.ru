@@ -38,9 +38,9 @@ class OpenGovRequestRouter
   end
 
   def call(env)
-    req = Rack::Request.new(env)
+    r = Rack::Request.new(env)
 
-    path = req.path.split "/"
+    path = r.path.split "/"
 
     if @routes[path[1]] == nil then
       [404, {'Content-Type' => 'text/html'}, ['Not Found']]

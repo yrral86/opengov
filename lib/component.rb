@@ -3,6 +3,8 @@ require 'drb/unix'
 require 'rubygems'
 require 'active_record'
 require 'daemons'
+require 'rack/request'
+require 'rack/response'
 
 require 'lib/componenthelper'
 
@@ -21,13 +23,14 @@ class OpenGovComponent
 
     @models = {}
     models.each do |m|
-      @models[m.name.to_s] = m
+      @models[m.name.downcase] = m
     end
 
-    @views = {}
-    views.each do |v|
-      @views[v.name.to_s] = v
-    end
+#    not yet used
+#    @views = {}
+#    views.each do |v|
+#      @views[v.name.downcase] = v
+#    end
 
     Class.send(:include, DRbUndumped)
 
@@ -77,6 +80,99 @@ class OpenGovComponent
   end
 
   def call(env)
-    [200, {'Content-Type' => 'text/html'}, ['Component ' + @name + ' handled the request']]
+    r = Rack::Request.new(env)
+    path = r.path.split "/"
+
+    model = @models[path[2]]
+    id = path[3]
+
+    if model then
+      if r.post? then # CREATE
+        object = model.new(r.params)
+        if obj.save then
+          response = Rack::Response.new
+          response.redirect('/' + @name.downcase +
+                            '/' + model.name.to_s +
+                            '/' + obj.id)
+          response.finish
+        else
+          [200,
+           {'Content-Type' => 'text/html'},
+           ['Component ' +
+            @name +
+            ' serving edit form for a new record for the model ' +
+            model.name]]
+        end
+      elsif r.get? then # READ
+        p 'before'
+        obj = model.find_by_id(id)
+        p 'after'
+        if obj then
+          [200,
+           {'Content-Type' => 'text/html'},
+           ['Component ' +
+            @name +
+            ' serving record #' +
+            id +
+            ' for model ' +
+            model.name.to_s]]
+        else
+          [200,
+           {'Content-Type' => 'text/html'},
+           ['Component ' +
+            @name +
+            ' serving list of records for model ' +
+            model.name]]
+        end
+      elsif r.put? then # UPDATE
+        obj = model.find_by_id(id)
+        if obj
+          # need help here
+          # should either display form, or update object
+          # maybe we need a url bifurcation here
+          # unless Bill knows the magical incantation
+          [200,
+           {'Content-Type' => 'text/html'},
+           ['Component ' +
+            @name +
+            ' serving edit form for an existing record for the model ' +
+            model.name]]
+        else
+          [404, {'Content-Type' => 'text/html'}, ['Record # ' +
+                                                  id +
+                                                  ' not found for model ' +
+                                                  model.name +
+                                                  'in component ' +
+                                                  @name]]      
+        end
+      elsif r.delete? then # DELETE
+        obj = model.find(id)
+        if obj then
+          obj.delete
+          response = Rack::Response.new
+          response.redirect('/' + @name.downcase +
+                            '/' + model.name.to_s)
+          response.finish
+        else
+          [404, {'Content-Type' => 'text/html'}, ['Record # ' +
+                                                  id +
+                                                  ' not found for model ' +
+                                                  model.name +
+                                                  'in component ' +
+                                                  @name]]
+        end
+      else
+        [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
+      end
+    else
+      model_name = path[2]
+      unless model_name then
+        model_name = 'Nil'
+      end
+      [404, {'Content-Type' => 'text/html'}, ['Model ' +
+                                              model_name +
+                                              ' not found in component ' +
+                                              @name]]      
+    end
   end
 end
