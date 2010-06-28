@@ -5,6 +5,8 @@ class OpenGovRequestRouter
   def initialize
     @ch = OpenGovComponentHelper.new
     @routes = {}
+    @r_mutex = Mutex.new
+
     DRb.start_service 'drbunix://tmp/opengovrequestrouter.sock', self
     at_exit {
       DRb.stop_service
@@ -15,19 +17,23 @@ class OpenGovRequestRouter
   def register_component(component)
     name = component.name
     new_routes = {}
-    component.routes.each do |r|
-      if @routes[r] == nil then
-        new_routes[r] = @ch.get_component(name)
-      else
-        raise "Route '" + r + "' already handled by component " + @routes[r].name
-      end    
+    @r_mutex.synchronize do
+      component.routes.each do |r|
+        if @routes[r] == nil then
+          new_routes[r] = @ch.get_component(name)
+        else
+          raise "Route '" + r + "' already handled by component " + @routes[r].name
+        end    
+      end
+      @routes.update(new_routes)
     end
-    @routes.update(new_routes)
   end
 
   def unregiser_component(component)
-    component.routes.each do |r|
-      @routes.delete(r)
+    @r_mutex.synchronize do
+      component.routes.each do |r|
+        @routes.delete(r)
+      end
     end
   end
 
