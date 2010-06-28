@@ -1,0 +1,25 @@
+Model:
+
+We can write a few small js functions to do call the proper methods at the
+proper times instead of url/parameter parsing to determine our routing
+
+CREATE
+POST /component/model : edit form
+sends form to
+POST /component/model : creates record
+redirects to GET /component/model/id
+
+READ
+GET /component/model : list of records
+GET /component/model/id : view of record
+edit button goes to
+
+UPDATE
+PUT /component/model/id : edit form
+sends form to 
+PUT /component/model/id : saves record
+redirects to GET /component/model/id
+
+DELETE
+DELETE /component/model/id : deletes record
+redirects to GET /component/model
