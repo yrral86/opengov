@@ -9,6 +9,7 @@ class OpenGovComponentManager
   def initialize
     @components = {}
     @c_mutex = Mutex.new
+    @router = DRbObject.new nil, 'drbunix://tmp/opengovrequestrouter.sock'
 
     DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', self
     at_exit {
@@ -23,13 +24,15 @@ class OpenGovComponentManager
   end
 
   def register_component(socket)
+    component = DRbObject.new nil, socket
     @c_mutex.synchronize do
-      component = DRbObject.new nil, socket
       @components[component.name] = component
     end
+    @router.register_component(component)
   end
 
   def unregister_component(name)
+    @router.unregister_component(@components[name])
     @c_mutex.synchronize do
       @components.delete(name)
     end

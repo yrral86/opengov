@@ -29,7 +29,7 @@ class OpenGovRequestRouter
     end
   end
 
-  def unregiser_component(component)
+  def unregister_component(component)
     @r_mutex.synchronize do
       component.routes.each do |r|
         @routes.delete(r)
