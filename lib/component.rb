@@ -93,65 +93,17 @@ class OpenGovComponent
     id = path[3]
 
     if model then
-      if r.post? then # CREATE
-        object = model.new(r.params)
-        # MODEL NEEDS VALIDATION OF SOME SORT OTHERWIsE WE
-        # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
-        # INSTEAD OF DISPLAYING THE FORM
-        if object.save then
-          redirect('/' + @name.downcase +
-                            '/' + model.name.downcase +
-                            '/' + object.id.to_s)
-        else
-          string_view('Component ' +
-                      @name +
-                      ' serving edit form for a new record for the model ' +
-                      model.name)
+      if r.post? then
+        case r.params['_method'].downcase
+          when 'put' # UPDATE
+          update(model,r)
+          when 'delete' # DELETE
+          delete(model,id)
+          else # CREATE
+          create(model,r)
         end
       elsif r.get? then # READ
-        object = model.find_by_id(id)
-        if object then
-          html_view(model.name.downcase,binding)
-        else
-          string_view('Component ' +
-                      @name +
-                      ' serving list of records for model ' +
-                      model.name +
-                      '<form method="POST"><input type="hidden" name="fname" value="Larry" /><input type="hidden" name="lname" value="Reaves" /><input type="submit"/></form>')
-        end
-      elsif r.put? then # UPDATE
-        object = model.find_by_id(id)
-        if object
-          # need help here
-          # should either display form, or update object
-          # maybe we need a url bifurcation here
-          # unless Bill knows the magical incantation
-          string_view('Component ' +
-                      @name +
-                      ' serving edit form for an existing record for ' +
-                      'the model ' + model.name)
-        else
-          not_found('Record # ' +
-                    id +
-                    ' not found for model ' +
-                    model.name +
-                    'in component ' +
-                    @name)
-        end
-      elsif r.delete? then # DELETE
-        object = model.find_by_id(id)
-        if object then
-          object.delete
-          redirect('/' + @name.downcase +
-                   '/' + model.name.to_s)
-        else
-          not_found('Record # ' +
-                    id +
-                    ' not found for model ' +
-                    model.name +
-                    'in component ' +
-                    @name)
-        end
+        read(model,id)
       else
         [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
       end
@@ -163,6 +115,74 @@ class OpenGovComponent
       not_found('Model ' +
                 model_name +
                 ' not found in component ' +
+                @name)
+    end
+  end
+
+  def create(model, request)
+    object = model.new(params)
+    # MODEL NEEDS VALIDATION OF SOME SORT OTHERWIsE WE
+    # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
+    # INSTEAD OF DISPLAYING THE FORM
+    if object.save then
+      redirect('/' + @name.downcase +
+               '/' + model.name.downcase +
+               '/' + object.id.to_s)
+    else
+      string_view('Component ' +
+                  @name +
+                  ' serving edit form for a new record for the model ' +
+                  model.name)
+    end
+  end
+
+  def read(model, id)
+    object = model.find_by_id(id)
+    if object then
+      html_view(model.name.downcase,binding)
+    else
+      string_view('Component ' +
+                  @name +
+                  ' serving list of records for model ' +
+                  model.name +
+                  '<form method="POST"><input type="hidden" name="fname" value="Larry" /><input type="hidden" name="lname" value="Reaves" /><input type="submit"/></form>')
+    end
+  end
+
+  def update(model, request)
+    id = request.path.split("/")[3]
+    object = model.find_by_id(id)
+    if object
+      # need help here
+      # should either display form, or update object (using r.params)
+      # maybe we need a url bifurcation here
+      # unless Bill knows the magical incantation
+      string_view('Component ' +
+                  @name +
+                  ' serving edit form for an existing record for ' +
+                  'the model ' + model.name)
+    else
+      not_found('Record # ' +
+                id.to_s +
+                ' not found for model ' +
+                model.name +
+                'in component ' +
+                @name)
+    end
+  end
+  
+  def delete(model, id)
+    object = model.find_by_id(id)
+    if object then
+      object.delete
+      redirect('/' + @name.downcase +
+               '/' + model.name.to_s)
+    else
+      not_found('Record # ' +
+                id +
+                ' not found for model ' +
+                model.name +
+                'in component ' +
                 @name)
     end
   end

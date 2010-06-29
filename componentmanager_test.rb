@@ -7,8 +7,12 @@ require 'lib/componenthelper'
 class OpenGovComponentManagerTest < Test::Unit::TestCase
   def setup
     `./componentmanager.rb start`
+    @webserver = fork do
+      exec 'rackup router.ru -p 3000'
+    end
+    sleep 5 # give the webserver time to start
     `./components/personlocator.rb start`
-    sleep 0.3 # give the daemons time to start and register themselves
+    sleep 1 # give the daemons time to start and register themselves
     @ch = OpenGovComponentHelper.new
   end
 
@@ -18,6 +22,9 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
 
     # should kill all components, but not working yet
     `./componentmanager.rb stop`
+
+    Process.kill("KILL", @webserver)
+    `rm /tmp/opengovrequestrouter.sock`
   end
 
   def test_components_register_unregister
