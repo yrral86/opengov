@@ -12,6 +12,7 @@ Daemons.run_proc('OpenGovPersonLocatorComponent') do
   OpenGovPersonLocatorComponent.new(
                                     'PersonLocator',
                                     [Person, Address],
-                                    []
+                                    [],
+                                    ['Static']
                                     ).daemonize
 end

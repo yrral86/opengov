@@ -17,7 +17,7 @@ end
 
 class OpenGovComponent
   # model: The active record class
-  def initialize(name, models, views)
+  def initialize(name, models, views, dependencies = [])
     @registered = false;
     ActiveRecord::Base.establish_connection(
                                             :adapter => 'mysql',
@@ -27,6 +27,7 @@ class OpenGovComponent
                                             :password => 'crappass'
                                             )
     @name = name
+    @dependencies = dependencies
 
     @models = {}
     models.each do |m|
@@ -42,18 +43,23 @@ class OpenGovComponent
     Class.send(:include, DRbUndumped)
 
     @ch = OpenGovComponentHelper.new
-
-    socket = 'drbunix://tmp/opengov_' + @name + '_component.sock'
-    DRb.start_service socket, self
-    @ch.cm.register_component(socket)
-    @registered = true
-    at_exit {
-      if @registered then
-        @ch.cm.unregister_component(@name)
-      end
-      DRb.stop_service
-      ActiveRecord::Base.remove_connection
-    }
+    need = @ch.dependencies_not_satisfied(@dependencies)
+    if need == [] then
+      socket = 'drbunix://tmp/opengov_' + @name + '_component.sock'
+      DRb.start_service socket, self
+      @ch.cm.register_component(socket)
+      @registered = true
+      at_exit {
+        if @registered then
+          @ch.cm.unregister_component(@name)
+        end
+        DRb.stop_service
+        ActiveRecord::Base.remove_connection
+      }
+    else
+      p 'Dependencies not met: ' + need.join(",")
+      exit
+    end
     self
   end
 

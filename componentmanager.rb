@@ -46,6 +46,10 @@ class OpenGovComponentManager
     models
   end
 
+  def available_components
+    @components.keys
+  end
+
   def get_model(name)
     component, model = name.split '::'
     @components[component].model(model)

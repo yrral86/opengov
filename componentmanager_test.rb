@@ -10,6 +10,8 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
       exec 'rackup router.ru -p 3000'
     end
     sleep 5 # give the webserver time to start
+    `./components/static.rb start` # required by PersonLocator
+    sleep 1 # give the daemons time to start and register themselves
     `./components/personlocator.rb start`
     sleep 1 # give the daemons time to start and register themselves
     @ch = OpenGovComponentHelper.new
@@ -18,6 +20,8 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   def teardown
     # if an assert fails, make sure we shut down
     `./components/personlocator.rb stop`
+
+    `./components/static.rb stop`
 
     # should kill all components, but not working yet
     `./componentmanager.rb stop`
