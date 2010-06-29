@@ -1,0 +1,12 @@
+<html>
+  <head>
+    <title>PersonLocator::person view_multiple</title>
+  </head>
+  <body>
+    <% objects.each do |o| %>
+    <%= o.fname %> <%= o.lname %> 
+    <a href="/personlocator/person/<%= o.id %>">Details</a><br />
+    <% end %>
+    <a href="/personlocator/person/edit">New Person</a>
+  </body>
+</html>

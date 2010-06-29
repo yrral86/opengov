@@ -1,19 +1,13 @@
 <html>
-<head>
-<title>PersonLocator::person form</title>
-<script type="text/javascript" src="/javascript/prototype.js">
-</script>
-<script type="text/javascript">
-	function submit(name, method) {
-		 $(name).request({method: method})
-	 }
-</script>
-</head>
-<body>
-<form id="form" onsubmit="submit('form','<%= method %>')">
-First Name: <input type="text" name="fname" value="<%= object.fname %>" /><br />
-Last Name: <input type="text name="lname" value="<%= object.lname %>" /><br />
-<input type="submit"  name="Update" />
-</form>
-</body>
+  <head>
+    <title>PersonLocator::person form</title>
+  </head>
+  <body>
+    <form id="form" method="post" action="/personlocator/person/<%= object.id %>">
+      <input type="hidden" name="_method" value="<%= method %>" />
+      First Name: <input type="text" name="fname" value="<%= object.fname %>" /><br />
+      Last Name: <input type="text" name="lname" value="<%= object.lname %>" /><br />
+      <input type="submit"  name="Update" />
+    </form>
+  </body>
 </html>

@@ -6,6 +6,7 @@ require 'daemons'
 require 'erb'
 require 'rack/request'
 require 'rack/response'
+require 'rack/logger'
 
 require 'lib/componenthelper'
 
@@ -88,13 +89,15 @@ class OpenGovComponent
   def call(env)
     r = Rack::Request.new(env)
     path = r.path.split "/"
+    @logger = env['rack.errors']
 
     model = @models[path[2]]
     id = path[3]
 
     if model then
       if r.post? then
-        case r.params['_method'].downcase
+        @logger.write "_method: " + r.params['_method'].to_s + "\n"
+        case r.params['_method']
           when 'put' # UPDATE
           update(model,r)
           when 'delete' # DELETE
@@ -103,7 +106,15 @@ class OpenGovComponent
           create(model,r)
         end
       elsif r.get? then # READ
-        read(model,id)
+        if id == 'edit' then
+          read_form(model,path[4])
+        else
+          read(model,id)
+        end
+      elsif r.delete? then # IN CASE WE EVER USE THE ACTUAL METHODS
+        delete(model,id) # INSTEAD OF TUNNELING OVER POST
+      elsif r.put? then
+        update(model,r)
       else
         [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
       end
@@ -119,9 +130,21 @@ class OpenGovComponent
     end
   end
 
+  def clean_params(model, params)
+    new_params = {}
+    attributes = model.new.attributes.keys - model.protected_attributes.to_a
+    attributes.each do |a|
+      if params[a] then
+        new_params[a] = params[a]
+      end
+    end
+    new_params
+  end
+
   def create(model, request)
+    params = clean_params(model, request.params)
     object = model.new(params)
-    # MODEL NEEDS VALIDATION OF SOME SORT OTHERWIsE WE
+    # MODEL NEEDS VALIDATION OF SOME SORT OTHERWISE WE
     # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
     # INSTEAD OF DISPLAYING THE FORM
     if object.save then
@@ -129,38 +152,46 @@ class OpenGovComponent
                '/' + model.name.downcase +
                '/' + object.id.to_s)
     else
-      string_view('Component ' +
-                  @name +
-                  ' serving edit form for a new record for the model ' +
-                  model.name)
+      read_form(model, nil)
     end
   end
 
-  def read(model, id)
+  def read(model, id)    
     object = model.find_by_id(id)
     if object then
       html_view(model.name.downcase,binding)
+    elsif id then
+      not_found('Record  #' + id + ' not found for model ' +
+                model.name + ' in component ' + @name)
     else
-      string_view('Component ' +
-                  @name +
-                  ' serving list of records for model ' +
-                  model.name +
-                  '<form method="POST"><input type="hidden" name="fname" value="Larry" /><input type="hidden" name="lname" value="Reaves" /><input type="submit"/></form>')
+      objects = model.find :all
+      html_view(model.name.downcase + 'list', binding)
     end
+  end
+
+  def read_form(model,id)
+    if id then
+      object = model.find_by_id(id)
+      method = 'put'
+    else
+      object = model.new
+      method = 'post'
+    end
+    html_view(model.name.downcase + 'form', binding)
   end
 
   def update(model, request)
     id = request.path.split("/")[3]
     object = model.find_by_id(id)
     if object
-      # need help here
-      # should either display form, or update object (using r.params)
-      # maybe we need a url bifurcation here
-      # unless Bill knows the magical incantation
-      string_view('Component ' +
-                  @name +
-                  ' serving edit form for an existing record for ' +
-                  'the model ' + model.name)
+      params = clean_params(model, request.params)
+      if object.update_attributes(params) then
+        redirect('/' + @name.downcase +
+                 '/' + model.name.downcase +
+                 '/' + id)
+      else
+        read_form(model, id)
+      end
     else
       not_found('Record # ' +
                 id.to_s +
@@ -176,7 +207,7 @@ class OpenGovComponent
     if object then
       object.delete
       redirect('/' + @name.downcase +
-               '/' + model.name.to_s)
+               '/' + model.name.downcase)
     else
       not_found('Record # ' +
                 id +
@@ -203,19 +234,30 @@ class OpenGovComponent
            [msg]]
   end
 
-  def html_view(name, binding)
-    [200,
-     {'Content-Type' => 'text/html'},
-     [render_template(name, binding)]
-    ]
+  def html_view(name, b)
+    string = render_template(name, b)
+    if string != -1 then
+      [200,
+       {'Content-Type' => 'text/html'},
+       [string]
+      ]
+    else
+      not_found("Template " + name + " not found in controller " + @name)
+    end
   end
 
-  def render_template(name, binding)
-    template = File.read(Config::RootDir + '/' +
-                         'components' + '/' +
-                         @name.downcase + '/' +
-                         'v' + '/' +
-                         name + '.rhtml')
-    ERB.new(template).result(binding)
+  def render_template(name, b)
+    begin
+      fn = Config::RootDir + '/' +
+        'components' + '/' +
+        @name.downcase + '/' +
+        'v' + '/' +
+        name + '.rhtml'
+      ERB.new(File.read(fn)).result b
+    rescue Exception => e
+      @logger.write "Error reading/processing template: " +  e.message + "\n"
+      @logger.write "Exception class: " + e.class.name + "\n"
+      -1
+    end
   end
 end

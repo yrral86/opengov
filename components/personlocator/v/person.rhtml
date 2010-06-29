@@ -1,27 +1,23 @@
 <html>
-<head>
-<title>PersonLocator::person view</title>
-<script type="text/javascript" src="/javascript/prototype.js">
-</script>
-<script type="text/javascript">
-	function update_object(id) {
-		new Ajax.Request('/personlocator/person/' + id, {
-		    method:'put',
-		    onSuccess: function(response) {
-		    	       alert(response.responseText);
-		    }
-		    });
-		document = "request sent"
-	}
-
-	function delete_object(id) {
-		 new Ajax.Request('', {method:'delete'});
-	}
-</script>
-</head>
-<body>
-<%= object.fname %> <%= object.lname %><br />
-<a href="javascript:update_object('<%= object.id %>');">Edit</a> 
-<a href="javascript:delete_object('<%= object.id %>');">Delete</a>
-</body>
+  <head>
+    <title>PersonLocator::person view</title>
+    <script type="text/javascript" src="/javascript/prototype.js">
+    </script>
+    <script type="text/javascript">
+      function delete_object(id) {
+      new Ajax.Request('/personlocator/person/' + id, {
+      method:'delete',
+      onSuccess: function(response) {
+      document.location.href = '/personlocator/person';
+      }
+      });
+      }
+    </script>
+  </head>
+  <body>
+    <%= object.fname %> <%= object.lname %><br />
+    <a href="/personlocator/person/edit/<%= object.id %>">Edit</a> 
+    <a href="javascript:delete_object('<%= object.id %>')">Delete</a> 
+    <a href="/personlocator/person">Back to list</a>
+  </body>
 </html>
