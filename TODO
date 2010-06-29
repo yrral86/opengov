@@ -4,83 +4,12 @@ better configuration handling(DRY)
 
 Background:
 Components have 0-N each of models, and views
-and 0 - 1 controller
+and 0 - 1 controller (component class)
 
 
 view class:
 	filename, render (to_s)... json, erb(html), xml
 
-
-controller class
-Option 1
--subclass ActionController::Base
--see if rails can support attaching and detatching controller objects at runtime
-
-Option 2
--We have a simple http receiver that routes requests to the right component
--When a component is registered with the component manager, it's available
-- methods/urls are registered with the router, along with the sockets... router
-- maintains active connections to all available components (SocketManager)
-- On request:
-
-class RequestHandler
-      @routes {
-      '/personlocator' => 'PersonLocator'
-      '/addressconverter' => 'AddressConverter'
-      }     
-      
-      def handle(request)
- # threading only makes since assuming the thread shares the sockets
-        Thread.new do
-	  name = route(request)
-	  ConnectionManager.handle(name, request)
-	end
-      end
-end
-
-
-class ConnectionManager
-      def handle(name, request)
-          Components[name].handle(request) # sends it over the wire
-      end
-end
-
-
-class DataComponent
-def handle(request)
-    Thread.new do
-      _handle(request)
-    end
-end
-
-def _handle(request)
-# @models[name] is the AR class, so find and friends are all there
-switch(request.method)
-Create:
-POST /modelname
-form params
-=> @models[modelname].create(params) or maybe update if form submission...
-   or _method = put form variable might work
-return: Status OK for js call/html for form submission
-
--Read:
-GET /viewname?id=value
-=> @views[viewname].render(id)
-return: the view as html/json/xml
-
--Update:
-PUT /modelname/id
-form params
-=> @models[modelname].update(params)
-return: status code, maybe json
-
--Delete
-DELETE /modelname/id
-=> @model[modelname].delete(id)
-return 
-
-end
--Coponent responds to client directly
 
 
 dependencies:
