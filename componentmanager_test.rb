@@ -1,7 +1,6 @@
-#!/usr/bin/env ruby1.8
+#!/usr/bin/env ruby1.9.1
 
 require 'test/unit'
-require 'test/unit/ui/console/testrunner'
 require 'lib/componenthelper'
 
 class OpenGovComponentManagerTest < Test::Unit::TestCase
@@ -46,5 +45,3 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     assert_equal('', @ch.cm.available_models.join(''))
   end
 end
-
-Test::Unit::UI::Console::TestRunner.run(OpenGovComponentManagerTest)
