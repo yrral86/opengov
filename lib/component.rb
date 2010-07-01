@@ -30,6 +30,7 @@ class OpenGovComponent
 
     @models = {}
     models.each do |m|
+      m.extend(DRbUndumped)
       @models[m.name.downcase] = m
     end
 
@@ -39,7 +40,6 @@ class OpenGovComponent
 #      @views[v.name.downcase] = v
 #    end
 
-    Class.send(:include, DRbUndumped)
 
     @ch = OpenGovComponentHelper.new
     need = @ch.dependencies_not_satisfied(@dependencies)
