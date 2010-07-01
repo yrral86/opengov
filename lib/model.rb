@@ -3,6 +3,13 @@ require 'active_record'
 require 'drb'
 
 class OpenGovModel < ActiveRecord::Base
+  # required to subclass ActiveRecord::Base without it trying to
+  # find an open_gov_model table
   self.abstract_class = true
+
+  # forces model objects to be sent over the socket as references
+  # instead of copied... if they are copied, they won't have their
+  # DB connection... and we want to keep DB interactions on the
+  # server anyway
   include DRbUndumped
 end
