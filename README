@@ -34,5 +34,5 @@ redirects to GET /component/model
 
 Abstract Data Types
 model defines abstract_map method that returns a hash
-'abstract_field_name' => 'model_field_name'
+:abstract_field_name => :model_field_name
 if the fields have the same name, they can be omitted

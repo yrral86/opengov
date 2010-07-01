@@ -7,7 +7,7 @@ class Person < OpenGovModel
   def abstract_map
     #    {} # return empty hash, db fields align with abstract fields
     {
-      'the_firstest_name' => 'fname'
+      :the_firstest_name => :fname
     }
   end
 end

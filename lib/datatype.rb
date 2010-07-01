@@ -8,7 +8,7 @@ class OpenGovDataType
   end
 
   def method_missing(id, *args)
-    target = @record.abstract_map[id.id2name]
+    target = @record.abstract_map[id]
     if target then
       @record.send(target, *args)
     else
