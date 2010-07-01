@@ -12,13 +12,13 @@ mapping component directly, or specific components that use the mapping
 component can specify which source they want to use)
 
 
-Messages component:
+Messages component (maybe two different components: Triggers, Messages):
 -Triggers for data updates
- Pushes, like a new marker for the map
-  New call... push to dispatcher, who pushes it an officer officer
-   (computer offers distance info, and unobtrusively defaults to closest
-    unocupied officer)
- RSS/XML/JSON feeds of updated information:
+ Pushes, such as new marker for the map
+  New call... push call location to dispatcher, who pushes it to an officer
+   (computer offers distance info for each officer, and unobtrusively defaults
+    to closest unoccupied officer)
+- RSS/XML/JSON feeds of updated information
  <event>
 	<text>Suspect #535 for case #495 pulled over for speeding</text>
         <date>timestamp</date>
