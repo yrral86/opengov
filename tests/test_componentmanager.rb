@@ -1,20 +1,27 @@
 #!/usr/bin/env ruby1.9.1
 
 require 'test/unit'
+require 'rack/test'
+
+require 'requestrouter'
 require 'lib/componenthelper'
 require 'lib/types/person'
 
 class OpenGovComponentManagerTest < Test::Unit::TestCase
+  def app
+    OpenGovRequestRouter.new
+  end
+
   def setup
+    @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
+
     `./componentmanager.rb start`
-    @webserver = fork do
-      exec 'rackup router.ru -p 3000'
-    end
-    sleep 5 # give the webserver time to start
+
+    sleep 0.05
     `./components/static.rb start` # required by PersonLocator
-    sleep 1 # give the daemons time to start and register themselves
+    sleep 0.05 # give the daemons time to start and register themselves
     `./components/personlocator.rb start`
-    sleep 1 # give the daemons time to start and register themselves
+    sleep 0.05 # give the daemons time to start and register themselves
     @ch = OpenGovComponentHelper.new
   end
 
@@ -27,7 +34,7 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     # should kill all components, but not working yet
     `./componentmanager.rb stop`
 
-    Process.kill("KILL", @webserver)
+    # clean up after old request router (in lieu of shutting it down properly)
     `rm /tmp/opengovrequestrouter.sock`
   end
 

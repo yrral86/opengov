@@ -1,13 +1,12 @@
 #!/usr/bin/env ruby1.9.1
 
 require 'test/unit'
-require 'lib/componenthelper'
 require 'rack/test'
+
 require 'requestrouter'
+require 'lib/componenthelper'
 
 class OpenGovRequestRouterTest < Test::Unit::TestCase
-#  include Rack::Test::Methods
-
   def app
     OpenGovRequestRouter.new
   end
