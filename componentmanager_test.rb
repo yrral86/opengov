@@ -31,12 +31,30 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     `rm /tmp/opengovrequestrouter.sock`
   end
 
-  def test_components_register_unregister
+  def test_components_register
     assert_equal(
                  ['PersonLocator::address','PersonLocator::person'],
                  @ch.cm.available_models.sort
                  )
+  end
 
+  def test_components_unregister
+    `./components/personlocator.rb stop`
+    assert_equal('', @ch.cm.available_models.join(''))
+  end
+
+  def test_components_get_model
+    person = @ch.get_model("PersonLocator::person")
+
+    larry = person.new(:fname => 'Larry', :lname => 'Reaves')
+    larry.save
+
+    assert_equal('Larry', person.find_by_lname('Reaves').fname)
+
+    larry.delete
+  end
+
+  def test_abstract_data_type
     person = @ch.get_model("PersonLocator::person")
 
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
@@ -46,11 +64,6 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
 
     assert_equal('Larry', larry2.the_firstest_name)
 
-    assert_equal('Larry', person.find_by_lname('Reaves').fname)
-
-    larry.delete
-     
-    `./components/personlocator.rb stop`
-    assert_equal('', @ch.cm.available_models.join(''))
+    larry.delete    
   end
 end
