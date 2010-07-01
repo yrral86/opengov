@@ -2,7 +2,7 @@ better testing
 script/generate
 better configuration handling(DRY)
 
-Abstract data types (mixins?) that models can implement, component can respond
+Abstract data types that models can implement, component can respond
 to queries about what datatypes its models  can provide: mapping component can
 ask component manager for all model addresses ('ComponentName::modelname') that
 can provide addresses, and can ask the user which source to use (if they use the
