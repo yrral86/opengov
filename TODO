@@ -2,33 +2,16 @@ better testing
 script/generate
 better configuration handling(DRY)
 
-Background:
-Components have 0-N each of models, and views
-and 0 - 1 controller (component class)
-
-
 view class:
 	filename, render (to_s)... json, erb(html), xml
 
 
-
-dependencies:
-
-# here's a list of what we need... return what you don't have
-doesnt_have = ComponentManagerObject.need(["PersonLocator","AddressConverter"])
-if doesnt_have eq nil then
-   ComponentManagerObject.register_component("PersonMapper",[],['person_marker.json','people_markers.json'])
-else
-  p "Dependecies not met: ' + need.join ","
-end
-
-PersonLocator has people and addresses
-# we probably just want to do this once for each address and store in the
-# address model, but it's an example of webservices as components
-AddressConverter tunrs addresses into latitude/longitude
-PersonMapper returns json for client side javascript that does the mapping
- based on requests of people ids
-
+Abstract data types (mixins?) that models can implement, component can respond
+to queries about what datatypes its models  can provide: mapping component can
+ask component manager for all model addresses ('ComponentName::modelname') that
+can provide addresses, and can ask the user which source to use (if they use the
+mapping component directly, or specific components that use the mapping
+component can specify which source they want to use)
 
 
 Messages component:
