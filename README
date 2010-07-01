@@ -1,0 +1,32 @@
+Models require 3 templates in components/model/v/
+model.rhtml # shows detailed view for one model record
+modellist.rhtml # shows summary view for all model records
+modelform.rhtml # form for editing model records*
+* need to define hidden input _method='put'|'post'
+  when html5 is better supported, forms can directly use put as method
+  but we will still need that selectable in the template
+
+URIs:
+use GET to get forms, POST/PUT to submit them
+
+CREATE
+GET /component/model/edit : blank edit form
+sends form to
+POST /component/model : creates record
+redirects to GET /component/model/id
+
+READ
+GET /component/model : list of records
+GET /component/model/id : view of record
+edit button goes to
+
+UPDATE
+GET /component/model/edit/id : edit form with record with id
+sends form to 
+PUT /component/model/id : saves record
+redirects to GET /component/model/id
+
+DELETE
+DELETE /component/model/id : deletes record
+redirects to GET /component/model
+
