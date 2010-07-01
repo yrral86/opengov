@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby1.9.1
 
 require 'lib/component'
+require 'lib/view'
 
 class OpenGovStaticComponent < OpenGovComponent
   def routes
@@ -14,14 +15,14 @@ class OpenGovStaticComponent < OpenGovComponent
     begin
       case path[1]
       when 'javascript'
-        string_view(File.read(Config::RootDir + r.path))
+        OpenGovView.render_string(File.read(Config::RootDir + r.path))
       when 'images'
-        string_view("TODO: return images")
+        OpenGovView.render_string("TODO: return images")
       else
-        not_found("File " + r.path + " not found")
+        OpenGovView.not_found("File " + r.path + " not found")
       end
     rescue
-      not_found("File " + r.path + " not found")
+      OpenGovView.not_found("File " + r.path + " not found")
     end
   end
 end

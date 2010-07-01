@@ -3,12 +3,11 @@ require 'drb/unix'
 require 'rubygems'
 require 'active_record'
 require 'daemons'
-require 'erb'
 require 'rack/request'
-require 'rack/response'
 require 'rack/logger'
 
 require 'lib/componenthelper'
+require 'lib/view'
 
 # SHOULD BE IN A CONFIG FILE SOMEWHERE
 module Config
@@ -113,7 +112,7 @@ class OpenGovComponent
         end
       elsif r.get? then # READ
         if id == 'edit' then
-          read_form(model,path[4])
+          render_form(model,path[4])
         else
           read(model,id)
         end
@@ -122,17 +121,17 @@ class OpenGovComponent
       elsif r.put? then
         update(model,r)
       else
-        [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
+        OpenGovView.method_not_allowed
       end
     else
       model_name = path[2]
       unless model_name then
         model_name = 'Nil'
       end
-      not_found('Model ' +
-                model_name +
-                ' not found in component ' +
-                @name)
+      OpenGovView.not_found('Model ' +
+                            model_name +
+                            ' not found in component ' +
+                            @name)
     end
   end
 
@@ -154,28 +153,29 @@ class OpenGovComponent
     # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
     # INSTEAD OF DISPLAYING THE FORM
     if object.save then
-      redirect('/' + @name.downcase +
-               '/' + model.name.downcase +
-               '/' + object.id.to_s)
+      OpenGovView.redirect('/' + @name.downcase +
+                           '/' + model.name.downcase +
+                           '/' + object.id.to_s)
     else
-      read_form(model, nil)
+      render_form(model, nil)
     end
   end
 
   def read(model, id)    
     object = model.find_by_id(id)
     if object then
-      html_view(model.name.downcase,binding)
+      OpenGovView.render_erb_from_file(view_file(model.name.downcase),binding)
     elsif id then
-      not_found('Record  #' + id + ' not found for model ' +
-                model.name + ' in component ' + @name)
+      OpenGovView.not_found('Record  #' + id + ' not found for model ' +
+                            model.name + ' in component ' + @name)
     else
       objects = model.find :all
-      html_view(model.name.downcase + 'list', binding)
+      OpenGovView.render_erb_from_file(view_file(model.name.downcase + 'list'),
+                                       binding)
     end
   end
 
-  def read_form(model,id)
+  def render_form(model,id)
     if id then
       object = model.find_by_id(id)
       method = 'put'
@@ -183,7 +183,8 @@ class OpenGovComponent
       object = model.new
       method = 'post'
     end
-    html_view(model.name.downcase + 'form', binding)
+    OpenGovView.render_erb_from_file(view_file(model.name.downcase + 'form'),
+                                     binding)
   end
 
   def update(model, request)
@@ -192,19 +193,19 @@ class OpenGovComponent
     if object
       params = clean_params(model, request.params)
       if object.update_attributes(params) then
-        redirect('/' + @name.downcase +
-                 '/' + model.name.downcase +
-                 '/' + id)
+        OpenGovView.redirect('/' + @name.downcase +
+                             '/' + model.name.downcase +
+                             '/' + id)
       else
-        read_form(model, id)
+        render_form(model, id)
       end
     else
-      not_found('Record # ' +
-                id.to_s +
-                ' not found for model ' +
-                model.name +
-                'in component ' +
-                @name)
+      OpenGovView.not_found('Record # ' +
+                            id.to_s +
+                            ' not found for model ' +
+                            model.name +
+                            'in component ' +
+                            @name)
     end
   end
   
@@ -212,58 +213,23 @@ class OpenGovComponent
     object = model.find_by_id(id)
     if object then
       object.delete
-      redirect('/' + @name.downcase +
-               '/' + model.name.downcase)
+      OpenGovView.redirect('/' + @name.downcase +
+                           '/' + model.name.downcase)
     else
-      not_found('Record # ' +
-                id +
-                ' not found for model ' +
-                model.name +
-                'in component ' +
-                @name)
+      OpenGovView.not_found('Record # ' +
+                            id +
+                            ' not found for model ' +
+                            model.name +
+                            'in component ' +
+                            @name)
     end
   end
-
-  def redirect(url)
-    response = Rack::Response.new
-    response.redirect(url)
-    response.finish
-  end
-
-  def not_found(msg)
-    [404, {'Content-Type' => 'text/html'}, [msg]]
-  end
-
-  def string_view(msg)
-          [200,
-           {'Content-Type' => 'text/html'},
-           [msg]]
-  end
-
-  def html_view(name, b)
-    string = render_template(name, b)
-    if string != -1 then
-      [200,
-       {'Content-Type' => 'text/html'},
-       [string]
-      ]
-    else
-      not_found("Template " + name + " not found in controller " + @name)
-    end
-  end
-
-  def render_template(name, b)
-    begin
-      fn = Config::RootDir + '/' +
-        'components' + '/' +
-        @name.downcase + '/' +
-        'v' + '/' +
-        name + '.rhtml'
-      ERB.new(File.read(fn)).result b
-    rescue Exception => e
-      @logger.write "Error reading/processing template: " +  e.message + "\n"
-      @logger.write "Exception class: " + e.class.name + "\n"
-      -1
-    end
+  
+  def view_file(name)
+    Config::RootDir + '/' +
+      'components' + '/' +
+      @name.downcase + '/' +
+      'v' + '/' +
+      name + '.rhtml'
   end
 end
