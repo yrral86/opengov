@@ -2,6 +2,7 @@
 
 require 'test/unit'
 require 'lib/componenthelper'
+require 'lib/types/person'
 
 class OpenGovComponentManagerTest < Test::Unit::TestCase
   def setup
@@ -40,6 +41,10 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
 
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
     larry.save
+
+    larry2 = OpenGovPerson.new(larry)
+
+    assert_equal('Larry', larry2.the_firstest_name)
 
     assert_equal('Larry', person.find_by_lname('Reaves').fname)
 
