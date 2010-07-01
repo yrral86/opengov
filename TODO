@@ -2,6 +2,8 @@ better testing
 script/generate
 better configuration handling(DRY)
 
+handle views with no model
+
 Abstract data types that models can implement, component can respond
 to queries about what datatypes its models  can provide: mapping component can
 ask component manager for all model addresses ('ComponentName::modelname') that
