@@ -20,7 +20,7 @@ class OpenGovComponent
     @registered = false;
     ActiveRecord::Base.establish_connection(
                                             :adapter => 'mysql',
-                                            :host => '127.0.0.1',
+                                            :host => 'localhost',
                                             :database => 'opengov',
                                             :username => 'opengov',
                                             :password => 'crappass'
