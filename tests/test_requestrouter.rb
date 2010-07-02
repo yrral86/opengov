@@ -20,6 +20,7 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
     sleep 0.05 # give the daemons time to start and register themselves
     `./components/personlocator.rb start`
     sleep 0.05 # give the daemons time to start and register themselves
+
     @ch = OpenGovComponentHelper.new
   end
 
@@ -31,10 +32,17 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
 
     # should kill all components, but not working yet
     `./componentmanager.rb stop`
+
+    `rm /tmp/opengovrequestrouter.sock`
   end
 
   def test_personlist
     @browser.get '/personlocator/person'
     assert @browser.last_response.ok?
+  end
+
+  def test_invalid_person_id
+    @browser.get '/personlocator/person/bogusid'
+    assert_equal 404, @browser.last_response.status
   end
 end

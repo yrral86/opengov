@@ -22,6 +22,7 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     sleep 0.05 # give the daemons time to start and register themselves
     `./components/personlocator.rb start`
     sleep 0.05 # give the daemons time to start and register themselves
+
     @ch = OpenGovComponentHelper.new
   end
 
