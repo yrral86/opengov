@@ -1,0 +1,4 @@
+activerecord
+rack-test
+mysql
+daemons

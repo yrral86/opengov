@@ -1,0 +1,7 @@
+ruby1.9.1
+ruby1.9.1-dev
+rubygems1.9.1
+mysql-server
+libmysqlclient-dev
+
+git-core
