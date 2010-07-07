@@ -1,0 +1,13 @@
+apt-get update
+apt-get install `cat requirements/packages`
+gem install `cat requirements/rubypackages`
+
+PATH=$PATH:/var/lib/gems/1.9.1/bin
+
+# create databases (opengov_[development|test|production])
+
+# install software/configuration
+
+# install startup script
+
+# run db migrations
