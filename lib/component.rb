@@ -11,20 +11,16 @@ require 'lib/view'
 
 # SHOULD BE IN A CONFIG FILE SOMEWHERE
 module Config
-  RootDir = "/home/larry/Projects/opengov"
+  RootDir = '/home/larry/Projects/opengov'
+  Environment = 'development'
 end  
 
 class OpenGovComponent
   # model: The active record class
   def initialize(name, models, views, dependencies = [])
     @registered = false;
-    ActiveRecord::Base.establish_connection(
-                                            :adapter => 'mysql',
-                                            :host => 'localhost',
-                                            :database => 'opengov',
-                                            :username => 'opengov',
-                                            :password => 'crappass'
-                                            )
+    database_yml = YAML::load(File.open(Config::RootDir + '/db/config.yml'))
+    ActiveRecord::Base.establish_connection(database_yml[Config::Environment])
     @name = name
     @dependencies = dependencies
 

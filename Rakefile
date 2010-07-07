@@ -6,7 +6,7 @@ namespace :db do
     require 'active_record'
     database_yml = YAML::load(File.open(APP_BASE + "/db/config.yml"))
     # TODO: need to be able to set environment from command line
-    current_env = "development"
+    current_env = ENV['env'] || "development"
     ActiveRecord::Base.establish_connection(database_yml[current_env])
     # set a logger for STDOUT
     ActiveRecord::Base.logger = Logger.new(STDOUT)
