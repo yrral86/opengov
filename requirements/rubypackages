@@ -3,3 +3,4 @@ rack-test
 mysql
 daemons
 rake
+thin
