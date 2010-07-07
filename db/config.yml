@@ -1,0 +1,7 @@
+development:
+  adapter: mysql
+  host: localhost
+  database: opengov
+  username: opengov
+  password: crappass
+	
