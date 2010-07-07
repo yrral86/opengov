@@ -2,6 +2,21 @@ better testing
 script/generate
 better configuration handling(DRY)
 
+Installer
+- Check dependencies
+- Install software
+- Configure web server
+- Configure db (migrations)
+
+Startup script
+
+Login/Authentication
+- db
+- system
+- ldap
+- nis
+
+
 handle views with no model
 
 Abstract data types that models can implement, component can respond
