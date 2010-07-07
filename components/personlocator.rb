@@ -1,8 +1,10 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'lib/component'
-require 'components/personlocator/m/person'
-require 'components/personlocator/m/address'
+dir = File.dirname(__FILE__)
+
+require dir + '/../lib/component'
+require dir + '/personlocator/m/person'
+require dir + '/personlocator/m/address'
 
 class OpenGovPersonLocatorComponent < OpenGovComponent
 

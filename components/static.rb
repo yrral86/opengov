@@ -1,7 +1,9 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'lib/component'
-require 'lib/view'
+dir = File.dirname(__FILE__)
+
+require dir + '/../lib/component'
+require dir + '/../lib/view'
 
 class OpenGovStaticComponent < OpenGovComponent
   def routes

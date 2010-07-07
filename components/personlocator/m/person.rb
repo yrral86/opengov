@@ -1,4 +1,6 @@
-require 'lib/model'
+dir = File.dirname(__FILE__)
+
+require dir + '/../../../lib/model'
 
 class Person < OpenGovModel
   has_many :addresses

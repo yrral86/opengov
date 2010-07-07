@@ -2,8 +2,9 @@
 
 require 'daemons'
 
+path = File.dirname(__FILE__)
 args = ARGV.join " "
 
-`./componentmanager.rb #{args}`
-`components/static.rb #{args}`
-`components/personlocator.rb #{args}`
+`#{path}/componentmanager.rb #{args}`
+`#{path}/components/static.rb #{args}`
+`#{path}/components/personlocator.rb #{args}`

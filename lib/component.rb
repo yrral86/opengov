@@ -6,8 +6,10 @@ require 'daemons'
 require 'rack/request'
 require 'rack/logger'
 
-require 'lib/componenthelper'
-require 'lib/view'
+dir = File.dirname(__FILE__)
+
+require dir + '/componenthelper'
+require dir + '/view'
 
 # SHOULD BE IN A CONFIG FILE SOMEWHERE
 module Config
