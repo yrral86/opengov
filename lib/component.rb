@@ -13,7 +13,7 @@ require dir + '/view'
 
 # SHOULD BE IN A CONFIG FILE SOMEWHERE
 module Config
-  RootDir = '/home/larry/Projects/opengov'
+  RootDir = File.expand_path(File.dirname(__FILE__)) + '/../'
   Environment = 'development'
 end  
 
