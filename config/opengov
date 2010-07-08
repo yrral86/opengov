@@ -1,0 +1,43 @@
+#!/bin/sh
+### BEGIN INIT INFO
+# Provides:          opengov
+# Required-Start:    $local_fs $remote_fs thin
+# Required-Stop:     $local_fs $remote_fs thin
+# Default-Start:     2 3 4 5
+# Default-Stop:      S 0 1 6
+# Short-Description: opengov initscript
+# Description:       opengov
+### END INIT INFO
+
+# Adaped by: Larry Reaves
+# From thin init script
+# Original author: Forrest Robertson
+
+# Do NOT "set -e"
+
+DAEMON=/var/www/opengov/componentmanager.rb
+SCRIPT_NAME=/etc/init.d/opengov
+
+# Exit if the package is not installed
+[ -x "$DAEMON" ] || exit 0
+
+case "$1" in
+  start)
+        su -c "$DAEMON start" www-data
+        ;;
+  stop)
+        su -c "$DAEMON stop" www-data
+        ;;
+  restart)
+        su -c "$DAEMON restart" www-data
+        ;;
+  status)
+	su -c "$DAEMON status" www-data
+	;;
+  *)
+        echo "Usage: $SCRIPT_NAME {start|status|stop|restart}" >&2
+        exit 3
+        ;;
+esac
+
+:

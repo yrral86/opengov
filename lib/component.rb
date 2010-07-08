@@ -6,7 +6,7 @@ require 'daemons'
 require 'rack/request'
 require 'rack/logger'
 
-dir = File.dirname(__FILE__)
+dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/componenthelper'
 require dir + '/view'

@@ -1,4 +1,4 @@
-dir = File.dirname(__FILE__)
+dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/../../../lib/model'
 

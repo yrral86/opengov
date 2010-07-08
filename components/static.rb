@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby1.9.1
 
-dir = File.dirname(__FILE__)
+dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/../lib/component'
 require dir + '/../lib/view'
@@ -29,7 +29,8 @@ class OpenGovStaticComponent < OpenGovComponent
   end
 end
 
-Daemons.run_proc('OpenGovStaticComponent') do
+Daemons.run_proc('OpenGovStaticComponent',
+                 {:dir_mode => :normal, :dir => dir}) do
   OpenGovStaticComponent.new(
                              'Static',
                              [],

@@ -16,11 +16,10 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
 
     `./componentmanager.rb start`
-
-    sleep 0.05
-    `./components/static.rb start` # required by PersonLocator
-    sleep 0.05 # give the daemons time to start and register themselves
-    `./components/personlocator.rb start`
+#    sleep 0.05
+#    `./components/static.rb start` # required by PersonLocator
+#    sleep 0.05 # give the daemons time to start and register themselves
+#    `./components/personlocator.rb start`
     sleep 0.05 # give the daemons time to start and register themselves
 
     @ch = OpenGovComponentHelper.new
@@ -28,9 +27,9 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
 
   def teardown
     # if an assert fails, make sure we shut down
-    `./components/personlocator.rb stop`
+#    `./components/personlocator.rb stop`
 
-    `./components/static.rb stop`
+#    `./components/static.rb stop`
 
     # should kill all components, but not working yet
     `./componentmanager.rb stop`
@@ -38,7 +37,7 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     # clean up after old request router (in lieu of shutting it down properly)
     `rm /tmp/opengovrequestrouter.sock`
   end
-
+  
   def test_components_register
     assert_equal(
                  ['PersonLocator::address','PersonLocator::person'],
@@ -47,7 +46,8 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   end
 
   def test_components_unregister
-    `./components/personlocator.rb stop`
+#    `./components/personlocator.rb stop`
+    @ch.cm.unregister_component('PersonLocator')
     assert_equal('', @ch.cm.available_models.join(''))
   end
 

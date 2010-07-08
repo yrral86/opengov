@@ -1,5 +1,7 @@
 #!/usr/bin/env ruby1.9.1
 
+dir = File.expand_path(File.dirname(__FILE__))
+
 require 'drb'
 require 'drb/unix'
 require 'rubygems'
@@ -7,19 +9,9 @@ require 'daemons'
 
 class OpenGovComponentManager
   def initialize
+    @dir = File.expand_path(File.dirname(__FILE__))
     @components = {}
     @c_mutex = Mutex.new
-    @router = DRbObject.new nil, 'drbunix://tmp/opengovrequestrouter.sock'
-
-    DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', self
-    at_exit {
-      @components.each_value do |c|
-        unregister_component(c.name)
-        c.unregistered
-        c.stop
-      end
-      DRb.stop_service
-    }
     @self
   end
 
@@ -63,13 +55,36 @@ class OpenGovComponentManager
       end
   end
 
-  def daemonize
+  def daemonize 
+    @router = DRbObject.new nil, 'drbunix://tmp/opengovrequestrouter.sock'
+
+    DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', self
+    
+    component_list = File.read(@dir + '/config/components').split "\n"
+    
+    component_list.each do |c|
+      unless c == '' then
+        `#{@dir}/components/#{c}.rb start`
+      end
+    end
+
+    at_exit {
+      component_list.each do |c|
+        unless c == '' then
+          `#{@dir}/components/#{c}.rb stop`
+        end
+      end
+      DRb.stop_service
+    }
+    
     DRb.thread.join
   end
 end
 
+cm = OpenGovComponentManager.new
 
-Daemons.run_proc('OpenGovComponentManager') do
-  OpenGovComponentManager.new.daemonize
+Daemons.run_proc('OpenGovComponentManager',
+                 {:dir_mode => :normal, :dir => dir}) do
+  cm.daemonize
 end
 
