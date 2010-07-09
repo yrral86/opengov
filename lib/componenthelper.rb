@@ -6,7 +6,12 @@ class OpenGovComponentHelper
   end
 
   def get_routes
-    @cm.available_routes
+    begin
+      @cm.available_routes
+    rescue
+      #@cm = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
+      {}
+    end
   end
 
   def get_model(name)
