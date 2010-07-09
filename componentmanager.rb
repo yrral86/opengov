@@ -11,7 +11,9 @@ class OpenGovComponentManager
   def initialize
     @dir = File.expand_path(File.dirname(__FILE__))
     @components = {}
+    @routes = {}
     @c_mutex = Mutex.new
+    @r_mutex = Mutex.new
     @self
   end
 
@@ -20,14 +22,41 @@ class OpenGovComponentManager
     @c_mutex.synchronize do
       @components[component.name] = component
     end
-    @router.register_component(component)
+    register_routes(component)
   end
 
   def unregister_component(name)
-    @router.unregister_component(@components[name])
+    unregister_routes(@components[name])
     @c_mutex.synchronize do
       @components.delete(name)
     end
+  end
+
+  def register_routes(component)
+    name = component.name
+    new_routes = {}
+    @r_mutex.synchronize do
+      component.routes.each do |r|
+        if @routes[r] == nil then
+          new_routes[r] = DRbObject.new nil, get_component_socket(name)
+        else
+          raise "Route '" + r + "' already handled by component " + @routes[r].name
+        end    
+      end
+      @routes.update(new_routes)
+    end
+  end
+
+  def unregister_routes(component)
+    @r_mutex.synchronize do
+      component.routes.each do |r|
+        @routes.delete(r)
+      end
+    end
+  end
+
+  def available_routes
+    @routes
   end
 
   def available_models
@@ -56,8 +85,6 @@ class OpenGovComponentManager
   end
 
   def daemonize 
-    @router = DRbObject.new nil, 'drbunix://tmp/opengovrequestrouter.sock'
-
     DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', self
     
     component_list = File.read(@dir + '/config/components').split "\n"

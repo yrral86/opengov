@@ -5,6 +5,10 @@ class OpenGovComponentHelper
     @cm = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
   end
 
+  def get_routes
+    @cm.available_routes
+  end
+
   def get_model(name)
     component, model = name.split '::'
     get_component(component).model(model)

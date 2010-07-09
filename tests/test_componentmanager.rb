@@ -3,18 +3,11 @@
 require 'test/unit'
 require 'rack/test'
 
-require 'requestrouter'
 require 'lib/componenthelper'
 require 'lib/types/person'
 
 class OpenGovComponentManagerTest < Test::Unit::TestCase
-  def app
-    OpenGovRequestRouter.new
-  end
-
   def setup
-    @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
-
     `./componentmanager.rb start`
     sleep 1.5 # give the daemons time to start and register themselves
 
@@ -24,9 +17,6 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   def teardown
     # kills all components
     `./componentmanager.rb stop`
-
-    `rm /tmp/opengovrequestrouter.sock`
-
     sleep 1.5
   end
   
@@ -38,7 +28,6 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   end
 
   def test_components_unregister
-#    `./components/personlocator.rb stop`
     @ch.cm.unregister_component('PersonLocator')
     assert_equal('', @ch.cm.available_models.join(''))
   end

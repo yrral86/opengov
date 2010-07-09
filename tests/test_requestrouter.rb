@@ -11,19 +11,17 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
   end
 
   def setup
+    `./componentmanager.rb start`
+
     @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
 
-    `./componentmanager.rb start`
     sleep 1.5 # give the daemons time to start and register themselves
   end
 
   def teardown
     # kills all components
     `./componentmanager.rb stop`
-
-    `rm /tmp/opengovrequestrouter.sock`
-
-    sleep 1.0 # give everything time to shut down
+    sleep 1.5
   end
 
   def test_personlist
