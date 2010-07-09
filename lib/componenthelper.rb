@@ -8,8 +8,7 @@ class OpenGovComponentHelper
   def get_routes
     begin
       @cm.available_routes
-    rescue
-      #@cm = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
+    rescue DRb::DRbConnError
       {}
     end
   end
@@ -20,7 +19,7 @@ class OpenGovComponentHelper
   end
 
   def get_component(name)
-    DRbObject.new(nil, @cm.get_component_socket(name))
+    DRbObject.new nil, @cm.get_component_socket(name)
   end
 
   def dependencies_not_satisfied(deps)
