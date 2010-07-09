@@ -4,7 +4,9 @@ rubygems1.9.1
 libdpkg-ruby1.9.1
 mysql-server
 libmysqlclient-dev
-libopenssl-ruby1.9.1
+apache2
+apache2-prefork-dev
+libaprutil1-dev
 
 git-core
 build-essential

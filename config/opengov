@@ -1,8 +1,8 @@
 #!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          opengov
-# Required-Start:    $local_fs $remote_fs thin
-# Required-Stop:     $local_fs $remote_fs thin
+# Required-Start:    $local_fs $remote_fs apache2
+# Required-Stop:     $local_fs $remote_fs apache2
 # Default-Start:     2 3 4 5
 # Default-Stop:      S 0 1 6
 # Short-Description: opengov initscript
