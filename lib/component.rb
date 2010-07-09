@@ -99,7 +99,6 @@ class OpenGovComponent
 
     if model then
       if r.post? then
-        @logger.write "_method: " + r.params['_method'].to_s + "\n"
         case r.params['_method']
           when 'put' # UPDATE
           update(model,r)
