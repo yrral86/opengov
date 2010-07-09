@@ -46,5 +46,5 @@ class OpenGovRequestRouter
     else
       @routes[path[1]].call(env)
     end
-  end  
+  end
 end

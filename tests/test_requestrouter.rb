@@ -4,7 +4,6 @@ require 'test/unit'
 require 'rack/test'
 
 require 'requestrouter'
-require 'lib/componenthelper'
 
 class OpenGovRequestRouterTest < Test::Unit::TestCase
   def app
@@ -15,25 +14,16 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
     @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
 
     `./componentmanager.rb start`
-#    sleep 0.05
-#    `./components/static.rb start` # required by PersonLocator
-#    sleep 0.05 # give the daemons time to start and register themselves
-#    `./components/personlocator.rb start`
-    sleep 1.15 # give the daemons time to start and register themselves
-
-#    @ch = OpenGovComponentHelper.new
+    sleep 1.5 # give the daemons time to start and register themselves
   end
 
   def teardown
-    # if an assert fails, make sure we shut down
-#    `./components/personlocator.rb stop`
-
- #   `./components/static.rb stop`
-
-    # should kill all components, but not working yet
+    # kills all components
     `./componentmanager.rb stop`
 
     `rm /tmp/opengovrequestrouter.sock`
+
+    sleep 1.0 # give everything time to shut down
   end
 
   def test_personlist

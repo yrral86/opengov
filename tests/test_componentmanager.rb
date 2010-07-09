@@ -16,26 +16,18 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
     @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
 
     `./componentmanager.rb start`
-#    sleep 0.05
-#    `./components/static.rb start` # required by PersonLocator
-#    sleep 0.05 # give the daemons time to start and register themselves
-#    `./components/personlocator.rb start`
-    sleep 0.05 # give the daemons time to start and register themselves
+    sleep 1.5 # give the daemons time to start and register themselves
 
     @ch = OpenGovComponentHelper.new
   end
 
   def teardown
-    # if an assert fails, make sure we shut down
-#    `./components/personlocator.rb stop`
-
-#    `./components/static.rb stop`
-
-    # should kill all components, but not working yet
+    # kills all components
     `./componentmanager.rb stop`
 
-    # clean up after old request router (in lieu of shutting it down properly)
     `rm /tmp/opengovrequestrouter.sock`
+
+    sleep 1.5
   end
   
   def test_components_register
