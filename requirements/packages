@@ -2,6 +2,7 @@ ruby1.9.1
 ruby1.9.1-dev
 rubygems1.9.1
 libdpkg-ruby1.9.1
+libopenssl-ruby1.9.1
 mysql-server
 libmysqlclient-dev
 apache2
