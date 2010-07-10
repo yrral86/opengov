@@ -62,7 +62,7 @@ class OpenGovComponentManager
   def available_models
     models = []
     @components.each_value do |c|
-      models = c.model_names.collect {|n| c.name + '::' + n}
+      models.concat(c.model_names.collect {|n| c.name + '::' + n})
     end
     models
   end
