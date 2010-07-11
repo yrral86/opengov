@@ -1,11 +1,13 @@
 require 'lib/componenthelper'
 require 'lib/requestauthenticator'
 require 'lib/requestparser'
+require 'lib/view'
 
 class OpenGovRequestRouter
   def initialize
     @ch = OpenGovComponentHelper.new
     @routes = {}
+    @view = OpenGovView
     DRb.start_service
     self
   end
@@ -18,13 +20,13 @@ class OpenGovRequestRouter
 
     component = env[:parser].next
     if @routes[component] == nil then
-      [404, {'Content-Type' => 'text/html'}, ['Not Found']]
+      @view.not_found 'Not Found'
     else
       begin
         @routes[component].call(env)
       rescue DRb::DRbConnError
         @routes = {}
-        [404, {'Content-Type' => 'text/html'}, ["Component #{component} went away"]]
+        @view.not_found "Component #{component} went away"
       end
     end
   end
