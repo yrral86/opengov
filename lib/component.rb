@@ -90,12 +90,11 @@ class OpenGovComponent
   end
 
   def call(env)
-    r = Rack::Request.new(env)
-    path = r.path.split "/"
-    @logger = env['rack.errors']
+    model_name = env[:parser].next
+    id = env[:parser].next
+    r = env[:parser].request
 
-    model = @models[path[2]]
-    id = path[3]
+    model = @models[model_name]
 
     if model then
       if r.post? then
@@ -109,7 +108,7 @@ class OpenGovComponent
         end
       elsif r.get? then # READ
         if id == 'edit' then
-          render_form(model,path[4])
+          render_form(model,env[:parser].next)
         else
           read(model,id)
         end
@@ -121,7 +120,6 @@ class OpenGovComponent
         OpenGovView.method_not_allowed
       end
     else
-      model_name = path[2]
       unless model_name then
         model_name = 'Nil'
       end

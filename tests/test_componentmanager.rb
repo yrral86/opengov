@@ -8,16 +8,29 @@ require 'lib/types/person'
 
 class OpenGovComponentManagerTest < Test::Unit::TestCase
   def setup
+    while Dir.entries('/tmp').detect {|f| f.match /^opengov/ } do
+      sleep 0.1
+    end
+
     `./componentmanager.rb start`
-    sleep 1.5 # give the daemons time to start and register themselves
 
     @ch = OpenGovComponentHelper.new
+
+    # give the daemons time to start and register themselves
+    waiting = true
+    while waiting do
+      sockets = Dir.entries('/tmp').find_all {|e| e.match /^opengov/}
+      if sockets.length == 3 then
+        waiting = false
+      else
+        sleep 0.1
+      end
+    end
   end
 
   def teardown
     # kills all components
     `./componentmanager.rb stop`
-    sleep 1.5
   end
   
   def test_components_register
@@ -33,7 +46,11 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   end
 
   def test_components_get_model
-    person = @ch.get_model("PersonLocator::person")
+    begin
+      person = @ch.get_model("PersonLocator::person")
+    rescue DRb::DRbServerNotFound
+      fail 'Could not connect to PersonLocator component'
+    end
 
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
     larry.save
@@ -44,8 +61,11 @@ class OpenGovComponentManagerTest < Test::Unit::TestCase
   end
 
   def test_abstract_data_type
-    person = @ch.get_model("PersonLocator::person")
-
+    begin
+      person = @ch.get_model("PersonLocator::person")
+    rescue DRb::DRbServerNotFound
+      fail 'Could not connect to PersonLocator component'
+    end
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
     larry.save
 

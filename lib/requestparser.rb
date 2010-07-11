@@ -4,10 +4,19 @@ class OpenGovRequestParser
   def initialize(env)
     @r = Rack::Request.new(env)
     @paths = @r.path.split '/'
-    @paths.shift
+    @queue = @paths
+    @queue.shift
   end
 
   def next
-    @paths.shift
+    @queue.shift
+  end
+
+  def path(n)
+    @paths[n]
+  end
+
+  def request
+    @r
   end
 end
