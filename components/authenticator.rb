@@ -21,7 +21,7 @@ class OpenGovAuthController
   end
 
   def call(env)
-    [404,{},[]]
+    OpenGovView.not_found("Authenticator failed")
   end
 
   def create(env)
@@ -52,7 +52,6 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     @adapter = OpenGovAuthAdapter.new(@controller)
 # possibly needs moved to router.ru
 # grab @adapter over drb
-    AuthLogic::Session::Base.controller = @adapter
     super
   end
 

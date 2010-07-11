@@ -16,7 +16,6 @@ class OpenGovRequestRouter
     @routes = @ch.get_routes if @routes.empty?
 
     env[:parser] = OpenGovRequestParser.new(env)
-    env[:authenticator] = OpenGovRequestAuthenticator.new(env)
 
     component = env[:parser].next
     if @routes[component] == nil then

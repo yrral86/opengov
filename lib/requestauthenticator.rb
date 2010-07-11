@@ -1,6 +1,11 @@
-class OpenGovRequestAuthenticator
-  def initialize(env)
-    @env = env
+require 'authlogic'
+
+class OpenGovRequestAuthenticator < Authlogic::ControllerAdapters::AbstractAdapter
+  def initialize
+  end
+
+  def cookie_domain
+    env['SERVER_NAME']
   end
 
   def authenticate
