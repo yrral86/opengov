@@ -21,8 +21,7 @@ class OpenGovAuthController
   end
 
   def call(env)
-    r = Rack::Request.new(env)
-    path = r.path.split "/"
+    [404,{},[]]
   end
 
   def create(env)

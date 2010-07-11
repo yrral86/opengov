@@ -11,20 +11,18 @@ class OpenGovStaticComponent < OpenGovComponent
   end
 
   def call(env)
-    r = Rack::Request.new(env)
-    path = r.path.split "/"
-
     begin
-      case path[1]
+      case env[:parser].path(1)
       when 'javascript'
-        OpenGovView.render_string(File.read(Config::RootDir + r.path))
+        OpenGovView.render_string(File.read(Config::RootDir +
+                                            env[:parser].request.path))
       when 'images'
         OpenGovView.render_string("TODO: return images")
       else
-        OpenGovView.not_found("File " + r.path + " not found")
+        OpenGovView.not_found("File #{env[:parser].request.path} not found")
       end
     rescue
-      OpenGovView.not_found("File " + r.path + " not found")
+      OpenGovView.not_found("File #{env[:parser].request.path} not found")
     end
   end
 end
