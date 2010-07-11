@@ -1,4 +1,5 @@
 require 'lib/componenthelper'
+require 'lib/requestparser.rb'
 
 class OpenGovRequestRouter
   def initialize
@@ -11,14 +12,18 @@ class OpenGovRequestRouter
   def call(env)
     @routes = @ch.get_routes if @routes.empty?
 
-    r = Rack::Request.new(env)
+    env[:parser] = OpenGovRequestParser.new(env)
 
-    path = r.path.split "/"
+    component = env[:parser].next
 
-    if @routes[path[1]] == nil then
+    if @routes[component] == nil then
       [404, {'Content-Type' => 'text/html'}, ['Not Found']]
     else
-      @routes[path[1]].call(env)
+      begin
+        @routes[component].call(env)
+      rescue DRbConnError
+        [404, {'Content-Type' => 'text/html'}, ["Component #{component} went away"]]
+      end
     end
   end
 end
