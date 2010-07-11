@@ -21,7 +21,8 @@ class OpenGovRequestRouter
     else
       begin
         @routes[component].call(env)
-      rescue DRb::DRbServerNotFound
+      rescue DRb::DRbConnError
+        @routes = {}
         [404, {'Content-Type' => 'text/html'}, ["Component #{component} went away"]]
       end
     end
