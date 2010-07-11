@@ -2,9 +2,7 @@ better testing
 script/generate
 better configuration handling(DRY)
 
-OpenGovAuthComponent
-env['ogac'].authenticate unless env['ogac'].authenticated?
-
+Implement Sessions using CGI::Session::MemoryStore
 
 Installer
 - Check dependencies

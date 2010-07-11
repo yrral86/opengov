@@ -2,26 +2,17 @@
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-require 'authlogic'
-
 require dir + '/../lib/component'
 require dir + '/authenticator/m/user'
 require dir + '/authenticator/m/usersession'
 
-
-class OpenGovAuthAdapter < Authlogic::ControllerAdapters::AbstractAdapter
-  def cookie_domain
-    env['SERVER_NAME']
-  end
-end
-
-class OpenGovAuthController
-  def initialize(component)
-    @component = component
+class OpenGovSessionsComponent < OpenGovComponent
+  def current_session
+    UserSession.find    
   end
 
-  def call(env)
-    OpenGovView.not_found("Authenticator failed")
+  def current_user
+    current_session.user
   end
 
   def create(env)
@@ -33,39 +24,14 @@ class OpenGovAuthController
     current_user_session.destroy
     # TODO: redirect_to new_user_session_url
   end
-
-  private
-  def current_user_session
-    return @current_user_session if defined?(current_user_session)
-    @current_user_session = User.find
-  end
-
-  def current_user
-    return @current_user if defined?(current_user)
-    @current_user = current_user_session && current_user_session.user
-  end
 end
 
-class OpenGovAuthenticatorComponent < OpenGovComponent
-  def initialize
-    @controller = OpenGovAuthController.new(self)
-    @adapter = OpenGovAuthAdapter.new(@controller)
-# possibly needs moved to router.ru
-# grab @adapter over drb
-    super
-  end
-
-  def call(env)
-    @controller.call(env)
-  end
-end
-
-Daemons.run_proc('OpenGovAuthenticatorComponent',
+Daemons.run_proc('OpenGovSessionsComponent',
                  {:dir_mode => :normal, :dir => dir}) do
-  OpenGovAuthenticatorComponent.new(
-                                    'Authenticator',
-                                    [User,UserSession],
-                                    [],
-                                    []
-                                    ).daemonize
+  OpenGovSessionsComponent.new(
+                               'Sessions',
+                               [User,UserSession],
+                               [],
+                               []
+                               ).daemonize
 end
