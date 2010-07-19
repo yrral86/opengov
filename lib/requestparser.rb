@@ -4,7 +4,7 @@ class OpenGovRequestParser
   def initialize(env)
     @r = Rack::Request.new(env)
     @paths = @r.path.split '/'
-    @queue = @paths
+    @queue = Array.new @paths
     @queue.shift
   end
 
