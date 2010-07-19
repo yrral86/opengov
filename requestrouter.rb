@@ -1,5 +1,6 @@
 require 'lib/componenthelper'
 require 'lib/requestparser'
+require 'lib/session'
 require 'lib/view'
 
 class OpenGovRequestRouter
@@ -15,6 +16,7 @@ class OpenGovRequestRouter
     @routes = @ch.get_routes if @routes.empty?
 
     env[:parser] = OpenGovRequestParser.new(env)
+    env[:session] = OpenGovSession.new(env)
 
     component = env[:parser].next
     if @routes[component] == nil then

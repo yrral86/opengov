@@ -25,14 +25,13 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
 
   def login(env)
     if env[:parser].request.post?
-      # if env[:session].login then      # saves token to db, set cookies
-      env['rack.session'] = {
-        :userid => 1,
-        :token => 3
-      }
+      if env[:session].login then
+        OpenGovView.redirect "/home"
+      else
+        OpenGovView.render_string("TODO: login form: login error<form method='post'><input type='submit' value='login'></form>")
+      end
+    elsif env[:session].authenticated? then
       OpenGovView.redirect "/home"
-    # elsif env['session'].authenticated? then
-      # OpenGovView.redirect "/home"
     else
       OpenGovView.render_string("TODO: login form<form method='post'><input type='submit' value='login'></form>")
     end
