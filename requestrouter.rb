@@ -1,5 +1,4 @@
 require 'lib/componenthelper'
-require 'lib/requestauthenticator'
 require 'lib/requestparser'
 require 'lib/view'
 
