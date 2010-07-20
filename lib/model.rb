@@ -7,6 +7,10 @@ class OpenGovModel < ActiveRecord::Base
   # find an open_gov_model table
   self.abstract_class = true
 
+  def abstract_map
+    {} # return empty hash, db fields align with abstract fields
+  end
+
   # forces model objects to be sent over the socket as references
   # instead of copied... if they are copied, they won't have their
   # DB connection... and we want to keep DB interactions on the

@@ -26,5 +26,6 @@ class OpenGovSession
 
   def generate_token
     3
+#    rand(2**(0.size *8))
   end
 end
