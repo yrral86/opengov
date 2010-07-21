@@ -2,6 +2,7 @@ require 'rack'
 
 class OpenGovRequestParser
   def initialize(env)
+    @env = env
     @r = Rack::Request.new(env)
     @paths = @r.path.split '/'
     @queue = Array.new @paths
@@ -19,4 +20,16 @@ class OpenGovRequestParser
   def request
     @r
   end
+
+  def session
+    @env['rack.session']
+  end
+
+  def params
+    @r.params
+  end
+
+  def cookies
+    @r.cookies
+  end  
 end

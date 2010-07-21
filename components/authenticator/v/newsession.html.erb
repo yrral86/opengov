@@ -1,0 +1,7 @@
+<h3>Login</h3>
+<%= user_session.errors.full_messages %>
+<form action="/login" method="post">
+  Username: <input type="text" name="username" value="<%= user_session.username %>"<br />
+  Password: <input type="password" /><br />
+  <input type="submit" value="login" />
+</form>

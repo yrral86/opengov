@@ -7,6 +7,11 @@ class OpenGovView
       render_erb(string,b)
   end
 
+  def self.render_erb_from_file_to_string(fn, b)
+      string = File.read(fn)
+      execute_template(string,b)
+  end
+
   def self.render_string(string)
     [200,
      {'Content-Type' => 'text/html'},

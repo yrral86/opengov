@@ -1,6 +1,7 @@
 require 'drb'
 require 'drb/unix'
 require 'rubygems'
+require 'action_controller'
 require 'active_record'
 require 'daemons'
 require 'rack/request'
@@ -18,7 +19,6 @@ module Config
 end  
 
 class OpenGovComponent
-  # model: The active record class
   def initialize(name, models, views, dependencies = [])
     @registered = false;
     database_yml = YAML::load(File.open(Config::RootDir + '/db/config.yml'))
@@ -225,6 +225,10 @@ class OpenGovComponent
       'components' + '/' +
       @name.downcase + '/' +
       'v' + '/' +
-      name + '.rhtml'
+      name + '.html.erb'
+  end
+
+  def render(name)
+    OpenGovView.render_erb_from_file_to_string(view_file('_' + name), binding)
   end
 end
