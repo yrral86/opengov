@@ -5,10 +5,15 @@ require 'authlogic'
 dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/../lib/component'
-require dir + '/authenticator/m/user'
-require dir + '/authenticator/m/usersession'
+
 
 class OpenGovAuthenticatorComponent < OpenGovComponent
+  def daemonize
+    require Config::RootDir + '/components/authenticator/m/user'
+    require Config::RootDir + '/components/authenticator/m/usersession'    
+    super
+  end
+
   def routes
     # /home is temporary
     ['login', 'logout', 'home', 'newuser', 'edituser']
@@ -22,6 +27,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     when "logout"
       logout(env)
     when 'home'
+      puts current_user
       OpenGovView.render_string("logged in id: #{current_user.id}, <a href='/logout'>logout</a>")
     when 'newuser'
       create_user(env)
@@ -52,18 +58,10 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
 
   def create_user(env)
     puts env[:parser].params['user']
-    puts 'before user.new'
-#    begin
-      user = User.new(env[:parser].params['user'])
- #   rescue
-  #    puts 'in rescue'
-   # end
-    puts 'before user.save'
+    user = User.new(env[:parser].params['user'])
     if user.save
-      puts 'user.save succeeded'
       OpenGovView.redirect '/home'
     else
-      puts user.errors.full_messages
       OpenGovView.render_erb_from_file(view_file('newuser'),binding)
     end
   end

@@ -1,4 +1,5 @@
 require 'rack'
+#require 'action_controller/http_authentication'
 
 class OpenGovRequestParser
   def initialize(env)
@@ -31,5 +32,14 @@ class OpenGovRequestParser
 
   def cookies
     @r.cookies
-  end  
+  end
+
+  def authenticate_with_http_basic(&login_procedure)
+    puts "authenticate_with_http_basic"
+    true
+  end
+
+  def cookie_domain
+    @env['HTTP_HOST']
+  end
 end

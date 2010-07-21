@@ -22,6 +22,7 @@ class OpenGovComponent
   def initialize(name, models, views, dependencies = [])
     @registered = false;
     database_yml = YAML::load(File.open(Config::RootDir + '/db/config.yml'))
+    ActiveRecord::Base.logger = Logger.new STDOUT
     ActiveRecord::Base.establish_connection(database_yml[Config::Environment])
     @name = name
     @dependencies = dependencies
@@ -228,7 +229,7 @@ class OpenGovComponent
       name + '.html.erb'
   end
 
-  def render(name)
+  def render(name, binding)
     OpenGovView.render_erb_from_file_to_string(view_file('_' + name), binding)
   end
 end

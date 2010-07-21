@@ -6,5 +6,4 @@ require dir + '/../../../lib/model'
 
 class User < OpenGovModel
   acts_as_authentic
-#  validates_presence_of :username
 end
