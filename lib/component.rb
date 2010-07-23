@@ -91,9 +91,9 @@ class OpenGovComponent
   end
 
   def call(env)
-    model_name = env[:parser].next
-    id = env[:parser].next
-    r = env[:parser].request
+    model_name = env[:controller].next
+    id = env[:controller].next
+    r = env[:controller].request
 
     model = @models[model_name]
 
@@ -109,7 +109,7 @@ class OpenGovComponent
         end
       elsif r.get? then # READ
         if id == 'edit' then
-          render_form(model,env[:parser].next)
+          render_form(model,env[:controller].next)
         else
           read(model,id)
         end

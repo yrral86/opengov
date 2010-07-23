@@ -20,8 +20,8 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def call(env)
-    Authlogic::Session::Base.controller = env[:parser]
-    case env[:parser].path(1)
+    Authlogic::Session::Base.controller = env[:controller]
+    case env[:controller].path(1)
     when "login"
       login(env)
     when "logout"
@@ -37,7 +37,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def login(env)
-    user_session = UserSession.new(env[:parser].params[:user_session])
+    user_session = UserSession.new(env[:controller].params[:user_session])
     if user_session.save
       OpenGovView.redirect "/home"
     else
@@ -57,9 +57,15 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def create_user(env)
-    puts env[:parser].params['user']
-    user = User.new(env[:parser].params['user'])
+    puts env[:controller].session
+    user = User.new(env[:controller].params['user'])
     if user.save
+      puts "persistence token = #{user.persistence_token}"
+      puts "before session.create: #{env[:controller].session}"
+      UserSession.create(user)
+      puts "after session.create: #{env[:controller].session}"
+      puts "after session.create: #{env[:controller].request.session}"
+      puts "session = #{UserSession.find}"
       OpenGovView.redirect '/home'
     else
       OpenGovView.render_erb_from_file(view_file('newuser'),binding)
@@ -68,7 +74,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
 
   def update_user(env)
     user = current_user
-    if user.update_attributes(env[:parser].params['user'])
+    if user.update_attributes(env[:controller].params['user'])
       OpenGovView.redirect '/home'
     else
       OpenGovView.render_erb_from_file(view_file('edituser'),binding)

@@ -1,5 +1,4 @@
 require 'lib/componenthelper'
-require 'lib/requestparser'
 require 'lib/authenticatorhelper'
 require 'lib/view'
 
@@ -15,10 +14,9 @@ class OpenGovRequestRouter
   def call(env)
     @routes = @ch.get_routes if @routes.empty?
 
-    env[:parser] = OpenGovRequestParser.new(env)
-#    env[:auth] = OpenGovAuthenticatorHelper.new(env)
+    env[:controller].session[:testkey2] = 2
 
-    component = env[:parser].next
+    component = env[:controller].next
     if @routes[component] == nil then
       @view.not_found 'Not Found'
     else
