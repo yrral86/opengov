@@ -14,8 +14,6 @@ class OpenGovRequestRouter
   def call(env)
     @routes = @ch.get_routes if @routes.empty?
 
-    env[:controller].session[:testkey2] = 2
-
     component = env[:controller].next
     if @routes[component] == nil then
       @view.not_found 'Not Found'

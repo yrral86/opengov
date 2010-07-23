@@ -3,9 +3,10 @@
 require 'test/unit'
 require 'rack/test'
 
+require 'lib/controller'
 require 'requestrouter'
 
-class OpenGovRequestRouterTest < Test::Unit::TestCase
+class OpenGovAuthenticatorTest < Test::Unit::TestCase
   def app
     OpenGovRequestRouter.new
   end
@@ -16,6 +17,7 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
     end
 
     `./componentmanager.rb start`
+    `./components/authenticator.rb start`
 
     @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
 
@@ -23,7 +25,7 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
     waiting = true
     while waiting do
       sockets = Dir.entries('/tmp').find_all {|e| e.match /^opengov/}
-      if sockets.length == 3 then
+      if sockets.length == 4 then
         waiting = false
       else
         sleep 0.1
@@ -33,20 +35,21 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
 
   def teardown
     # kills all components
+    `./components/authenticator.rb stop`
     `./componentmanager.rb stop`
   end
 
-  def test_personlist
+  def test_getlogin
     assert false, "no middleware"
     # this won't work until we figure out how to enable middlewear in tests
-    # @browser.get '/personlocator/person'
+    # @browser.get '/login'
     # assert @browser.last_response.ok?
   end
 
-  def test_invalid_person_id
+  def test_getnewuser
     assert false, "no middleware"
     # same as above
-    # @browser.get '/personlocator/person/bogusid'
-    # assert_equal 404, @browser.last_response.status
+    # @browser.get '/newuser'
+    # assert @browser.last_response.ok?    
   end
 end

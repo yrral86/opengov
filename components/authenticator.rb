@@ -37,7 +37,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def login(env)
-    user_session = UserSession.new(env[:controller].params[:user_session])
+    user_session = UserSession.new(env[:controller].params['user_session'])
     if user_session.save
       OpenGovView.redirect "/home"
     else

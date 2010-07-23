@@ -36,6 +36,8 @@ class OpenGovRequestController
     @env['rack.session'] ||= {}
     @session = @env['rack.session']
     @session.extend(DRbUndumped)
+    @r.cookies.extend(DRbUndumped)
+    @r.cookies.extend(CookieFix)
   end
 
   def next
@@ -59,6 +61,7 @@ class OpenGovRequestController
   end
 
   def cookies
+    puts "controller.cookies called, cookies = #{@r.cookies}"
     @r.cookies
   end
 
@@ -74,4 +77,10 @@ class OpenGovRequestController
   def cookie_domain
     @env['HTTP_HOST']
   end
+end
+
+module CookieFix
+  def delete(key, options = {})
+    value = super(key.to_s)                       
+  end                     
 end
