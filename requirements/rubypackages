@@ -4,3 +4,4 @@ mysql
 daemons
 rake
 passenger
+authlogic
