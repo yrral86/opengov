@@ -1,4 +1,5 @@
 activerecord
+actionpack
 rack-test
 mysql
 daemons
