@@ -1,5 +1,12 @@
+require 'rake/testtask'
+
 APP_BASE = File.dirname(File.expand_path(__FILE__))
- 
+
+Rake::TestTask.new do |t|
+  t.test_files = FileList['tests/test*.rb']
+  t.verbose = true
+end
+
 namespace :db do
   task :ar_init do
     # Load the database config
