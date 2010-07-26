@@ -36,3 +36,16 @@ Abstract Data Types
 model defines abstract_map method that returns a hash
 :abstract_field_name => :model_field_name
 if the fields have the same name, they can be omitted
+
+
+
+Authentication:
+Uses authlogic, current_user is accessible from any component, nil if not logged in
+
+All components have these available:
+controller
+session (cookie based session)
+params
+path(n) (nth component of request path)
+next_path (next component of request path)
+current_user (see authentication above)
