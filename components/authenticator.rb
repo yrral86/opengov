@@ -1,14 +1,14 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'authlogic'
-
 dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/../lib/component'
 
-
 class OpenGovAuthenticatorComponent < OpenGovComponent
   def daemonize
+    # these requires have to be delayed until initialize is called
+    # because user's init requires activerecord to be activated
+    # not sure is usersession has to be here, but it doesn't hurt
     require Config::RootDir + '/components/authenticator/m/user'
     require Config::RootDir + '/components/authenticator/m/usersession'    
     super
@@ -20,8 +20,8 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def call(env)
-    Authlogic::Session::Base.controller = env[:controller]
-    case env[:controller].path(1)
+    setup_env(env)
+    case path(1)
     when "login"
       login(env)
     when "logout"
@@ -37,7 +37,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def login(env)
-    user_session = UserSession.new(env[:controller].params['user_session'])
+    user_session = UserSession.new(params['user_session'])
     if user_session.save
       OpenGovView.redirect "/home"
     else
@@ -51,21 +51,10 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     OpenGovView.redirect "/login"
   end
 
-  def current_user
-    s = UserSession.find
-    s && s.record
-  end
-
   def create_user(env)
-    puts env[:controller].session
-    user = User.new(env[:controller].params['user'])
+    user = User.new(params['user'])
     if user.save
-      puts "persistence token = #{user.persistence_token}"
-      puts "before session.create: #{env[:controller].session}"
       UserSession.create(user)
-      puts "after session.create: #{env[:controller].session}"
-      puts "after session.create: #{env[:controller].request.session}"
-      puts "session = #{UserSession.find}"
       OpenGovView.redirect '/home'
     else
       OpenGovView.render_erb_from_file(view_file('newuser'),binding)
@@ -74,7 +63,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
 
   def update_user(env)
     user = current_user
-    if user.update_attributes(env[:controller].params['user'])
+    if user.update_attributes(params['user'])
       OpenGovView.redirect '/home'
     else
       OpenGovView.render_erb_from_file(view_file('edituser'),binding)

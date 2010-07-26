@@ -11,18 +11,19 @@ class OpenGovStaticComponent < OpenGovComponent
   end
 
   def call(env)
+    setup_env(env)
     begin
-      case env[:controller].path(1)
+      case path(1)
       when 'javascript'
         OpenGovView.render_string(File.read(Config::RootDir +
-                                            env[:controller].request.path))
+                                            controller.request.path))
       when 'images'
         OpenGovView.render_string("TODO: return images")
       else
-        OpenGovView.not_found("File #{env[:controller].request.path} not found")
+        OpenGovView.not_found("File #{controller.request.path} not found")
       end
     rescue
-      OpenGovView.not_found("File #{env[:controller].request.path} not found")
+      OpenGovView.not_found("File #{controller.request.path} not found")
     end
   end
 end

@@ -3,6 +3,7 @@ require 'drb/unix'
 require 'rubygems'
 require 'action_controller'
 require 'active_record'
+require 'authlogic'
 require 'daemons'
 require 'rack/request'
 require 'rack/logger'
@@ -90,10 +91,41 @@ class OpenGovComponent
     [@name.downcase]
   end
 
+  def setup_env(env)
+    Thread.current[:env] = env
+    Authlogic::Session::Base.controller = controller
+  end
+
+  def controller
+    Thread.current[:env][:controller]
+  end
+
+  def session
+    controller.session
+  end
+
+  def params
+    controller.params
+  end
+
+  def path(n)
+    controller.path(n)
+  end
+
+  def next_path
+    controller.next
+  end
+
+  def current_user
+    s = UserSession.find
+    s && s.record
+  end
+
   def call(env)
-    model_name = env[:controller].next
-    id = env[:controller].next
-    r = env[:controller].request
+    setup_env(env)
+    model_name = next_path
+    id = next_path
+    r = controller.request
 
     model = @models[model_name]
 
@@ -109,7 +141,7 @@ class OpenGovComponent
         end
       elsif r.get? then # READ
         if id == 'edit' then
-          render_form(model,env[:controller].next)
+          render_form(model,next_path)
         else
           read(model,id)
         end
