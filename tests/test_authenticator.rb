@@ -1,55 +1,30 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'test/unit'
-require 'rack/test'
+require 'lib/testcase'
 
-require 'lib/controller'
-require 'requestrouter'
-
-class OpenGovAuthenticatorTest < Test::Unit::TestCase
-  def app
-    Rack::Builder.new {
-      use Rack::Session::Cookie
-      use OpenGovController
-      run OpenGovRequestRouter.new
-    }
-  end
-
+class OpenGovAuthenticatorTest < OpenGovTestCase
   def setup
-    while Dir.entries('/tmp').detect {|f| f.match /^opengov/ } do
-      sleep 0.1
-    end
+    super
 
-    `./componentmanager.rb start`
     `./components/authenticator.rb start`
 
-    @browser = Rack::Test::Session.new(Rack::MockSession.new(app))
-
-    # give the daemons time to start and register themselves
-    waiting = true
-    while waiting do
-      sockets = Dir.entries('/tmp').find_all {|e| e.match /^opengov/}
-      if sockets.length == 4 then
-        waiting = false
-      else
-        sleep 0.1
-      end
-    end
+    # give the authenticator component time to start
+    socket_wait('opengov_Authenticator',1)
   end
 
   def teardown
     # kills all components
     `./components/authenticator.rb stop`
-    `./componentmanager.rb stop`
+    super
   end
 
   def test_getlogin
-    @browser.get '/login'
-    assert @browser.last_response.ok?
+    get '/login'
+    assert last_response.ok?
   end
 
   def test_getnewuser
-    @browser.get '/newuser'
-    assert @browser.last_response.ok?    
+    get '/newuser'
+    assert last_response.ok?    
   end
 end

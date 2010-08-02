@@ -1,36 +1,13 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'test/unit'
-require 'rack/test'
-
+require 'lib/testcase'
 require 'lib/componenthelper'
 require 'lib/types/person'
 
-class OpenGovComponentManagerTest < Test::Unit::TestCase
+class OpenGovComponentManagerTest < OpenGovTestCase
   def setup
-    while Dir.entries('/tmp').detect {|f| f.match /^opengov/ } do
-      sleep 0.1
-    end
-
-    `./componentmanager.rb start`
-
     @ch = OpenGovComponentHelper.new
-
-    # give the daemons time to start and register themselves
-    waiting = true
-    while waiting do
-      sockets = Dir.entries('/tmp').find_all {|e| e.match /^opengov/}
-      if sockets.length == 3 then
-        waiting = false
-      else
-        sleep 0.1
-      end
-    end
-  end
-
-  def teardown
-    # kills all components
-    `./componentmanager.rb stop`
+    super
   end
   
   def test_components_register
