@@ -16,13 +16,7 @@ class OpenGovTestCase < Test::Unit::TestCase
   end
 
   def setup
-    while Dir.entries('/tmp').detect {|f| f.match /^opengov/ } do
-      sleep 0.05
-    end
-
-    `./componentmanager.rb start`
-
-    # give the daemons time to start and register themselves
+    # make sure the sockets are ready
     socket_wait('opengov', 3)
   end
 
@@ -39,7 +33,6 @@ class OpenGovTestCase < Test::Unit::TestCase
   end
 
   def teardown
-    # kills all components
-    `./componentmanager.rb stop`
+    true
   end
 end

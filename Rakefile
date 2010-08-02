@@ -2,9 +2,14 @@ require 'rake/testtask'
 
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 
-Rake::TestTask.new do |t|
+Rake::TestTask.new(:do_test) do |t|
+  `./componentmanager.rb start`
   t.test_files = FileList['tests/test*.rb']
   t.verbose = true
+end
+
+task :test => :do_test do
+  `./componentmanager.rb stop`
 end
 
 namespace :db do
@@ -18,14 +23,14 @@ namespace :db do
     # set a logger for STDOUT
     ActiveRecord::Base.logger = Logger.new(STDOUT)
   end
- 
+
   desc "Migrate the database through scripts in db/migrate. Target specific version with VERSION=x. Turn off output with VERBOSE=false."
   task :migrate => :ar_init do
     ActiveRecord::Migration.verbose = ENV["VERBOSE"] ? ENV["VERBOSE"] == "true" : true
     ActiveRecord::Migrator.migrate(APP_BASE + "/db/migrations/", ENV["VERSION"] ? ENV["VERSION"].to_i : nil)
     Rake::Task["db:schema:dump"].invoke if ActiveRecord::Base.schema_format == :ruby
   end
- 
+
   namespace :schema do
     desc "Create a db/ar_schema.rb file that can be portably used against any DB supported by AR"
     task :dump => :ar_init do
@@ -34,7 +39,7 @@ namespace :db do
         ActiveRecord::SchemaDumper.dump(ActiveRecord::Base.connection, file)
       end
     end
- 
+
     desc "Load a ar_schema.rb file into the database"
     task :load => :ar_init do
       file = ENV['SCHEMA'] || APP_BASE + "/db/schema.rb"
@@ -49,13 +54,13 @@ namespace :db do
       puts "For example: rake #{t.name} name=add_field_to_form"
       abort
     end
-    
+
     class_name = migration.split('_').map{|s| s.capitalize }.join
     file_contents = <<eof
 class #{class_name} < ActiveRecord::Migration
   def self.up
   end
-  
+
   def self.down
     raise ActiveRecord::IrreversibleMigration
   end
@@ -68,5 +73,5 @@ eof
     File.open(file_name, 'w'){|f| f.write file_contents }
 
     puts "Created migration #{file_name}"
-  end  
+  end
 end

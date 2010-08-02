@@ -9,7 +9,7 @@ class OpenGovComponentManagerTest < OpenGovTestCase
     @ch = OpenGovComponentHelper.new
     super
   end
-  
+
   def test_components_register
     assert_equal(
                  ['PersonLocator::address','PersonLocator::person'],
@@ -20,6 +20,7 @@ class OpenGovComponentManagerTest < OpenGovTestCase
   def test_components_unregister
     @ch.cm.unregister_component('PersonLocator')
     assert_equal('', @ch.cm.available_models.join(''))
+    @ch.cm.register_component('drbunix://tmp/opengov_PersonLocator_component.sock')
   end
 
   def test_components_get_model
@@ -50,6 +51,6 @@ class OpenGovComponentManagerTest < OpenGovTestCase
 
     assert_equal('Larry', larry2.the_firstest_name)
 
-    larry.delete    
+    larry.delete
   end
 end

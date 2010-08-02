@@ -25,6 +25,6 @@ class OpenGovAuthenticatorTest < OpenGovTestCase
 
   def test_getnewuser
     get '/newuser'
-    assert last_response.ok?    
+    assert last_response.ok?
   end
 end

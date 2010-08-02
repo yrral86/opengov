@@ -17,7 +17,7 @@ require dir + '/view'
 module Config
   RootDir = File.expand_path(File.dirname(__FILE__)) + '/../'
   Environment = 'development'
-end  
+end
 
 class OpenGovComponent
   def initialize(name, models, views, dependencies = [])
