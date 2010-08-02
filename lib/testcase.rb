@@ -17,7 +17,7 @@ class OpenGovTestCase < Test::Unit::TestCase
 
   def setup
     # make sure the sockets are ready
-    socket_wait('opengov', 3)
+    socket_wait('opengov', 4)
   end
 
   def socket_wait(name, qty)
