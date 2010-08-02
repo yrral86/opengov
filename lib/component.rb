@@ -121,45 +121,48 @@ class OpenGovComponent
     s && s.record
   end
 
-  def call(env)
+  def call(env, model_crud = true)
     setup_env(env)
-    model_name = next_path
-    id = next_path
-    r = controller.request
 
-    model = @models[model_name]
+    if model_crud then
+      model_name = next_path
+      id = next_path
+      r = controller.request
 
-    if model then
-      if r.post? then
-        case r.params['_method']
+      model = @models[model_name]
+
+      if model then
+        if r.post? then
+          case r.params['_method']
           when 'put' # UPDATE
-          update(model,r)
+            update(model,r)
           when 'delete' # DELETE
-          delete(model,id)
+            delete(model,id)
           else # CREATE
-          create(model,r)
-        end
-      elsif r.get? then # READ
-        if id == 'edit' then
-          render_form(model,next_path)
+            create(model,r)
+          end
+        elsif r.get? then # READ
+          if id == 'edit' then
+            render_form(model,next_path)
+          else
+            read(model,id)
+          end
+        elsif r.delete? then # IN CASE WE EVER USE THE ACTUAL METHODS
+          delete(model,id) # INSTEAD OF TUNNELING OVER POST
+        elsif r.put? then
+          update(model,r)
         else
-          read(model,id)
+          OpenGovView.method_not_allowed
         end
-      elsif r.delete? then # IN CASE WE EVER USE THE ACTUAL METHODS
-        delete(model,id) # INSTEAD OF TUNNELING OVER POST
-      elsif r.put? then
-        update(model,r)
       else
-        OpenGovView.method_not_allowed
+        unless model_name then
+          model_name = 'Nil'
+        end
+        OpenGovView.not_found('Model ' +
+                              model_name +
+                              ' not found in component ' +
+                              @name)
       end
-    else
-      unless model_name then
-        model_name = 'Nil'
-      end
-      OpenGovView.not_found('Model ' +
-                            model_name +
-                            ' not found in component ' +
-                            @name)
     end
   end
 
