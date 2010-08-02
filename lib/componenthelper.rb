@@ -6,8 +6,7 @@ class OpenGovComponentHelper
   end
 
   def get_current_session(env)
-    a = get_component('Authenticator')
-    a.current_session(env)
+    get_component('Authenticator').current_session(env)
   end
 
   def get_routes

@@ -18,7 +18,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def current_session(env=Thread.current[:env])
-    Authlogic::Session::Base.controller = env[:controller] unless Authlogic::Session::Base.controller
+    Authlogic::Session::Base.controller = env[:controller]
     UserSession.find
   end
 
@@ -31,7 +31,6 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     when "logout"
       logout(env)
     when 'home'
-      puts "cookies = #{controller.cookies}"
       OpenGovView.render_string("logged in username: #{current_user.username}, <a href='/logout'>logout</a>")
     when 'newuser'
       create_user(env)
@@ -87,6 +86,5 @@ Daemons.run_proc('OpenGovAuthenticatorComponent',
                                            [],
                                            [])
   auth.require_models
-  auth.add_models [User]
   auth.daemonize
 end

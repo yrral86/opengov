@@ -21,7 +21,6 @@ class OpenGovController
   private
 
   def authenticate(env)
-    puts env[:controller].cookies
     if @ch.get_current_session(env) or env[:controller].request.path == '/login'
       yield env
     else
