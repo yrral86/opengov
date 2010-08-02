@@ -8,7 +8,11 @@ require 'requestrouter'
 
 class OpenGovAuthenticatorTest < Test::Unit::TestCase
   def app
-    OpenGovRequestRouter.new
+    Rack::Builder.new {
+      use Rack::Session::Cookie
+      use OpenGovController
+      run OpenGovRequestRouter.new
+    }
   end
 
   def setup
@@ -40,16 +44,12 @@ class OpenGovAuthenticatorTest < Test::Unit::TestCase
   end
 
   def test_getlogin
-    skip "no middleware"
-    # this won't work until we figure out how to enable middlewear in tests
-    # @browser.get '/login'
-    # assert @browser.last_response.ok?
+    @browser.get '/login'
+    assert @browser.last_response.ok?
   end
 
   def test_getnewuser
-    skip "no middleware"
-    # same as above
-    # @browser.get '/newuser'
-    # assert @browser.last_response.ok?    
+    @browser.get '/newuser'
+    assert @browser.last_response.ok?    
   end
 end

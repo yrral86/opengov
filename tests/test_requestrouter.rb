@@ -4,10 +4,15 @@ require 'test/unit'
 require 'rack/test'
 
 require 'requestrouter'
+require 'lib/controller'
 
 class OpenGovRequestRouterTest < Test::Unit::TestCase
   def app
-    OpenGovRequestRouter.new
+    Rack::Builder.new {
+      use Rack::Session::Cookie
+      use OpenGovController
+      run OpenGovRequestRouter.new
+    }
   end
 
   def setup
@@ -37,16 +42,12 @@ class OpenGovRequestRouterTest < Test::Unit::TestCase
   end
 
   def test_personlist
-    skip "no middleware"
-    # this won't work until we figure out how to enable middlewear in tests
-    # @browser.get '/personlocator/person'
-    # assert @browser.last_response.ok?
+    @browser.get '/personlocator/person'
+    assert @browser.last_response.ok?
   end
 
   def test_invalid_person_id
-    skip "no middleware"
-    # same as above
-    # @browser.get '/personlocator/person/bogusid'
-    # assert_equal 404, @browser.last_response.status
+    @browser.get '/personlocator/person/bogusid'
+    assert_equal 404, @browser.last_response.status
   end
 end
