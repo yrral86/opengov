@@ -192,7 +192,7 @@ class OpenGovComponent
     end
   end
 
-  def read(model, id)    
+  def read(model, id)
     object = model.find_by_id(id)
     if object then
       OpenGovView.render_erb_from_file(view_file(model.name.downcase),binding)
@@ -239,7 +239,7 @@ class OpenGovComponent
                             @name)
     end
   end
-  
+
   def delete(model, id)
     object = model.find_by_id(id)
     if object then
@@ -255,7 +255,7 @@ class OpenGovComponent
                             @name)
     end
   end
-  
+
   def view_file(name)
     Config::RootDir + '/' +
       'components' + '/' +

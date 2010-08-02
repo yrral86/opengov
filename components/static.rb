@@ -11,7 +11,7 @@ class OpenGovStaticComponent < OpenGovComponent
   end
 
   def call(env)
-    setup_env(env)
+    super(env, false)
     begin
       case path(1)
       when 'javascript'

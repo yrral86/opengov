@@ -20,7 +20,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def call(env)
-    setup_env(env)
+    super(env, false)
     case path(1)
     when "login"
       login(env)
