@@ -1,5 +1,4 @@
 require 'lib/componenthelper'
-require 'lib/authenticatorhelper'
 require 'lib/view'
 
 class OpenGovRequestRouter

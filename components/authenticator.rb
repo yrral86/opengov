@@ -24,7 +24,6 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
 
   def call(env)
     super(env, false)
-    puts "session = #{session}"
     case path(1)
     when "login"
       login(env)

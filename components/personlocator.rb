@@ -7,11 +7,7 @@ require dir + '/personlocator/m/person'
 require dir + '/personlocator/m/address'
 
 class OpenGovPersonLocatorComponent < OpenGovComponent
-  def call(env)
-    super(env, false)
-    puts current_user.username
-    crud(env)
-  end
+
 end
 
 Daemons.run_proc('OpenGovPersonLocatorComponent',
