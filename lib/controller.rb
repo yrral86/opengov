@@ -81,6 +81,6 @@ end
 
 module CookieFix
   def delete(key, options = {})
-    value = super(key.to_s)                       
-  end                     
+    value = super(key.to_s)
+  end
 end

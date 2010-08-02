@@ -10,7 +10,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     # because user's init requires activerecord to be activated
     # not sure is usersession has to be here, but it doesn't hurt
     require Config::RootDir + '/components/authenticator/m/user'
-    require Config::RootDir + '/components/authenticator/m/usersession'    
+    require Config::RootDir + '/components/authenticator/m/usersession'
     super
   end
 
@@ -44,7 +44,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
       OpenGovView.render_erb_from_file(view_file("newsession"),binding)
     end
   end
-  
+
   def logout(env)
     session = UserSession.find
     session.destroy if session
