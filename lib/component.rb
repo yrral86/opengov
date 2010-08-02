@@ -29,10 +29,8 @@ class OpenGovComponent
     @dependencies = dependencies
 
     @models = {}
-    models.each do |m|
-      m.extend(DRbUndumped)
-      @models[m.name.downcase] = m
-    end
+
+    add_models(models)
 
 #    not yet used
 #    @views = {}
@@ -60,6 +58,13 @@ class OpenGovComponent
       exit
     end
     self
+  end
+
+  def add_models(models)
+    models.each do |m|
+      m.extend(DRbUndumped)
+      @models[m.name.downcase] = m
+    end
   end
 
   def unregistered
@@ -116,8 +121,12 @@ class OpenGovComponent
     controller.next
   end
 
+  def current_session
+    @ch.get_current_session(Thread.current[:env])
+  end
+
   def current_user
-    s = UserSession.find
+    s = current_session
     s && s.record
   end
 
@@ -125,44 +134,48 @@ class OpenGovComponent
     setup_env(env)
 
     if model_crud then
-      model_name = next_path
-      id = next_path
-      r = controller.request
+      crud(env)
+    end
+  end
 
-      model = @models[model_name]
+  def crud(env)
+    model_name = next_path
+    id = next_path
+    r = controller.request
 
-      if model then
-        if r.post? then
-          case r.params['_method']
-          when 'put' # UPDATE
-            update(model,r)
-          when 'delete' # DELETE
-            delete(model,id)
-          else # CREATE
-            create(model,r)
-          end
-        elsif r.get? then # READ
-          if id == 'edit' then
-            render_form(model,next_path)
-          else
-            read(model,id)
-          end
-        elsif r.delete? then # IN CASE WE EVER USE THE ACTUAL METHODS
-          delete(model,id) # INSTEAD OF TUNNELING OVER POST
-        elsif r.put? then
+    model = @models[model_name]
+
+    if model then
+      if r.post? then
+        case r.params['_method']
+        when 'put' # UPDATE
           update(model,r)
+        when 'delete' # DELETE
+          delete(model,id)
+        else # CREATE
+          create(model,r)
+        end
+      elsif r.get? then # READ
+        if id == 'edit' then
+          render_form(model,next_path)
         else
-          OpenGovView.method_not_allowed
+          read(model,id)
         end
+      elsif r.delete? then # IN CASE WE EVER USE THE ACTUAL METHODS
+        delete(model,id) # INSTEAD OF TUNNELING OVER POST
+      elsif r.put? then
+        update(model,r)
       else
-        unless model_name then
-          model_name = 'Nil'
-        end
-        OpenGovView.not_found('Model ' +
-                              model_name +
-                              ' not found in component ' +
-                              @name)
+        OpenGovView.method_not_allowed
       end
+    else
+      unless model_name then
+        model_name = 'Nil'
+      end
+      OpenGovView.not_found('Model ' +
+                            model_name +
+                            ' not found in component ' +
+                            @name)
     end
   end
 

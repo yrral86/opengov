@@ -1,18 +1,34 @@
 require 'rack'
 require 'drb'
 
+require 'lib/componenthelper'
+require 'lib/view'
+
 class OpenGovController
   def initialize(app)
     @app = app
+    @ch = OpenGovComponentHelper.new
   end
 
   def call(env)
     load_parser(env)
-    status, headers, body = @app.call(env)
+    status, headers, body = authenticate(env) do |env|
+      @app.call(env)
+    end
     commit_parser(env, status, headers, body)
   end
 
   private
+
+  def authenticate(env)
+    puts env[:controller].cookies
+    if @ch.get_current_session(env) or env[:controller].request.path == '/login'
+      yield env
+    else
+      env[:controller].session[:onlogin] = env[:controller].request.path
+      OpenGovView.redirect('/login')
+    end
+  end
 
   def load_parser(env)
     env[:controller] = OpenGovRequestController.new(env)
@@ -61,7 +77,6 @@ class OpenGovRequestController
   end
 
   def cookies
-    puts "controller.cookies called, cookies = #{@r.cookies}"
     @r.cookies
   end
 

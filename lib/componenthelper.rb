@@ -5,6 +5,11 @@ class OpenGovComponentHelper
     @cm = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
   end
 
+  def get_current_session(env)
+    a = get_component('Authenticator')
+    a.current_session(env)
+  end
+
   def get_routes
     begin
       @cm.available_routes
@@ -26,7 +31,7 @@ class OpenGovComponentHelper
     available = {}
     @cm.available_components.each do |c|
       available[c] = true
-    end    
+    end
     not_available = []
     deps.each do |d|
 

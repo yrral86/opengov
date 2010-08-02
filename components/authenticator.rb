@@ -2,16 +2,14 @@
 
 dir = File.expand_path(File.dirname(__FILE__))
 
+require dir + '/authenticator/m/usersession'
 require dir + '/../lib/component'
 
 class OpenGovAuthenticatorComponent < OpenGovComponent
-  def daemonize
-    # these requires have to be delayed until initialize is called
+  def require_models
+    # this require has to be delayed until after initialize is called
     # because user's init requires activerecord to be activated
-    # not sure is usersession has to be here, but it doesn't hurt
     require Config::RootDir + '/components/authenticator/m/user'
-    require Config::RootDir + '/components/authenticator/m/usersession'
-    super
   end
 
   def routes
@@ -19,16 +17,22 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     ['login', 'logout', 'home', 'newuser', 'edituser']
   end
 
+  def current_session(env=Thread.current[:env])
+    Authlogic::Session::Base.controller = env[:controller] unless Authlogic::Session::Base.controller
+    UserSession.find
+  end
+
   def call(env)
     super(env, false)
+    puts "session = #{session}"
     case path(1)
     when "login"
       login(env)
     when "logout"
       logout(env)
     when 'home'
-      puts current_user
-      OpenGovView.render_string("logged in id: #{current_user.id}, <a href='/logout'>logout</a>")
+      puts "cookies = #{controller.cookies}"
+      OpenGovView.render_string("logged in username: #{current_user.username}, <a href='/logout'>logout</a>")
     when 'newuser'
       create_user(env)
     when 'edituser'
@@ -39,14 +43,17 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   def login(env)
     user_session = UserSession.new(params['user_session'])
     if user_session.save
-      OpenGovView.redirect "/home"
+      url = session[:onlogin]
+      session[:onlogin] = nil
+      url ||= "/home"
+      OpenGovView.redirect url
     else
       OpenGovView.render_erb_from_file(view_file("newsession"),binding)
     end
   end
 
   def logout(env)
-    session = UserSession.find
+    session = current_session
     session.destroy if session
     OpenGovView.redirect "/login"
   end
@@ -74,10 +81,12 @@ end
 
 Daemons.run_proc('OpenGovAuthenticatorComponent',
                  {:dir_mode => :normal, :dir => dir}) do
-  OpenGovAuthenticatorComponent.new(
-                                    'Authenticator',
-                                    [],
-                                    [],
-                                    []
-                                    ).daemonize
+  auth = OpenGovAuthenticatorComponent.new(
+                                           'Authenticator',
+                                           [UserSession],
+                                           [],
+                                           [])
+  auth.require_models
+  auth.add_models [User]
+  auth.daemonize
 end

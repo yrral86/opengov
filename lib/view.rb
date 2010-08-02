@@ -17,7 +17,7 @@ class OpenGovView
      {'Content-Type' => 'text/html'},
      [string]]
   end
-  
+
   def self.render_erb(string,b)
     [200,
      {'Content-Type' => 'text/html'},
