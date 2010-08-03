@@ -1,7 +1,6 @@
 require 'drb'
 require 'drb/unix'
 require 'rubygems'
-require 'action_controller'
 require 'active_record'
 require 'authlogic'
 require 'daemons'
