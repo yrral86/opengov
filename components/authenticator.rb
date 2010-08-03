@@ -85,5 +85,6 @@ Daemons.run_proc('OpenGovAuthenticatorComponent',
                                            [],
                                            [])
   auth.require_models
+  auth.add_models([User])
   auth.daemonize
 end

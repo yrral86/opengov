@@ -20,11 +20,23 @@ class OpenGovTestCase < Test::Unit::TestCase
         :username => 'yrral86', :password => 'password'}}
   end
 
+  def do_auth(credentials=login_credentials)
+    post '/login', credentials
+    follow_redirects
+    assert last_response.ok?, "Login failed with credentials #{credentials}"
+  end
+
+  def follow_redirects
+    while last_response.status == 302
+      follow_redirect!
+    end
+  end
+
   def setup(authenticate=true)
     # make sure the sockets are ready
     socket_wait('opengov', 4)
     if authenticate
-      post '/login', login_credentials
+      do_auth
     end
   end
 

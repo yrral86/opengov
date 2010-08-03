@@ -12,7 +12,8 @@ class OpenGovComponentManagerTest < OpenGovTestCase
 
   def test_components_register
     assert_equal(
-                 ['Authenticator::usersession',
+                 ['Authenticator::user',
+                  'Authenticator::usersession',
                   'PersonLocator::address',
                   'PersonLocator::person'],
                  @ch.cm.available_models.sort
@@ -21,7 +22,8 @@ class OpenGovComponentManagerTest < OpenGovTestCase
 
   def test_components_unregister
     @ch.cm.unregister_component('PersonLocator')
-    assert_equal(['Authenticator::usersession'], @ch.cm.available_models.sort)
+    assert_equal(['Authenticator::user','Authenticator::usersession'],
+                 @ch.cm.available_models.sort)
     @ch.cm.register_component('drbunix://tmp/opengov_PersonLocator_component.sock')
   end
 
