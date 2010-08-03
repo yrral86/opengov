@@ -1,20 +1,21 @@
-development:
-  adapter: mysql
-  host: localhost
-  database: opengov_development
-  username: opengov
-  password: crappass
+default:
+  development:
+    adapter: mysql
+    host: localhost
+    database: opengov_development
+    username: opengov
+    password: crappass
 
-test:
-  adapter: mysql
-  host: localhost
-  database: opengov_test
-  username: opengov
-  password: crappass
+  test:
+    adapter: mysql
+    host: localhost
+    database: opengov_test
+    username: opengov
+    password: crappass
 
-production:
-  adapter: mysql
-  host: localhost
-  database: opengov_production
-  username: opengov
-  password: crappass
+  production:
+    adapter: mysql
+    host: localhost
+    database: opengov_production
+    username: opengov
+    password: crappass

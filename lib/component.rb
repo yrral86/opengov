@@ -19,11 +19,11 @@ module Config
 end
 
 class OpenGovComponent
-  def initialize(name, models, views, dependencies = [])
+  def initialize(name, models, views, dependencies = [], db = 'default')
     @registered = false;
-    database_yml = YAML::load(File.open(Config::RootDir + '/db/config.yml'))
+    db_config = YAML::load(File.open(Config::RootDir + '/db/config.yml'))[db]
     ActiveRecord::Base.logger = Logger.new STDOUT
-    ActiveRecord::Base.establish_connection(database_yml[Config::Environment])
+    ActiveRecord::Base.establish_connection(db_config[Config::Environment])
     @name = name
     @dependencies = dependencies
 
