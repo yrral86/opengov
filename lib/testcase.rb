@@ -15,9 +15,17 @@ class OpenGovTestCase < Test::Unit::TestCase
     }
   end
 
-  def setup
+  def login_credentials
+    {'user_session' => {
+        :username => 'yrral86', :password => 'password'}}
+  end
+
+  def setup(authenticate=true)
     # make sure the sockets are ready
     socket_wait('opengov', 4)
+    if authenticate
+      post '/login', login_credentials
+    end
   end
 
   def socket_wait(name, qty)

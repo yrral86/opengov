@@ -3,12 +3,6 @@
 require 'lib/testcase'
 
 class OpenGovRequestRouterTest < OpenGovTestCase
-  def setup
-    super
-    post '/login', {'user_session' => {
-        :username => 'yrral86', :password => 'password'}}
-  end
-
   def test_personlist
     get '/personlocator/person'
     assert_equal 200, last_response.status

@@ -5,8 +5,6 @@ require 'lib/testcase'
 class OpenGovAuthenticatorTest < OpenGovTestCase
   def setup
     super
-    post '/login', {'user_session' => {
-        :username => 'yrral86', :password => 'password'}}
   end
 
   def test_getlogin
