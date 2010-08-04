@@ -5,3 +5,4 @@ daemons
 rake
 passenger
 authlogic
+authlogic_pam

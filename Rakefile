@@ -16,7 +16,7 @@ namespace :db do
   task :ar_init do
     # Load the database config
     require 'active_record'
-    database_yml = YAML::load(File.open(APP_BASE + "/db/config.yml"))
+    database_yml = YAML::load(File.open(APP_BASE + "/db/config.yml"))['default']
     # TODO: need to be able to set environment from command line
     current_env = ENV['env'] || "development"
     ActiveRecord::Base.establish_connection(database_yml[current_env])

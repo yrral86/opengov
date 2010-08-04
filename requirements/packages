@@ -8,6 +8,6 @@ libmysqlclient-dev
 apache2
 apache2-prefork-dev
 libaprutil1-dev
-
 git-core
 build-essential
+libpam-dev
