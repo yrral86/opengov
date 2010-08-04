@@ -10,4 +10,4 @@ apache2-prefork-dev
 libaprutil1-dev
 git-core
 build-essential
-libpam-dev
+libpam0g-dev
