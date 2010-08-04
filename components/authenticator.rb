@@ -39,15 +39,34 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   end
 
   def login(env)
-    user_session = UserSession.new(params['user_session'])
+    session_params = params['user_session']
+    user_session = UserSession.new session_params
     if user_session.save
+      login_success
+    elsif session_params
+      pam_params = {:pam_login => session_params['username'],
+        :pam_password => session_params['password']}
+      puts pam_params
+      pam_session = UserSession.new(pam_params)
+      if pam_session.save
+        login_success
+      else
+        login_fail(pam_session)
+      end
+    else
+      login_fail(user_session)
+    end
+  end
+
+  def login_fail(user_session)
+    OpenGovView.render_erb_from_file(view_file("newsession"),binding)
+  end
+
+  def login_success
       url = session[:onlogin]
       session[:onlogin] = nil
       url ||= "/home"
       OpenGovView.redirect url
-    else
-      OpenGovView.render_erb_from_file(view_file("newsession"),binding)
-    end
   end
 
   def logout(env)
