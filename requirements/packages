@@ -11,3 +11,5 @@ libaprutil1-dev
 git-core
 build-essential
 libpam0g-dev
+libxml2-dev
+libxslt1-dev
