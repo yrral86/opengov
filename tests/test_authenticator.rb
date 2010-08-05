@@ -47,4 +47,11 @@ class OpenGovAuthenticatorTest < OpenGovTestCase
     get '/home'
     assert_equal 302, last_response.status
   end
+
+  def test_not_logged_in
+    get '/home'
+    assert_equal 302, last_response.status
+    follow_redirects
+    assert_equal '/login', last_request.path
+  end
 end
