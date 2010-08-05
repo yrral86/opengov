@@ -40,28 +40,23 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
 
   def login(env)
     session_params = params['user_session']
-    if session_params && User.find_by_pam_login(session_params['username'])
-      pam_params = {:pam_login => session_params['username'],
-        :pam_password => session_params['password']}
-      pam_session = UserSession.new pam_params
-    end
 
-    # still not quite right... invalid password for pam says username
-    # is not valid (because we are passing user_session), but we can't
-    # pass pam_session because then we lose the messages for db login
-    # (like invalid password)... need to work this out... or just have
-    # "authentication failed" message for everything
-    user_session = UserSession.new session_params
-    if user_session.save
-      login_success
-    elsif pam_session
-      if pam_session.save
-        login_success
+    if session_params
+      if User.find_by_pam_login(session_params['username'])
+        pam_params = {:pam_login => session_params['username'],
+          :pam_password => session_params['password']}
+        new_session = UserSession.new pam_params
       else
-        login_fail(pam_session)
+        new_session = UserSession.new session_params
       end
     else
-      login_fail(user_session)
+      new_session = UserSession.new
+    end
+
+    if new_session.save
+      login_success
+    else
+      login_fail(new_session)
     end
   end
 
