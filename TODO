@@ -11,10 +11,10 @@ Installer
 Startup script
 
 Login/Authentication
-- db - working
-- system - authlogic-pam
-- ldap- authlogic-ldap
-- nis- ?
+- db - authlogic: working
+- system - authlogic_pam: working
+- ldap- pam_ldap: should work once we configure pam
+- nis- pam_nis: should work once we configure pam
 
 handle views with no model in component class
 
