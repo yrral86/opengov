@@ -54,4 +54,11 @@ class OpenGovAuthenticatorTest < OpenGovTestCase
     follow_redirects
     assert_equal '/login', last_request.path
   end
+
+  def test_authentication_before_notfound
+    get '/invalidurl'
+    assert_equal 302, last_response.status
+    follow_redirects
+    assert_equal '/login', last_request.path
+  end
 end
