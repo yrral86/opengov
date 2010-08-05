@@ -1,7 +1,5 @@
 <h3>Login</h3>
-<% if !user_session.new_record %>
 <%= error_box(user_session) %>
-<% end %>
 <form action="/login" method="post">
   Username: <input type="text" name="user_session[username]" value="<%= user_session.username %>" /><br />
   Password: <input type="password" name="user_session[password]" /><br />
