@@ -24,7 +24,8 @@ class OpenGovController
     if @ch.get_current_session(env) or env[:controller].request.path == '/login'
       yield env
     else
-      env[:controller].session[:onlogin] = env[:controller].request.path
+      path = env[:controller].request.path
+      env[:controller].session[:onlogin] = path unless path == '/favicon.ico'
       OpenGovView.redirect('/login')
     end
   end
