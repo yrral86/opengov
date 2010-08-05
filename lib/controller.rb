@@ -34,13 +34,15 @@ class OpenGovController
   end
 
   def commit_parser(env, status, headers, body)
-    env[:controller].save_session
+    response = Rack::Response.new(body, status, headers)
+    env[:controller].save_session(response)
     [status, headers, body]
   end
 end
 
 class OpenGovRequestController
   attr :session, true
+  attr :cookies, true
 
   def initialize(env)
     @env = env
@@ -51,8 +53,17 @@ class OpenGovRequestController
     @env['rack.session'] ||= {}
     @session = @env['rack.session']
     @session.extend(DRbUndumped)
-    @r.cookies.extend(DRbUndumped)
-    @r.cookies.extend(CookieFix)
+    @cookies = init_cookies
+  end
+
+  def init_cookies
+    c = {}
+    c.extend(DRbUndumped)
+    c.extend(CookieFix)
+    @r.cookies.keys.each do |k|
+      c[k] = @r.cookies[k]['value']
+    end
+    c
   end
 
   def next
@@ -67,16 +78,15 @@ class OpenGovRequestController
     @r
   end
 
-  def save_session
+  def save_session(response)
     @env['rack.session'] = @session.dup
+    @cookies.keys.each do |k|
+      response.set_cookie k, @cookies[k]
+    end
   end
 
   def params
     @r.params
-  end
-
-  def cookies
-    @r.cookies
   end
 
   def authenticate_with_http_basic(&block)
@@ -95,6 +105,6 @@ end
 
 module CookieFix
   def delete(key, options = {})
-    value = super(key.to_s)
+    super(key)
   end
 end

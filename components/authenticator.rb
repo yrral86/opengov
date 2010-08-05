@@ -46,7 +46,6 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     elsif session_params
       pam_params = {:pam_login => session_params['username'],
         :pam_password => session_params['password']}
-      puts pam_params
       pam_session = UserSession.new(pam_params)
       if pam_session.save
         login_success

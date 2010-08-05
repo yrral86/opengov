@@ -8,4 +8,8 @@ require dir + '/../../../lib/model'
 class User < OpenGovModel
   include AuthlogicPam::ActsAsAuthentic
   acts_as_authentic
+
+  def username
+    pam_login || super
+  end
 end
