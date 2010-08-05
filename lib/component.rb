@@ -279,4 +279,12 @@ class OpenGovComponent
   def render(name, binding)
     OpenGovView.render_erb_from_file_to_string(view_file('_' + name), binding)
   end
+
+  def error_box(record)
+    string = "<ul>"
+    record.errors.full_messages.each do |m|
+      string += "<li>#{m}</li>"
+    end
+    string += "</ul>"
+  end
 end
