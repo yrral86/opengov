@@ -49,13 +49,14 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
       else
         new_session = UserSession.new session_params
       end
+
+      if new_session.save
+        login_success
+      else
+        login_fail(new_session)
+      end
     else
       new_session = UserSession.new
-    end
-
-    if new_session.save
-      login_success
-    else
       login_fail(new_session)
     end
   end
