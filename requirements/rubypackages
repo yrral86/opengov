@@ -6,4 +6,7 @@ rake
 passenger
 authlogic
 authlogic_pam
+rpam
+rack
 nokogiri
+activesupport

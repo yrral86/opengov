@@ -65,7 +65,7 @@ class OpenGovAuthenticatorTest < OpenGovTestCase
   end
 
   def test_pam_login
-    post '/login', {'usersession'=>{'username'=>'larry','password'=>'redacted'}}
+    do_auth({'user_session'=>{'username'=>'larry','password'=>'redacted'}})
     get '/home'
     assert_equal 200, last_response.status
   end

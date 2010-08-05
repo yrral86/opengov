@@ -41,6 +41,7 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   def login(env)
     session_params = params['user_session']
 
+    puts "params = #{params}"
     puts "beginning of login: session = #{session}"
     puts "cookies = #{controller.cookies}"
 
