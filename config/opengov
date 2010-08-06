@@ -17,22 +17,24 @@
 
 DAEMON=/var/www/opengov/componentmanager.rb
 SCRIPT_NAME=/etc/init.d/opengov
+#USER=www-data
+USER=root
 
 # Exit if the package is not installed
 [ -x "$DAEMON" ] || exit 0
 
 case "$1" in
   start)
-        su -c "$DAEMON start" www-data
+        su -c "$DAEMON start" $USER
         ;;
   stop)
-        su -c "$DAEMON stop" www-data
+        su -c "$DAEMON stop" $USER
         ;;
   restart)
-        su -c "$DAEMON restart" www-data
+        su -c "$DAEMON restart" $USER
         ;;
   status)
-	su -c "$DAEMON status" www-data
+	su -c "$DAEMON status" $USER
 	;;
   *)
         echo "Usage: $SCRIPT_NAME {start|status|stop|restart}" >&2
