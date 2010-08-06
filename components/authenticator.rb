@@ -41,10 +41,6 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
   def login(env)
     session_params = params['user_session']
 
-    puts "params = #{params}"
-    puts "beginning of login: session = #{session}"
-    puts "cookies = #{controller.cookies}"
-
     if session_params
       if User.find_by_pam_login(session_params['username'])
         pam_params = {:pam_login => session_params['username'],
@@ -55,9 +51,6 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
       end
 
       if new_session.save
-        puts new_session.user.inspect
-        puts "after successful login: session = #{session}"
-        puts "cookies = #{controller.cookies}"
         login_success
       else
         login_fail(new_session)
@@ -76,7 +69,6 @@ class OpenGovAuthenticatorComponent < OpenGovComponent
     url = session[:onlogin]
     session[:onlogin] = nil
     url ||= "/home"
-    puts "login succeeded: redirecting to #{url}"
     OpenGovView.redirect url
   end
 
