@@ -1,12 +1,10 @@
 #!/usr/bin/env ruby1.9.1
 
 require 'lib/testcase'
-require 'lib/componenthelper'
 
 class OpenGovAuthenticatorTest < OpenGovTestCase
   def setup
     super(false)
-    @ch = OpenGovComponentHelper.new
   end
 
   def test_getlogin
@@ -45,6 +43,8 @@ class OpenGovAuthenticatorTest < OpenGovTestCase
 
   def test_logout
     do_auth
+    get '/home'
+    assert_equal 200, last_response.status
     get '/logout'
     get '/home'
     assert_equal 302, last_response.status

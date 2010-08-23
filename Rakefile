@@ -3,7 +3,9 @@ require 'rake/testtask'
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 
 Rake::TestTask.new(:do_test) do |t|
+  ENV['ENV']='test'
   `./componentmanager.rb start`
+  sleep 1.0
   t.test_files = FileList['tests/test*.rb']
   t.verbose = true
 end
@@ -17,8 +19,7 @@ namespace :db do
     # Load the database config
     require 'active_record'
     database_yml = YAML::load(File.open(APP_BASE + "/db/config.yml"))['default']
-    # TODO: need to be able to set environment from command line
-    current_env = ENV['env'] || "development"
+    current_env = ENV['ENV'] || "development"
     ActiveRecord::Base.establish_connection(database_yml[current_env])
     # set a logger for STDOUT
     ActiveRecord::Base.logger = Logger.new(STDOUT)

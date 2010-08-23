@@ -3,6 +3,7 @@ require 'rack/test'
 
 require 'requestrouter'
 require 'lib/controller'
+require 'lib/componenthelper'
 
 class OpenGovTestCase < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -17,7 +18,30 @@ class OpenGovTestCase < Test::Unit::TestCase
 
   def login_credentials
     {'user_session' => {
-        :username => 'yrral86', :password => 'password'}}
+        :username => 'yrral86',
+        :password => 'password',
+        :password_confirmation => 'password'}}
+  end
+
+  def seed_db
+    clear_db
+    seed_users
+  end
+
+  def seed_users
+    u = @ch.get_model('Authenticator::user')
+    u.create(login_credentials['user_session'])
+    u.new({:pam_login => 'larry'}).save(false)
+  end
+
+  def clear_db
+    @ch.cm.available_models.each do |m|
+      next if m == 'Authenticator::usersession'
+      model = @ch.get_model(m)
+      model.find(:all).each do |record|
+        record.destroy
+      end
+    end
   end
 
   def do_auth(credentials=login_credentials)
@@ -35,9 +59,10 @@ class OpenGovTestCase < Test::Unit::TestCase
   def setup(authenticate=true)
     # make sure the sockets are ready
     socket_wait('opengov', 4)
-    if authenticate
-      do_auth
-    end
+
+    @ch = OpenGovComponentHelper.new
+    seed_db
+    do_auth if authenticate
   end
 
   def socket_wait(name, qty)

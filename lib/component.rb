@@ -15,7 +15,7 @@ require dir + '/view'
 # SHOULD BE IN A CONFIG FILE SOMEWHERE
 module Config
   RootDir = File.expand_path(File.dirname(__FILE__)) + '/../'
-  Environment = 'development'
+  Environment = ENV['ENV'] || 'development'
 end
 
 class OpenGovComponent

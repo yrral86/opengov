@@ -1,15 +1,9 @@
 #!/usr/bin/env ruby1.9.1
 
 require 'lib/testcase'
-require 'lib/componenthelper'
 require 'lib/types/person'
 
 class OpenGovComponentManagerTest < OpenGovTestCase
-  def setup
-    @ch = OpenGovComponentHelper.new
-    super
-  end
-
   def test_components_register
     assert_equal(
                  ['Authenticator::user',
