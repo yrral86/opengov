@@ -22,7 +22,7 @@ edit button goes to
 
 UPDATE
 GET /component/model/edit/id : edit form with record with id
-sends form to 
+sends form to
 PUT /component/model/id : saves record
 redirects to GET /component/model/id
 
@@ -49,3 +49,5 @@ params
 path(n) (nth component of request path)
 next_path (next component of request path)
 current_user (see authentication above)
+
+ENV environment variable controls which configuration to use: development, test, or production
