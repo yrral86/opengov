@@ -2,10 +2,10 @@
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../lib/component'
+require dir + '/../lib/derailed/component/base'
 require dir + '/../lib/view'
 
-class OpenGovStaticComponent < OpenGovComponent
+class OpenGovStaticComponent < Derailed::Component::Base
   def routes
     ['javascript','images']
   end

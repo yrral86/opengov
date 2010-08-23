@@ -3,9 +3,9 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/authenticator/m/usersession'
-require dir + '/../lib/component'
+require dir + '/../lib/derailed/component/base'
 
-class OpenGovAuthenticatorComponent < OpenGovComponent
+class OpenGovAuthenticatorComponent < Derailed::Component::Base
   def require_models
     # this require has to be delayed until after initialize is called
     # because user's init requires activerecord to be activated

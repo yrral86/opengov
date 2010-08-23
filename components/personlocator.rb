@@ -2,11 +2,11 @@
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../lib/component'
+require dir + '/../lib/derailed/component/base'
 require dir + '/personlocator/m/person'
 require dir + '/personlocator/m/address'
 
-class OpenGovPersonLocatorComponent < OpenGovComponent
+class OpenGovPersonLocatorComponent < Derailed::Component::Base
 
 end
 
