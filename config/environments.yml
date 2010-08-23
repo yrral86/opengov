@@ -1,8 +1,8 @@
 development:
-  socket_dir: ./sockets/development/
+  socket_dir: ./sockets/development
 
 test:
-  socket_dir: ./sockets/test/
+  socket_dir: ./sockets/test
 
 production
   socket_dir: /tmp/opengov
