@@ -9,7 +9,7 @@ class OpenGovAuthenticatorComponent < Derailed::Component::Base
   def require_models
     # this require has to be delayed until after initialize is called
     # because user's init requires activerecord to be activated
-    require Config::RootDir + '/components/authenticator/m/user'
+    require Derailed::Config::RootDir + '/components/authenticator/m/user'
   end
 
   def routes

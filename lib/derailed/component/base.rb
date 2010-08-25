@@ -20,10 +20,11 @@ require dir + '/../../view'
   require "#{dir}/#{library}"
 end
 
-# SHOULD BE IN A CONFIG FILE SOMEWHERE
-module Config
-  RootDir = File.expand_path(File.dirname(__FILE__)) + '/../../../'
-  Environment = ENV['ENV'] || 'development'
+[
+'config',
+'socket'
+].each do |library|
+  require "#{dir}/../#{library}"
 end
 
 module Derailed
