@@ -4,6 +4,7 @@ require 'rack/test'
 require 'requestrouter'
 require 'lib/controller'
 require 'lib/componenthelper'
+require 'lib/derailed'
 
 class OpenGovTestCase < Test::Unit::TestCase
   include Rack::Test::Methods
@@ -56,7 +57,7 @@ class OpenGovTestCase < Test::Unit::TestCase
 
   def setup(authenticate=true)
     # make sure the sockets are ready
-    socket_wait('opengov', 4)
+    socket_wait('sock', 4)
 
     @ch = OpenGovComponentHelper.new
     seed_db
@@ -66,7 +67,7 @@ class OpenGovTestCase < Test::Unit::TestCase
   def socket_wait(name, qty)
     waiting = true
     while waiting do
-      sockets = Dir.entries('/tmp').find_all {|e| e.match /^#{name}/}
+      sockets = Dir.entries(Derailed::Socket.dir).find_all {|e| e.match /#{name}$/}
       if sockets.length == qty then
         waiting = false
       else

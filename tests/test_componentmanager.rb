@@ -2,6 +2,7 @@
 
 require 'lib/testcase'
 require 'lib/types/person'
+require 'lib/derailed'
 
 class OpenGovComponentManagerTest < OpenGovTestCase
   def test_components_register
@@ -18,7 +19,7 @@ class OpenGovComponentManagerTest < OpenGovTestCase
     @ch.cm.unregister_component('PersonLocator')
     assert_equal(['Authenticator::user','Authenticator::usersession'],
                  @ch.cm.available_models.sort)
-    @ch.cm.register_component('drbunix://tmp/opengov_PersonLocator_component.sock')
+    @ch.cm.register_component(Socket.get_socket_uri('PersonLocator'))
   end
 
   def test_components_get_model

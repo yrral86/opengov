@@ -87,7 +87,7 @@ class OpenGovComponentManager
   end
 
   def daemonize
-    DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', self
+    DRb.start_service Derailed::Socket.get_socket_uri('ComponentManager'), self
 
     component_list = File.read(@dir + '/config/components').split "\n"
 

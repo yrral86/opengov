@@ -1,8 +1,12 @@
 require 'drb'
 
+dir = File.expand_path(File.dirname(__FILE__))
+
+require dir + '/derailed'
+
 class OpenGovComponentHelper
   def initialize
-    @cm = DRbObject.new nil, 'drbunix://tmp/opengovcomponentmanager.sock'
+    @cm = DRbObject.new nil, Derailed::Socket.get_socket_uri('ComponentManager')
   end
 
   def get_current_session(env)

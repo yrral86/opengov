@@ -25,6 +25,7 @@ USER=root
 
 case "$1" in
   start)
+	mkdir /tmp/opengov
         su -c "$DAEMON start" $USER
         ;;
   stop)

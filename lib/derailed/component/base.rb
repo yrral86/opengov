@@ -56,7 +56,7 @@ module Derailed
         @ch = OpenGovComponentHelper.new
         need = @ch.dependencies_not_satisfied(@dependencies)
         if need == [] then
-          socket = 'drbunix://tmp/opengov_' + @name + '_component.sock'
+          socket = Socket.get_socket_uri @name
           DRb.start_service socket, self
           @ch.cm.register_component(socket)
           @registered = true

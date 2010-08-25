@@ -8,6 +8,10 @@ module Derailed
     def self.get_socket_uri(name)
       "drbunix:#{@@dir}/#{name}.sock"
     end
+
+    def self.dir
+      @@dir
+    end
   end
 end
 
