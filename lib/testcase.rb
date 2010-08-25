@@ -38,9 +38,7 @@ class OpenGovTestCase < Test::Unit::TestCase
     @ch.cm.available_models.each do |m|
       next if m == 'Authenticator::usersession'
       model = @ch.get_model(m)
-      model.find(:all).each do |record|
-        record.destroy
-      end
+      model.destroy_all
     end
   end
 
