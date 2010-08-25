@@ -6,7 +6,8 @@ FILES = componentmanager.rb \
 	javascript \
 	lib \
 	requestrouter.rb \
-	config.ru
+	config.ru \
+	production-ruby
 
 #USER=www-data
 USER=root
