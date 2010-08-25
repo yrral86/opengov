@@ -13,6 +13,7 @@ FILES = componentmanager.rb \
 USER=root
 
 deploy:
+	ENV=production rake db:migrate
 	service apache2 stop
 	service opengov stop
 	rm -rf /var/www/opengov
