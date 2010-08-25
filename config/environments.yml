@@ -4,5 +4,5 @@ development:
 test:
   socket_dir: ./sockets/test
 
-production
+production:
   socket_dir: /tmp/opengov
