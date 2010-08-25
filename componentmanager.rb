@@ -6,6 +6,8 @@ require 'drb'
 require 'drb/unix'
 require 'rubygems'
 require 'daemons'
+require dir + '/lib/derailed'
+
 
 class OpenGovComponentManager
   def initialize
@@ -41,7 +43,7 @@ class OpenGovComponentManager
           new_routes[r] = DRbObject.new nil, get_component_socket(name)
         else
           raise "Route '" + r + "' already handled by component " + @routes[r].name
-        end    
+        end
       end
       @routes.update(new_routes)
     end
@@ -84,11 +86,11 @@ class OpenGovComponentManager
       end
   end
 
-  def daemonize 
+  def daemonize
     DRb.start_service 'drbunix://tmp/opengovcomponentmanager.sock', self
-    
+
     component_list = File.read(@dir + '/config/components').split "\n"
-    
+
     component_list.each do |c|
       unless c == '' then
         `#{@dir}/components/#{c}.rb start`
@@ -103,7 +105,7 @@ class OpenGovComponentManager
       end
       DRb.stop_service
     }
-    
+
     DRb.thread.join
   end
 end
