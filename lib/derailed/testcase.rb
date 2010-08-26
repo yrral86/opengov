@@ -4,7 +4,6 @@ require 'rack/test'
 ENV['ENV'] = 'test'
 
 require 'lib/derailed'
-require 'lib/controller'
 
 module Derailed
   class TestCase < Test::Unit::TestCase
@@ -56,7 +55,7 @@ module Derailed
       # make sure the sockets are ready
       socket_wait('sock', 4)
 
-      @ch = Derailed::ComponentHelper.new
+      @ch = ComponentHelper.new
       seed_db
       do_auth if authenticate
     end
@@ -64,7 +63,7 @@ module Derailed
     def socket_wait(name, qty)
       waiting = true
       while waiting do
-        sockets = Dir.entries(Derailed::Socket.dir).find_all {|e| e.match /#{name}$/}
+        sockets = Dir.entries(Socket.dir).find_all {|e| e.match /#{name}$/}
         if sockets.length == qty then
           waiting = false
         else

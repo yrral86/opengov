@@ -1,6 +1,5 @@
 require 'lib/derailed'
-require 'lib/controller'
 
 use Rack::Session::Cookie
-use OpenGovController
+use Derailed::Controller::Base
 run Derailed::RequestRouter.new
