@@ -1,9 +1,5 @@
 require 'drb'
 
-#dir = File.expand_path(File.dirname(__FILE__))
-
-#require dir + '/derailed'
-
 module Derailed
   class ComponentHelper
     def initialize
