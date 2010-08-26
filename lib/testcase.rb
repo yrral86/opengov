@@ -3,7 +3,6 @@ require 'rack/test'
 
 ENV['ENV'] = 'test'
 
-require 'requestrouter'
 require 'lib/controller'
 require 'lib/derailed'
 
@@ -14,7 +13,7 @@ class OpenGovTestCase < Test::Unit::TestCase
     Rack::Builder.new {
       use Rack::Session::Cookie
       use OpenGovController
-      run OpenGovRequestRouter.new
+      run Derailed::RequestRouter.new
     }
   end
 

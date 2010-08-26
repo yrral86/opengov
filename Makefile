@@ -5,7 +5,6 @@ FILES = componentmanager.rb \
 	db/config.yml \
 	javascript \
 	lib \
-	requestrouter.rb \
 	config.ru \
 	production-ruby
 
