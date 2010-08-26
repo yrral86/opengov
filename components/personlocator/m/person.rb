@@ -1,4 +1,4 @@
-class Person < Derailed::Model
+class Person < Derailed::Component::Model
   has_many :addresses
   validates_presence_of :lname
 

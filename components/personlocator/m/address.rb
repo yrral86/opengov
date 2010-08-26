@@ -1,3 +1,3 @@
-class Address < Derailed::Model
+class Address < Derailed::Component::Model
   belongs_to :person
 end

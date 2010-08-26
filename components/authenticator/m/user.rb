@@ -1,7 +1,7 @@
 require 'authlogic'
 require 'authlogic_pam'
 
-class User < Derailed::Model
+class User < Derailed::Component::Model
   include AuthlogicPam::ActsAsAuthentic
   acts_as_authentic
 

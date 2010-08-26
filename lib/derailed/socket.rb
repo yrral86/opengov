@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Derailed
   class Socket
     def self.read_config

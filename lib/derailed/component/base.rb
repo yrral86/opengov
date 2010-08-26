@@ -14,7 +14,8 @@ require dir + '/../../view'
 [
 'authentication',
 'controller',
-'crud'
+'crud',
+'model'
 ].each do |library|
   require "#{dir}/#{library}"
 end
