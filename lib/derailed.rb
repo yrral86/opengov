@@ -5,6 +5,7 @@ require dir + '/derailed/config'
 require dir + '/derailed/componenthelper'
 require dir + '/derailed/requestrouter'
 require dir + '/derailed/socket'
+require dir + '/derailed/view'
 
 require dir + '/derailed/component/base'
 require dir + '/derailed/controller/base'

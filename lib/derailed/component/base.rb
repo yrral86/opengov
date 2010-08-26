@@ -13,8 +13,7 @@ dir = File.expand_path(File.dirname(__FILE__))
  'authentication',
  'controller',
  'crud',
- 'model',
- 'view'
+ 'model'
 ].each do |library|
   require "#{dir}/#{library}"
 end

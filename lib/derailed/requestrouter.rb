@@ -5,7 +5,6 @@ module Derailed
     def initialize
       @ch = ComponentHelper.new
       @routes = {}
-      @view = Component::View
       DRb.start_service
       self
     end
@@ -15,13 +14,13 @@ module Derailed
 
       component = env[:controller].next
       if @routes[component] == nil then
-        @view.not_found 'Not Found'
+        View.not_found 'Not Found'
       else
         begin
           @routes[component].call(env)
         rescue DRb::DRbConnError
           @routes = {}
-          @view.not_found "Component #{component} went away"
+          View.not_found "Component #{component} went away"
         end
       end
     end
