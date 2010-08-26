@@ -3,9 +3,8 @@ require 'rake/testtask'
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 
 Rake::TestTask.new(:do_test) do |t|
-  ENV['ENV']='test'
   `mkdir -p sockets/test`
-  `./componentmanager.rb start`
+  `./componentmanager.rb start --test`
   sleep 1.0
   t.test_files = FileList['tests/test*.rb']
   t.verbose = true

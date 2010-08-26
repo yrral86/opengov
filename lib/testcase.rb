@@ -1,6 +1,8 @@
 require 'test/unit'
 require 'rack/test'
 
+ENV['ENV'] = 'test'
+
 require 'requestrouter'
 require 'lib/controller'
 require 'lib/componenthelper'

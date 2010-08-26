@@ -6,8 +6,22 @@ require 'drb'
 require 'drb/unix'
 require 'rubygems'
 require 'daemons'
-require dir + '/lib/derailed'
+require 'optparse'
 
+optparse = OptionParser.new do |opts|
+  opts.on('--test') do
+    ENV['ENV'] = 'test'
+  end
+  opts.on('--development') do
+    ENV['ENV'] = 'development'
+  end
+  opts.on('--production') do
+    ENV['ENV'] = 'production'
+  end
+end
+optparse.parse!
+
+require dir + '/lib/derailed'
 
 class OpenGovComponentManager
   def initialize
