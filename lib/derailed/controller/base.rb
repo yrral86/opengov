@@ -3,8 +3,6 @@ require 'drb'
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../../view'
-
 [
  'cookiefix',
  'controller'
@@ -36,7 +34,7 @@ module Derailed
         else
           path = env[:controller].request.path
           env[:controller].session[:onlogin] = path unless path == '/favicon.ico'
-          OpenGovView.redirect('/login')
+          Component::View.redirect('/login')
         end
       end
 

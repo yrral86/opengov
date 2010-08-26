@@ -1,13 +1,11 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../view'
-
 module Derailed
   class RequestRouter
     def initialize
       @ch = ComponentHelper.new
       @routes = {}
-      @view = OpenGovView
+      @view = Component::View
       DRb.start_service
       self
     end

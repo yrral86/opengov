@@ -29,13 +29,13 @@ module Derailed
           elsif r.put? then
             update(model,r)
           else
-            OpenGovView.method_not_allowed
+            View.method_not_allowed
           end
         else
           unless model_name then
             model_name = 'Nil'
           end
-          OpenGovView.not_found('Model ' +
+          View.not_found('Model ' +
                                 model_name +
                                 ' not found in component ' +
                                 @name)
@@ -60,7 +60,7 @@ module Derailed
         # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
         # INSTEAD OF DISPLAYING THE FORM
         if object.save then
-          OpenGovView.redirect('/' + @name.downcase +
+          View.redirect('/' + @name.downcase +
                                '/' + model.name.downcase +
                                '/' + object.id.to_s)
         else
@@ -71,13 +71,13 @@ module Derailed
       def read(model, id)
         object = model.find_by_id(id)
         if object then
-          OpenGovView.render_erb_from_file(view_file(model.name.downcase),binding)
+          View.render_erb_from_file(view_file(model.name.downcase),binding)
         elsif id then
-          OpenGovView.not_found('Record  #' + id + ' not found for model ' +
+          View.not_found('Record  #' + id + ' not found for model ' +
                                 model.name + ' in component ' + @name)
         else
           objects = model.find :all
-          OpenGovView.render_erb_from_file(view_file(model.name.downcase + 'list'),
+          View.render_erb_from_file(view_file(model.name.downcase + 'list'),
                                            binding)
         end
       end
@@ -90,7 +90,7 @@ module Derailed
           object = model.new
           method = 'post'
         end
-        OpenGovView.render_erb_from_file(view_file(model.name.downcase + 'form'),
+        View.render_erb_from_file(view_file(model.name.downcase + 'form'),
                                          binding)
       end
 
@@ -100,14 +100,14 @@ module Derailed
         if object
           params = clean_params(model, request.params)
           if object.update_attributes(params) then
-            OpenGovView.redirect('/' + @name.downcase +
+            View.redirect('/' + @name.downcase +
                                  '/' + model.name.downcase +
                                  '/' + id)
           else
             render_form(model, id)
           end
         else
-          OpenGovView.not_found('Record # ' +
+          View.not_found('Record # ' +
                                 id.to_s +
                                 ' not found for model ' +
                                 model.name +
@@ -120,10 +120,10 @@ module Derailed
         object = model.find_by_id(id)
         if object then
           object.delete
-          OpenGovView.redirect('/' + @name.downcase +
+          View.redirect('/' + @name.downcase +
                                '/' + model.name.downcase)
         else
-          OpenGovView.not_found('Record # ' +
+          View.not_found('Record # ' +
                                 id +
                                 ' not found for model ' +
                                 model.name +
@@ -141,7 +141,7 @@ module Derailed
       end
 
       def render(name, binding)
-        OpenGovView.render_erb_from_file_to_string(view_file('_' + name), binding)
+        View.render_erb_from_file_to_string(view_file('_' + name), binding)
       end
 
       def error_box(record)

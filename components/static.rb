@@ -3,7 +3,6 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/../lib/derailed'
-require dir + '/../lib/view'
 
 class OpenGovStaticComponent < Derailed::Component::Base
   def routes
@@ -15,15 +14,15 @@ class OpenGovStaticComponent < Derailed::Component::Base
     begin
       case path(1)
       when 'javascript'
-        OpenGovView.render_string(File.read(Config::RootDir +
+        View.render_string(File.read(Config::RootDir +
                                             controller.request.path))
       when 'images'
-        OpenGovView.render_string("TODO: return images")
+        View.render_string("TODO: return images")
       else
-        OpenGovView.not_found("File #{controller.request.path} not found")
+        View.not_found("File #{controller.request.path} not found")
       end
     rescue
-      OpenGovView.not_found("File #{controller.request.path} not found")
+      View.not_found("File #{controller.request.path} not found")
     end
   end
 end
