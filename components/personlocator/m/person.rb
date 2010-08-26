@@ -1,7 +1,3 @@
-dir = File.expand_path(File.dirname(__FILE__))
-
-require dir + '/../../../lib/derailed/model'
-
 class Person < Derailed::Model
   has_many :addresses
   validates_presence_of :lname
