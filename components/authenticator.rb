@@ -3,7 +3,7 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
 require dir + '/authenticator/m/usersession'
-require dir + '/../lib/derailed/component/base'
+require dir + '/../lib/derailed'
 
 class OpenGovAuthenticatorComponent < Derailed::Component::Base
   def require_models

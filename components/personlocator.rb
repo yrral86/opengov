@@ -2,7 +2,7 @@
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../lib/derailed/component/base'
+require dir + '/../lib/derailed'
 require dir + '/personlocator/m/person'
 require dir + '/personlocator/m/address'
 
