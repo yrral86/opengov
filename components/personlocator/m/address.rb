@@ -1,7 +1,7 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../../../lib/model'
+require dir + '/../../../lib/derailed/model'
 
-class Address < OpenGovModel
+class Address < Derailed::Model
   belongs_to :person
 end

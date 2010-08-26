@@ -3,9 +3,9 @@ require 'authlogic_pam'
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../../../lib/model'
+require dir + '/../../../lib/derailed/model'
 
-class User < OpenGovModel
+class User < Derailed::Model
   include AuthlogicPam::ActsAsAuthentic
   acts_as_authentic
 

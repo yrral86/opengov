@@ -1,8 +1,8 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../../../lib/model'
+require dir + '/../../../lib/derailed/model'
 
-class Person < OpenGovModel
+class Person < Derailed::Model
   has_many :addresses
   validates_presence_of :lname
 

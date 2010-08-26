@@ -56,7 +56,7 @@ class OpenGovComponentManager
         if @routes[r] == nil then
           new_routes[r] = DRbObject.new nil, get_component_socket(name)
         else
-          raise "Route '" + r + "' already handled by component " + @routes[r].name
+          raise "Route '#{r}' already handled by component #{@routes[r].name}"
         end
       end
       @routes.update(new_routes)
