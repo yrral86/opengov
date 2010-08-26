@@ -8,4 +8,5 @@ require dir + '/derailed/socket'
 require dir + '/derailed/view'
 
 require dir + '/derailed/component/base'
+require dir + '/derailed/component/authenticator'
 require dir + '/derailed/controller/base'
