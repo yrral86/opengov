@@ -1,13 +1,13 @@
 require 'rack'
 require 'drb'
 
-require 'lib/componenthelper'
+require 'lib/derailed'
 require 'lib/view'
 
 class OpenGovController
   def initialize(app)
     @app = app
-    @ch = OpenGovComponentHelper.new
+    @ch = Derailed::ComponentHelper.new
   end
 
   def call(env)

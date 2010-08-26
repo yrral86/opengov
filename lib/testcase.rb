@@ -5,7 +5,6 @@ ENV['ENV'] = 'test'
 
 require 'requestrouter'
 require 'lib/controller'
-require 'lib/componenthelper'
 require 'lib/derailed'
 
 class OpenGovTestCase < Test::Unit::TestCase
@@ -61,7 +60,7 @@ class OpenGovTestCase < Test::Unit::TestCase
     # make sure the sockets are ready
     socket_wait('sock', 4)
 
-    @ch = OpenGovComponentHelper.new
+    @ch = Derailed::ComponentHelper.new
     seed_db
     do_auth if authenticate
   end

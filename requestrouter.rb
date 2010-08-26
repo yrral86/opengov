@@ -1,9 +1,9 @@
-require 'lib/componenthelper'
+require 'lib/derailed'
 require 'lib/view'
 
 class OpenGovRequestRouter
   def initialize
-    @ch = OpenGovComponentHelper.new
+    @ch = Derailed::ComponentHelper.new
     @routes = {}
     @view = OpenGovView
     DRb.start_service

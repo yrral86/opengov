@@ -9,7 +9,6 @@ require 'rack/logger'
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/../../componenthelper'
 require dir + '/../../view'
 
 [
@@ -18,13 +17,6 @@ require dir + '/../../view'
 'crud'
 ].each do |library|
   require "#{dir}/#{library}"
-end
-
-[
-'config',
-'socket'
-].each do |library|
-  require "#{dir}/../#{library}"
 end
 
 module Derailed
@@ -53,7 +45,7 @@ module Derailed
         #    end
 
 
-        @ch = OpenGovComponentHelper.new
+        @ch = ComponentHelper.new
         need = @ch.dependencies_not_satisfied(@dependencies)
         if need == [] then
           socket = Socket.get_socket_uri @name
