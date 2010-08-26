@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'lib/testcase'
+require 'lib/derailed/testcase'
 
-class OpenGovRequestRouterTest < OpenGovTestCase
+class OpenGovRequestRouterTest < Derailed::TestCase
   def test_personlist
     get '/personlocator/person'
     assert_equal 200, last_response.status

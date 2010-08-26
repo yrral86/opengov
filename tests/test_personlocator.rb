@@ -1,10 +1,10 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'lib/testcase'
+require 'lib/derailed/testcase'
 require 'lib/types/person'
 require 'nokogiri'
 
-class OpenGovPersonLocatorTest < OpenGovTestCase
+class OpenGovPersonLocatorTest < Derailed::TestCase
   def test_personlist
     get '/personlocator/person'
     doc = Nokogiri::HTML(last_response.body)

@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'lib/testcase'
+require 'lib/derailed/testcase'
 
-class OpenGovAuthenticatorTest < OpenGovTestCase
+class OpenGovAuthenticatorTest < Derailed::TestCase
   def setup
     super(false)
   end

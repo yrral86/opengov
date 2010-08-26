@@ -1,10 +1,9 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'lib/testcase'
 require 'lib/types/person'
-require 'lib/derailed'
+require 'lib/derailed/testcase'
 
-class OpenGovComponentManagerTest < OpenGovTestCase
+class OpenGovComponentManagerTest < Derailed::TestCase
   def test_components_register
     assert_equal(
                  ['Authenticator::user',
