@@ -31,7 +31,7 @@ module Derailed
       end
 
       def path(n)
-    @paths[n]
+        @paths[n]
       end
 
       def request
@@ -39,7 +39,7 @@ module Derailed
       end
 
       def save_session(response)
-    @env['rack.session'] = @session.dup
+        @env['rack.session'] = @session.dup
         @cookies.keys.each do |k|
           response.set_cookie k, @cookies[k]
         end
@@ -59,7 +59,7 @@ module Derailed
       end
 
       def cookie_domain
-    @env['HTTP_HOST']
+        @env['HTTP_HOST']
       end
     end
   end
