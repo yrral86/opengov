@@ -11,11 +11,7 @@ module Derailed
     include Rack::Test::Methods
 
     def app
-      Rack::Builder.new {
-        use Rack::Session::Cookie
-        use OpenGovController
-        run Derailed::RequestRouter.new
-      }
+      Rack::Builder.parse_file('config.ru')[0]
     end
 
     def login_credentials
