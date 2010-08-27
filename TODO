@@ -2,9 +2,6 @@ better testing
 script/generate
 better configuration handling(DRY)
 
-Document:
-Derailed::View
-
 handle views with no model in component class
 
 Abstract data types that models can implement, component can respond
