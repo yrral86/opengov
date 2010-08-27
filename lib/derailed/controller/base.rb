@@ -12,22 +12,33 @@ end
 
 module Derailed
   module Controller
+    # = Deraild::Controller::Base
+    # This class provides a Rack middleware that adds a
+    # Derailed::Controller::Controller to the env variable and ensures
+    # a user is logged in for any url other than /login
     class Base
+      # initialize sets the app and creates a ComponentHelper
       def initialize(app)
         @app = app
         @ch = ComponentHelper.new
       end
 
+      # call adds the controller, calls the app, and commits the changes
+      # to the session and cookies via commit_controller which returns the
+      # response
       def call(env)
-        load_parser(env)
+        load_controller(env)
         status, headers, body = authenticate(env) do |env|
           @app.call(env)
         end
-        commit_parser(env, status, headers, body)
+        commit_controller(env, status, headers, body)
       end
 
       private
 
+      # authenticate enforces authentication for all urls other than /login.
+      # If there is no logged in user, any other url is stored for redirecting
+      # after login, and the user is redirected to the login form.
       def authenticate(env)
         if @ch.get_current_session(env) or env[:controller].request.path == '/login'
           yield env
@@ -38,11 +49,13 @@ module Derailed
         end
       end
 
-      def load_parser(env)
+      # load_controller creates a Controller::Controller for the request
+      def load_controller(env)
         env[:controller] = Controller.new(env)
       end
 
-      def commit_parser(env, status, headers, body)
+      # commit_controller saves the session/cookies and returns the response
+      def commit_controller(env, status, headers, body)
         response = Rack::Response.new(body, status, headers)
         env[:controller].save_session(response)
         [status, headers, body]
