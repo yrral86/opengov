@@ -1,6 +1,9 @@
+dir = File.expand_path(File.dirname(__FILE__))
+
+require "#{dir}/cookiefix"
+
 module Derailed
   module Controller
-#--
     # = Derailed::Controller::Controller
     # This module provides a controller object that is used both in the
     # components (functions provided by Derailed::Component::Controller),
@@ -100,6 +103,5 @@ module Derailed
         @env['HTTP_HOST']
       end
     end
-#++
   end
 end

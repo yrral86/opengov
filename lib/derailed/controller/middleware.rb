@@ -3,20 +3,15 @@ require 'drb'
 
 dir = File.expand_path(File.dirname(__FILE__))
 
-[
- 'cookiefix',
- 'controller'
-].each do |library|
-  require "#{dir}/#{library}"
-end
+require "#{dir}/controller"
 
 module Derailed
   module Controller
-    # = Deraild::Controller::Base
+    # = Deraild::Controller::Middleware
     # This class provides a Rack middleware that adds a
     # Derailed::Controller::Controller to the env variable and ensures
     # a user is logged in for any url other than /login
-    class Base
+    class Middleware
       # initialize sets the app and creates a ComponentHelper
       def initialize(app)
         @app = app
