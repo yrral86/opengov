@@ -4,7 +4,6 @@ better configuration handling(DRY)
 
 Document:
 Derailed::Component::Crud
-Derailed::Component::Model
 Derailed::Socket
 Derailed::TestCase
 Derailed::View
