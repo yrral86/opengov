@@ -3,7 +3,6 @@ script/generate
 better configuration handling(DRY)
 
 Document:
-Derailed::TestCase
 Derailed::View
 
 handle views with no model in component class
