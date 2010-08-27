@@ -14,6 +14,11 @@ task :test => :do_test do
   `./componentmanager.rb stop`
 end
 
+task :doc do
+  `rm -rf doc/`
+  `rdoc1.9.1 lib`
+end
+
 namespace :db do
   task :ar_init do
     # Load the database config
