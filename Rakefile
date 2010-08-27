@@ -15,7 +15,8 @@ task :test => :do_test do
 end
 
 task :doc do
-  `rdoc1.9.1 -S lib`
+  `rm -rf doc/`
+  `rdoc1.9.1 -Sd lib`
 end
 
 namespace :db do
