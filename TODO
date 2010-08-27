@@ -2,19 +2,12 @@ better testing
 script/generate
 better configuration handling(DRY)
 
-Installer
-- Check dependencies
-- Install software
-- Configure web server
-- Configure db (migrations)
-
-Startup script
-
-Login/Authentication
-- db - authlogic: working
-- system - authlogic_pam: working
-- ldap- pam_ldap: should work once we configure pam
-- nis- pam_nis: should work once we configure pam
+Document:
+Derailed::Component::Crud
+Derailed::Component::Model
+Derailed::Socket
+Derailed::TestCase
+Derailed::View
 
 handle views with no model in component class
 
