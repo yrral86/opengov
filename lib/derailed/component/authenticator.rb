@@ -1,16 +1,23 @@
 module Derailed
   module Component
+    # = Derailed::Component::Authenticator
+    # This class is the base for an Authenticator component using Authlogic.
+    # It provides /login, /logout, /home (for now), /newuser, and /edituser
     class Authenticator < Base
+      # routes (as in any component) provides the routes this component services
       def routes
         # /home is temporary
         ['login', 'logout', 'home', 'newuser', 'edituser']
       end
 
+      # current_session provides the current authenticated session if the user
+      # is logged in, and nil otherwise
       def current_session(env=Thread.current[:env])
         Authlogic::Session::Base.controller = env[:controller]
         UserSession.find
       end
 
+      # call handles routing the various paths to the functions to handle them
       def call(env)
         super(env, false)
         case path(1)
@@ -27,6 +34,7 @@ module Derailed
         end
       end
 
+      # login handles displaying the login form and processing its submission
       def login(env)
         session_params = params['user_session']
 
@@ -50,10 +58,14 @@ module Derailed
         end
       end
 
+      # login_fail displays the login form when login failed to authenticate
+      # the user
       def login_fail(user_session)
         View.render_erb_from_file(view_file("newsession"),binding)
       end
 
+      # login_success handles redirecting the user to their previously requested
+      # url, or /home after they have successfully authenticated
       def login_success
         url = session[:onlogin]
         session[:onlogin] = nil
@@ -61,12 +73,16 @@ module Derailed
         View.redirect url
       end
 
+      # logut destroys the user's session and sends them to the login form
       def logout(env)
         session = current_session
         session.destroy if session
         View.redirect "/login"
       end
 
+      # create_user handles creating a new user.  At the moment, this can be
+      # done by any logged in user.  This behavior should be modified before
+      # deployment.
       def create_user(env)
         user = User.new(params['user'])
         if user.save
@@ -77,6 +93,7 @@ module Derailed
         end
       end
 
+      # update_user allows the current user to update his/her user record
       def update_user(env)
         user = current_user
         if user.update_attributes(params['user'])
@@ -85,7 +102,6 @@ module Derailed
           View.render_erb_from_file(view_file('edituser'),binding)
         end
       end
-
     end
   end
 end
