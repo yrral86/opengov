@@ -38,7 +38,7 @@ module Derailed
       # ===== example: /extra/long/test/path/
       # 1st call:: 'extra'
       # 2nd call:: 'long'
-      # 3rdt call:: 'test'
+      # 3rd call:: 'test'
       # 4th call:: 'path'
       def next_path
         controller.next
