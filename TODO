@@ -3,7 +3,6 @@ script/generate
 better configuration handling(DRY)
 
 Document:
-Derailed::Socket
 Derailed::TestCase
 Derailed::View
 
