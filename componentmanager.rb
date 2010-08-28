@@ -23,9 +23,9 @@ optparse.parse!
 
 require dir + '/lib/derailed'
 
-cm = Derailed::Manager.new
+cm = Derailed::Manager::Interface.new
 
-Daemons.run_proc('OpenGovComponentManager',
+Daemons.run_proc('OpenGovManager',
                  {:dir_mode => :normal, :dir => dir}) do
   cm.daemonize
 end

@@ -3,7 +3,7 @@
 require 'lib/derailed/testcase'
 
 class OpenGovComponentManagerTest < Derailed::TestCase
-  def test_components_register
+  def test_component_register
     assert_equal(
                  ['Authenticator::user',
                   'Authenticator::usersession',
@@ -13,14 +13,18 @@ class OpenGovComponentManagerTest < Derailed::TestCase
                  )
   end
 
-  def test_components_unregister
+  def test_component_unregister
     @cc.cm.unregister_component('PersonLocator')
     assert_equal(['Authenticator::user','Authenticator::usersession'],
                  @cc.cm.available_models.sort)
-    @cc.cm.register_component(Derailed::Socket.uri('PersonLocator'))
+    @cc.cm.register_component(Derailed::Manager::Socket.uri('PersonLocator'))
   end
 
-  def test_components_get_model
+  def test_component_available_types
+    assert_equal ['PersonLocator::Person'], @cc.cm.available_types
+  end
+
+  def test_component_get_model
     begin
       person = @cc.get_model("PersonLocator::person")
     rescue DRb::DRbServerNotFound

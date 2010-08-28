@@ -24,9 +24,9 @@ module Derailed
   module Component
     # = Derailed::Component::Base
     # This class is the base of all components, and handles
-    # registering/deregistering with the ComponentManager, database
-    # initialization, and access to models.  It also provides basic CRUD
-    # functionality for all models via the Derailed::Component::Crud module
+    # registering/deregistering with the Manager, database initilization, and
+    # access to models.  It also provides basic CRUD functionality for all
+    # models via the Derailed::Component::Crud module
     class Base
       include Authentication
       include Controller
@@ -36,7 +36,7 @@ module Derailed
 
       # initialize sets up the database from the config file, initializes the
       # list of models, checks for dependencies, and then registers the
-      # component with the ComponentManager
+      # component with the Manager
       def initialize(name, models, views, dependencies = [], db = 'default')
         @registered = false;
         db_config = YAML::load(File.open(Config::RootDir + '/db/config.yml'))[db]
@@ -59,7 +59,7 @@ module Derailed
         @cc = ComponentClient.new
         need = @cc.dependencies_not_satisfied(@dependencies)
         if need == [] then
-          socket = Socket.uri @name
+          socket = Manager::Socket.uri @name
           DRb.start_service socket, self
           @cc.cm.register_component(socket)
           @registered = true
@@ -90,6 +90,15 @@ module Derailed
       # downcased)
       def model_names
         @models.keys
+      end
+
+      # model_types returns the list of available model types
+      def model_types
+        types = []
+        @models.each_value do |m|
+          types << m.type if m.respond_to?(:type) && m.type
+        end
+        types
       end
 
       # model returns the requested model (name is downcased)

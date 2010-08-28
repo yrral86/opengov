@@ -3,12 +3,12 @@ require 'drb'
 module Derailed
   # = Derailed::ComponentClient
   # This class provides an interface to the components as well as the
-  # ComponentManager
+  # Manager (possibly these two functionalities should be spilt)
   class ComponentClient
-    # initialize creates a DRbObject for the ComponentManager
+    # initialize creates a DRbObject for the Manager
     def initialize
       @cm = DRbObject.new nil,
-      Derailed::Socket.uri('ComponentManager')
+      Manager::Socket.uri('Manager')
     end
 
     # get_current_session invokes current_session on the Authenticator component
@@ -19,7 +19,7 @@ module Derailed
       get_component('Authenticator').current_session(env)
     end
 
-    # get_routes invokes the available_routes method on the ComponentManager.
+    # get_routes invokes the available_routes method on the Manager.
     # If the call fails, an empty hash is returned
     def get_routes
       begin
@@ -39,7 +39,7 @@ module Derailed
     end
 
     # get_component returns a DRbObject representing the component.
-    # The socket uri is fetched from the ComponentManager by a CamelCase
+    # The socket uri is fetched from the Manager by a CamelCase
     # component name
     def get_component(name)
       DRbObject.new nil, @cm.get_component_socket(name)
@@ -63,7 +63,7 @@ module Derailed
       not_available
     end
 
-    # cm is an accessor for the ComponentManager
+    # cm is an accessor for the Manager
     def cm
       @cm
     end

@@ -27,3 +27,17 @@ Messages component (maybe two different components: Triggers, Messages):
 	<long>-130</long>
  </event>
 read/unread
+
+
+Moves
+Derailed::Controller::Controller => Derailed::Controller::Interface
+Derailed::Component::Base => Derailed::Component::Interface ?
+
+
+CLEAN UP DEPENDENCIES IN Derailed
+Identify and Document entry points and minimize unneeded code
+* three types of processes
+-- X RequestRouter/Controller processes
+-- 1 Manager process
+-- X Component processes
+

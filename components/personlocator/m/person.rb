@@ -9,7 +9,7 @@ class Person < Derailed::Component::Model
     }
   end
 
-  def type
+  def self.type
     'Person'
   end
 end

@@ -80,7 +80,9 @@ module Derailed
     def socket_wait(name, qty)
       waiting = true
       while waiting do
-        sockets = Dir.entries(Socket.dir).find_all {|e| e.match /#{name}$/}
+        sockets = Dir.entries(Manager::Socket.dir).find_all {|e|
+          e.match /#{name}$/
+        }
         if sockets.length == qty then
           waiting = false
         else
