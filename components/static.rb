@@ -14,15 +14,15 @@ class OpenGovStaticComponent < Derailed::Component::Base
     begin
       case path(1)
       when 'javascript'
-        View.render_string(File.read(Config::RootDir +
+        Derailed::View.render_string(File.read(Derailed::Config::RootDir +
                                             controller.request.path))
       when 'images'
-        View.render_string("TODO: return images")
+        Derailed::View.render_string("TODO: return images")
       else
-        View.not_found("File #{controller.request.path} not found")
+        Derailed::View.not_found("File #{controller.request.path} not found")
       end
     rescue
-      View.not_found("File #{controller.request.path} not found")
+      Derailed::View.not_found("File #{controller.request.path} not found")
     end
   end
 end
