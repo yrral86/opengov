@@ -1,5 +1,12 @@
 module Derailed
+  # = Derailed::Manager
+  # This class manages components.  New components register themselves with
+  # a manager, and the manager provides information about what
+  # components/models/views are available.  It also can provide the socket
+  # URIs for the components.
   class Manager
+    # initialize creates empty hashes for the components and routes, and a mutex
+    # for each hash
     def initialize
       @dir = File.expand_path(File.dirname(__FILE__)) + '/../..'
       @components = {}
@@ -9,6 +16,10 @@ module Derailed
       @self
     end
 
+    # register_component is called by the component right after it sets up its
+    # socket.  The component sends the manager the socket, and the manager opens
+    # the socket and stores the DRbObject.  Manager then registers the routes
+    # the component provides in the routes hash.
     def register_component(socket)
       component = DRbObject.new nil, socket
       @c_mutex.synchronize do
@@ -17,6 +28,8 @@ module Derailed
       register_routes(component)
     end
 
+    # unregister_component is called by the component on shutdown.  It removes
+    # the component's routes and then deletes it from the component hash.
     def unregister_component(name)
       unregister_routes(@components[name])
       @c_mutex.synchronize do
@@ -24,6 +37,8 @@ module Derailed
       end
     end
 
+    # register_routes addes the routes for a given component to the routes hash.
+    # Routes are {'url1'=>DRbObject1, 'url2'=> DRbObject2}
     def register_routes(component)
       name = component.name
       new_routes = {}
@@ -39,6 +54,7 @@ module Derailed
       end
     end
 
+    # unregister_routes removes a component's routes from the routes hash
     def unregister_routes(component)
       @r_mutex.synchronize do
         component.routes.each do |r|
@@ -47,10 +63,13 @@ module Derailed
       end
     end
 
+    # available_routes returns the routes hash
     def available_routes
       @routes
     end
 
+    # available_models returns a list of all models provided by registered
+    # components
     def available_models
       models = []
       @components.each_value do |c|
@@ -59,15 +78,18 @@ module Derailed
       models
     end
 
+    # available_components returns a list of all registered components
     def available_components
       @components.keys
     end
 
+    # get_model returns a DRbObject representing the given model
     def get_model(name)
       component, model = name.split '::'
       @components[component].model(model)
     end
 
+    # get_component_socket returns the socket URI for the named Component
     def get_component_socket(name)
       if @components[name] then
         @components[name].__drburi
@@ -76,6 +98,8 @@ module Derailed
       end
     end
 
+    # daemonize starts the DRb service, reads the components to start from the
+    # config file, and starts the components.
     def daemonize
       DRb.start_service Derailed::Socket.uri('ComponentManager'), self
 
