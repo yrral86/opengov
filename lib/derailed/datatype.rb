@@ -7,31 +7,31 @@ module Derailed
   #    don't have the same name as database fields to the appropriate field.
   # 2. type, which specifies the name of the type implemented in CamelCase.
   # ==== example:
-  # module Type
-  #   class Primate < DataType
-  #     @fields = {
-  #       :first_name => 'First Name',
-  #       :last_name => 'Last Name',
-  #       :age => 'Age'
-  #     }
-  #   end
-  # end
-  #
-  # class Person < Derailed::Component::Model
-  #   def abstract_map
-  #     {:age => :years} # db field is years
+  #   module Type
+  #     class Primate < DataType
+  #       @fields = {
+  #         :first_name => 'First Name',
+  #         :last_name => 'Last Name',
+  #         :age => 'Age'
+  #       }
+  #     end
   #   end
   #
-  #   def type
-  #     'Primate'
+  #   class Person < Derailed::Component::Model
+  #     def abstract_map
+  #       {:age => :years} # db field is 'years'
+  #     end
+  #
+  #     def type
+  #       'Primate'
+  #     end
   #   end
-  # end
   #
   # ===== Usage:
-  # p = Person.new({:first_name => 'Bob', :last_name => 'Smith', :years => 23})
-  # primate = Type::Primate.new(p)
-  # primate.age
-  # > 23
+  #  p = Person.new({:first_name => 'Bob', :last_name => 'Smith', :years => 23})
+  #  primate = Type::Primate.new(p)
+  #  primate.age
+  #  > 23
   class DataType
     include DRbUndumped
 
