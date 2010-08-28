@@ -29,11 +29,6 @@ Messages component (maybe two different components: Triggers, Messages):
 read/unread
 
 
-Moves
-Derailed::Controller::Controller => Derailed::Controller::Interface
-Derailed::Component::Base => Derailed::Component::Interface ?
-
-
 CLEAN UP DEPENDENCIES IN Derailed
 Identify and Document entry points and minimize unneeded code
 * three types of processes
