@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby1.9.1
 
-require 'lib/types/person'
 require 'lib/derailed/testcase'
 
 class OpenGovComponentManagerTest < Derailed::TestCase
@@ -45,9 +44,11 @@ class OpenGovComponentManagerTest < Derailed::TestCase
     larry = person.new(:fname => 'Larry', :lname => 'Reaves')
     larry.save
 
-    larry2 = OpenGovPerson.new(larry)
+    larry2 = Derailed::Type::Person.new(larry)
 
-    assert_equal('Larry', larry2.the_firstest_name)
+    assert_equal(larry.id, larry2.id)
+    assert_equal(larry.fname, larry2.first_name)
+    assert_equal(larry.lname, larry2.last_name)
 
     larry.delete
   end

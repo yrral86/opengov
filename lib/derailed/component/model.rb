@@ -21,6 +21,12 @@ module Derailed
         {} # return empty hash, db fields align with abstract fields
       end
 
+      # type specifies the abstract data type this model implements (default:
+      # nil)
+      def type
+        nil
+      end
+
       # forces model objects to be sent over the socket as references
       # instead of copied... if they are copied, they won't have their
       # DB connection... and we want to keep DB interactions local anyway

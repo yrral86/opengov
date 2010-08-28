@@ -4,7 +4,12 @@ class Person < Derailed::Component::Model
 
   def abstract_map
     {
-      :the_firstest_name => :fname
+      :first_name => :fname,
+      :last_name => :lname
     }
+  end
+
+  def type
+    'Person'
   end
 end

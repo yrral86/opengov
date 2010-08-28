@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby1.9.1
 
 require 'lib/derailed/testcase'
-require 'lib/types/person'
 require 'nokogiri'
 
 class OpenGovPersonLocatorTest < Derailed::TestCase
