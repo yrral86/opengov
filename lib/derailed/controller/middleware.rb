@@ -40,7 +40,7 @@ module Derailed
         else
           path = env[:controller].request.path
           env[:controller].session[:onlogin] = path unless path == '/favicon.ico'
-          View.redirect('/login')
+          Component::View.redirect('/login')
         end
       end
 

@@ -43,16 +43,16 @@ module Derailed
           elsif r.put? then
             update(model,r)
           else
-            View.method_not_allowed
+            method_not_allowed
           end
         else
           unless model_name then
             model_name = 'Nil'
           end
-          View.not_found('Model ' +
-                                model_name +
-                                ' not found in component ' +
-                                @name)
+          not_found('Model ' +
+                    model_name +
+                    ' not found in component ' +
+                    @name)
         end
       end
 
@@ -76,9 +76,9 @@ module Derailed
         # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
         # INSTEAD OF DISPLAYING THE FORM
         if object.save then
-          View.redirect('/' + @name.downcase +
-                               '/' + model.name.downcase +
-                               '/' + object.id.to_s)
+          redirect('/' + @name.downcase +
+                   '/' + model.name.downcase +
+                   '/' + object.id.to_s)
         else
           render_form(model, nil)
         end
@@ -88,14 +88,14 @@ module Derailed
       def read(model, id)
         object = model.find_by_id(id)
         if object then
-          View.render_erb_from_file(view_file(model.name.downcase),binding)
+          render_erb_from_file(view_file(model.name.downcase),binding)
         elsif id then
-          View.not_found('Record  #' + id + ' not found for model ' +
-                                model.name + ' in component ' + @name)
+          not_found('Record  #' + id + ' not found for model ' +
+                    model.name + ' in component ' + @name)
         else
           objects = model.find :all
-          View.render_erb_from_file(view_file(model.name.downcase + 'list'),
-                                           binding)
+          render_erb_from_file(view_file(model.name.downcase + 'list'),
+                               binding)
         end
       end
 
@@ -108,8 +108,8 @@ module Derailed
           object = model.new
           method = 'post'
         end
-        View.render_erb_from_file(view_file(model.name.downcase + 'form'),
-                                         binding)
+        render_erb_from_file(view_file(model.name.downcase + 'form'),
+                             binding)
       end
 
       # update updated the given record
@@ -119,19 +119,19 @@ module Derailed
         if object
           params = clean_params(model, request.params)
           if object.update_attributes(params) then
-            View.redirect('/' + @name.downcase +
-                                 '/' + model.name.downcase +
-                                 '/' + id)
+            redirect('/' + @name.downcase +
+                     '/' + model.name.downcase +
+                     '/' + id)
           else
             render_form(model, id)
           end
         else
-          View.not_found('Record # ' +
-                                id.to_s +
-                                ' not found for model ' +
-                                model.name +
-                                'in component ' +
-                                @name)
+          not_found('Record # ' +
+                    id.to_s +
+                    ' not found for model ' +
+                    model.name +
+                    'in component ' +
+                    @name)
         end
       end
 
@@ -140,15 +140,15 @@ module Derailed
         object = model.find_by_id(id)
         if object then
           object.delete
-          View.redirect('/' + @name.downcase +
-                               '/' + model.name.downcase)
+          redirect('/' + @name.downcase +
+                   '/' + model.name.downcase)
         else
-          View.not_found('Record # ' +
-                                id +
-                                ' not found for model ' +
-                                model.name +
-                                'in component ' +
-                                @name)
+          not_found('Record # ' +
+                    id +
+                    ' not found for model ' +
+                    model.name +
+                    'in component ' +
+                    @name)
         end
       end
 
@@ -166,7 +166,7 @@ module Derailed
 
       # render renders a template from it's name and a binding
       def render(name, binding)
-        View.render_erb_from_file_to_string(view_file('_' + name), binding)
+        render_erb_from_file_to_string(view_file('_' + name), binding)
       end
 
       # error_box returns a string containing an unordered list of model

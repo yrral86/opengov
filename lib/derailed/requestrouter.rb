@@ -30,13 +30,13 @@ module Derailed
 
       component = env[:controller].next
       if @routes[component] == nil then
-        View.not_found 'Not Found'
+        Component::View.not_found 'Not Found'
       else
         begin
           @routes[component].call(env)
         rescue DRb::DRbConnError
           @routes = {}
-          View.not_found "Component #{component} went away"
+          Component::View.not_found "Component #{component} went away"
         end
       end
     end

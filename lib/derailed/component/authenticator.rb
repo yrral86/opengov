@@ -26,7 +26,7 @@ module Derailed
         when "logout"
           logout(env)
         when 'home'
-          View.render_string("logged in username: #{current_user.username}, <a href='/logout'>logout</a>")
+          render_string("logged in username: #{current_user.username}, <a href='/logout'>logout</a>")
         when 'newuser'
           create_user(env)
         when 'edituser'
@@ -61,7 +61,7 @@ module Derailed
       # login_fail displays the login form when login failed to authenticate
       # the user
       def login_fail(user_session)
-        View.render_erb_from_file(view_file("newsession"),binding)
+        render_erb_from_file(view_file("newsession"),binding)
       end
 
       # login_success handles redirecting the user to their previously requested
@@ -70,14 +70,14 @@ module Derailed
         url = session[:onlogin]
         session[:onlogin] = nil
         url ||= "/home"
-        View.redirect url
+        redirect url
       end
 
       # logut destroys the user's session and sends them to the login form
       def logout(env)
         session = current_session
         session.destroy if session
-        View.redirect "/login"
+        redirect "/login"
       end
 
       # create_user handles creating a new user.  At the moment, this can be
@@ -87,9 +87,9 @@ module Derailed
         user = User.new(params['user'])
         if user.save
           UserSession.create(user)
-          View.redirect '/home'
+          redirect '/home'
         else
-          View.render_erb_from_file(view_file('newuser'),binding)
+          render_erb_from_file(view_file('newuser'),binding)
         end
       end
 
@@ -97,9 +97,9 @@ module Derailed
       def update_user(env)
         user = current_user
         if user.update_attributes(params['user'])
-          View.redirect '/home'
+          redirect '/home'
         else
-          View.render_erb_from_file(view_file('edituser'),binding)
+          render_erb_from_file(view_file('edituser'),binding)
         end
       end
     end

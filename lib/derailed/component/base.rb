@@ -14,7 +14,8 @@ dir = File.expand_path(File.dirname(__FILE__))
  'controller',
  'crud',
  'helpers',
- 'model'
+ 'model',
+ 'view'
 ].each do |library|
   require "#{dir}/#{library}"
 end
@@ -31,6 +32,7 @@ module Derailed
       include Controller
       include Crud
       include Helpers
+      include View
 
       # initialize sets up the database from the config file, initializes the
       # list of models, checks for dependencies, and then registers the
