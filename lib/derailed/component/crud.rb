@@ -34,7 +34,11 @@ module Derailed
             end
           elsif r.get? then # READ
             if id == 'edit' then
-              render_form(model,next_path)
+              if next_path
+                update(model,r)
+              else
+                create(model,r)
+              end
             else
               read(model,id)
             end
@@ -71,16 +75,17 @@ module Derailed
       # create creates a new record for the given model with the given params
       def create(model, request)
         params = clean_params(model, request.params)
-        object = model.new(params)
-        # MODEL NEEDS VALIDATION OF SOME SORT OTHERWISE WE
-        # WILL FALL THROUGH AND CREATE A NULL FILLED RECORD
-        # INSTEAD OF DISPLAYING THE FORM
-        if object.save then
-          redirect('/' + @name.downcase +
-                   '/' + model.name.downcase +
-                   '/' + object.id.to_s)
+        if params.empty?
+          render_form(model, nil, 'post')
         else
-          render_form(model, nil)
+          object = model.new(params)
+          if object.save then
+            redirect('/' + @name.downcase +
+                     '/' + model.name.downcase +
+                     '/' + object.id.to_s)
+          else
+            render_form(model, object, 'post')
+          end
         end
       end
 
@@ -100,37 +105,39 @@ module Derailed
       end
 
       # render_form renders the form for creation/update
-      def render_form(model,id)
-        if id then
-          object = model.find_by_id(id)
-          method = 'put'
-        else
-          object = model.new
-          method = 'post'
-        end
+      def render_form(model,object,method)
+        object = model.new unless object
         render_erb_from_file(view_file(model.name.downcase + 'form'),
                              binding)
       end
 
       # update updated the given record
       def update(model, request)
-        id = request.path.split("/")[3]
+        if request.get?
+          id = path(4)
+        else
+          id = path(3)
+        end
         object = model.find_by_id(id)
         if object
           params = clean_params(model, request.params)
-          if object.update_attributes(params) then
-            redirect('/' + @name.downcase +
-                     '/' + model.name.downcase +
-                     '/' + id)
+          if params.empty?
+            render_form(model, object, 'put')
           else
-            render_form(model, id)
+            if object.update_attributes(params) then
+              redirect('/' + @name.downcase +
+                       '/' + model.name.downcase +
+                       '/' + id)
+            else
+              render_form(model, object, 'put')
+            end
           end
         else
           not_found('Record # ' +
                     id.to_s +
                     ' not found for model ' +
                     model.name +
-                    'in component ' +
+                    ' in component ' +
                     @name)
         end
       end
@@ -147,7 +154,7 @@ module Derailed
                     id +
                     ' not found for model ' +
                     model.name +
-                    'in component ' +
+                    ' in component ' +
                     @name)
         end
       end
