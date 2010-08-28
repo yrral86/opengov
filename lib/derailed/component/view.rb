@@ -63,6 +63,25 @@ module Derailed
         [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
       end
       module_function :method_not_allowed
+
+      # Renders a template from it's name and a binding
+      def render(name, binding)
+        render_erb_from_file_to_string(view_file('_' + name), binding)
+      end
+
+      private
+
+      # view_file returns the filename of a given view
+      # ==== example:
+      # view_file('modelnamelist') returns
+      # RootDir/components/componentname/v/nodelnamelist.html.erb
+      def view_file(name)
+        Config::RootDir + '/' +
+          'components' + '/' +
+          @name.downcase + '/' +
+          'v' + '/' +
+          name + '.html.erb'
+      end
     end
   end
 end

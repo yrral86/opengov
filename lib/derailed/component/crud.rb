@@ -151,33 +151,6 @@ module Derailed
                     @name)
         end
       end
-
-      # view_file returns the filename of a given view
-      # ==== example:
-      # view_file('modelnamelist') returns
-      # RootDir/components/componentname/v/nodelnamelist.html.erb
-      def view_file(name)
-        Config::RootDir + '/' +
-          'components' + '/' +
-          @name.downcase + '/' +
-          'v' + '/' +
-          name + '.html.erb'
-      end
-
-      # render renders a template from it's name and a binding
-      def render(name, binding)
-        render_erb_from_file_to_string(view_file('_' + name), binding)
-      end
-
-      # error_box returns a string containing an unordered list of model
-      # validation errors
-      def error_box(record)
-        string = "<ul>"
-        record.errors.full_messages.each do |m|
-          string += "<li>#{m}</li>"
-        end
-        string += "</ul>"
-      end
     end
   end
 end

@@ -94,7 +94,7 @@ module Derailed
       end
 
       # update_user allows the current user to update his/her user record
-      def update_user(env)
+      def edit_user(env)
         user = current_user
         if user.update_attributes(params['user'])
           redirect '/home'
