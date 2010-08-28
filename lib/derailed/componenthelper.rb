@@ -8,7 +8,7 @@ module Derailed
     # initialize creates a DRbObject for the ComponentManager
     def initialize
       @cm = DRbObject.new nil,
-      Derailed::Socket.get_socket_uri('ComponentManager')
+      Derailed::Socket.uri('ComponentManager')
     end
 
     # get_current_session invokes current_session on the Authenticator component

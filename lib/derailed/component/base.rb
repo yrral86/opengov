@@ -57,7 +57,7 @@ module Derailed
         @ch = ComponentHelper.new
         need = @ch.dependencies_not_satisfied(@dependencies)
         if need == [] then
-          socket = Socket.get_socket_uri @name
+          socket = Socket.uri @name
           DRb.start_service socket, self
           @ch.cm.register_component(socket)
           @registered = true

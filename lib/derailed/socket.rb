@@ -11,8 +11,8 @@ module Derailed
       @@dir = "#{File.expand_path(File.dirname(__FILE__))}/../../#{@@dir}" if @@dir[0] == '.'
     end
 
-    # self.get_socket_uri returns the socket uri for a given name
-    def self.get_socket_uri(name)
+    # self.uri returns the socket uri for a given name
+    def self.uri(name)
       "drbunix:#{@@dir}/#{name}.sock"
     end
 

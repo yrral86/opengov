@@ -18,7 +18,7 @@ class OpenGovComponentManagerTest < Derailed::TestCase
     @ch.cm.unregister_component('PersonLocator')
     assert_equal(['Authenticator::user','Authenticator::usersession'],
                  @ch.cm.available_models.sort)
-    @ch.cm.register_component(Derailed::Socket.get_socket_uri('PersonLocator'))
+    @ch.cm.register_component(Derailed::Socket.uri('PersonLocator'))
   end
 
   def test_components_get_model
