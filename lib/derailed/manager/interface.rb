@@ -1,5 +1,6 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
+require dir + '/mux'
 require dir + '/socket'
 
 module Derailed
@@ -10,6 +11,8 @@ module Derailed
     # components/models/views are available.  It also can provide the socket
     # URIs for the components.
     class Interface
+      include Mux
+
       # initialize creates empty hashes for the components and routes, and a
       # mutex for each hash
       def initialize
@@ -77,22 +80,18 @@ module Derailed
       # (CamelCase::downcase)... I can't think of any reason not to get it
       # working with CamelCase though for consistency
       def available_models
-        models = []
-        @components.each_value do |c|
-          models.concat(c.model_names.collect {|n| "#{c.name}::#{n}"})
+        gather do |c|
+          c.model_names
         end
-        models
       end
 
       # available_types returns a list of all abstract data types the components
       # can provide... we only allow one model for each type per component.
       # Type names are ComponentName::TypeName (CamelCase::CamelCase)
       def available_types
-        types = []
-        @components.each_value do |c|
-          types.concat(c.model_types.collect {|n| "#{c.name}::#{n}"})
+        gather do |c|
+          c.model_types
         end
-        types
       end
 
       # available_components returns a list of all registered components
