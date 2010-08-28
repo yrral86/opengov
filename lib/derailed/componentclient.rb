@@ -47,7 +47,8 @@ module Derailed
 
     # dependencies_not_satisfied returns a list of unsatisfied dependencies
     # when given a list of dependencies.  In other words, it removes all
-    # dependencies from the list which are met.
+    # dependencies from the list which are met.  If the returned hash is empty
+    # all dependencies are satisfied.
     def dependencies_not_satisfied(deps)
       available = {}
       @cm.available_components.each do |c|
