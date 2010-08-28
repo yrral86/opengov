@@ -1,4 +1,4 @@
-<%= user.errors.full_messages %>
+<%= error_box(user) %>
 <form method="post" action="/newuser">
   Username: <input type="text" name="user[username]" value="<%= user.username %>" /><br />
   Password: <input type="password" name="user[password]" /><br />
