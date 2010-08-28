@@ -15,9 +15,9 @@ module Derailed
       end
 
       # current_session fetches the current session via
-      # Derailed::ComponentHelper.get_current_session
+      # Derailed::ComponentClient.get_current_session
       def current_session
-        @ch.get_current_session(Thread.current[:env])
+        @cc.get_current_session(Thread.current[:env])
       end
 
       # current_user extracts the user from the current session

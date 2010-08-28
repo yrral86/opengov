@@ -12,10 +12,10 @@ module Derailed
     # Derailed::Controller::Controller to the env variable and ensures
     # a user is logged in for any url other than /login
     class Middleware
-      # initialize sets the app and creates a ComponentHelper
+      # initialize sets the app and creates a ComponentClient
       def initialize(app)
         @app = app
-        @ch = ComponentHelper.new
+        @cc = ComponentClient.new
       end
 
       # call adds the controller, calls the app, and commits the changes
@@ -35,7 +35,7 @@ module Derailed
       # If there is no logged in user, any other url is stored for redirecting
       # after login, and the user is redirected to the login form.
       def authenticate(env)
-        if @ch.get_current_session(env) or env[:controller].request.path == '/login'
+        if @cc.get_current_session(env) or env[:controller].request.path == '/login'
           yield env
         else
           path = env[:controller].request.path

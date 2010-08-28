@@ -1,10 +1,10 @@
 require 'drb'
 
 module Derailed
-  # = Derailed::ComponentHelper
+  # = Derailed::ComponentClient
   # This class provides an interface to the components as well as the
   # ComponentManager
-  class ComponentHelper
+  class ComponentClient
     # initialize creates a DRbObject for the ComponentManager
     def initialize
       @cm = DRbObject.new nil,

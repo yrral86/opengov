@@ -54,16 +54,16 @@ module Derailed
         #    end
 
 
-        @ch = ComponentHelper.new
-        need = @ch.dependencies_not_satisfied(@dependencies)
+        @cc = ComponentClient.new
+        need = @cc.dependencies_not_satisfied(@dependencies)
         if need == [] then
           socket = Socket.uri @name
           DRb.start_service socket, self
-          @ch.cm.register_component(socket)
+          @cc.cm.register_component(socket)
           @registered = true
           at_exit {
             if @registered then
-              @ch.cm.unregister_component(@name)
+              @cc.cm.unregister_component(@name)
             end
             DRb.stop_service
             ActiveRecord::Base.remove_connection

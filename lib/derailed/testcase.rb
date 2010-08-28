@@ -36,7 +36,7 @@ module Derailed
     # seed_users creates two users, a db user defined by login_credentials
     # and a pam user with login 'larry'
     def seed_users
-      u = @ch.get_model('Authenticator::user')
+      u = @cc.get_model('Authenticator::user')
       u.create(login_credentials['user_session'])
       u.new({:pam_login => 'larry'}).save(false)
     end
@@ -44,9 +44,9 @@ module Derailed
     # clear_db calls destroy_all on all available models except
     # Authenticator::usersession, which has no db backing
     def clear_db
-      @ch.cm.available_models.each do |m|
+      @cc.cm.available_models.each do |m|
         next if m == 'Authenticator::usersession'
-        model = @ch.get_model(m)
+        model = @cc.get_model(m)
         model.destroy_all
       end
     end
@@ -65,13 +65,13 @@ module Derailed
       end
     end
 
-    # setup waits for the components to start, creates a ComponentHelper,
+    # setup waits for the components to start, creates a ComponentClient,
     # calls seed_db, and authenticates the user unless false is passed in
     def setup(authenticate=true)
       # make sure the sockets are ready
       socket_wait('sock', 4)
 
-      @ch = ComponentHelper.new
+      @cc = ComponentClient.new
       seed_db
       do_auth if authenticate
     end

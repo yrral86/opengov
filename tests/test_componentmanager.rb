@@ -10,20 +10,20 @@ class OpenGovComponentManagerTest < Derailed::TestCase
                   'Authenticator::usersession',
                   'PersonLocator::address',
                   'PersonLocator::person'],
-                 @ch.cm.available_models.sort
+                 @cc.cm.available_models.sort
                  )
   end
 
   def test_components_unregister
-    @ch.cm.unregister_component('PersonLocator')
+    @cc.cm.unregister_component('PersonLocator')
     assert_equal(['Authenticator::user','Authenticator::usersession'],
-                 @ch.cm.available_models.sort)
-    @ch.cm.register_component(Derailed::Socket.uri('PersonLocator'))
+                 @cc.cm.available_models.sort)
+    @cc.cm.register_component(Derailed::Socket.uri('PersonLocator'))
   end
 
   def test_components_get_model
     begin
-      person = @ch.get_model("PersonLocator::person")
+      person = @cc.get_model("PersonLocator::person")
     rescue DRb::DRbServerNotFound
       fail 'Could not connect to PersonLocator component'
     end
@@ -38,7 +38,7 @@ class OpenGovComponentManagerTest < Derailed::TestCase
 
   def test_abstract_data_type
     begin
-      person = @ch.get_model("PersonLocator::person")
+      person = @cc.get_model("PersonLocator::person")
     rescue DRb::DRbServerNotFound
       fail 'Could not connect to PersonLocator component'
     end
