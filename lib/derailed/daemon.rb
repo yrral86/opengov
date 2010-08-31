@@ -58,7 +58,7 @@ module Derailed
     end
 
     def subclass?(m,klass)
-      c.ancestors.include?(klass)
+      m.ancestors.include?(klass)
     end
 
     def class_list
