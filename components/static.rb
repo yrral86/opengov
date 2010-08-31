@@ -1,8 +1,7 @@
 #!/usr/bin/env ruby1.9.1
 
 dir = File.expand_path(File.dirname(__FILE__))
-
-require dir + '/../lib/derailed'
+require dir + '/../lib/derailed/daemon'
 
 class OpenGovStaticComponent < Derailed::Component::Base
   def routes
@@ -27,11 +26,4 @@ class OpenGovStaticComponent < Derailed::Component::Base
   end
 end
 
-Daemons.run_proc('OpenGovStaticComponent',
-                 {:dir_mode => :normal, :dir => dir}) do
-  OpenGovStaticComponent.new(
-                             'Static',
-                             [],
-                             []
-                             ).daemonize
-end
+Derailed::Daemon.component('Static').daemonize(OpenGovStaticComponent)

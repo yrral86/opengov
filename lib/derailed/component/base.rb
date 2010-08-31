@@ -41,11 +41,8 @@ module Derailed
       # initialize sets up the database from the config file, initializes the
       # list of models, checks for dependencies, and then registers the
       # component with the Manager
-      def initialize(name, models, views, dependencies = [], db = 'default')
+      def initialize(name, models, views, dependencies = [])
         @registered = false;
-        db_config = YAML::load(File.open(Config::RootDir + '/db/config.yml'))[db]
-        ActiveRecord::Base.logger = Logger.new STDOUT
-        ActiveRecord::Base.establish_connection(db_config[Config::Environment])
         @name = name
         @dependencies = dependencies
 

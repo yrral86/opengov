@@ -7,8 +7,6 @@ require 'drb/unix'
 require 'rubygems'
 require 'optparse'
 
-require dir + '/lib/derailed/daemon.rb'
-
 optparse = OptionParser.new do |opts|
   opts.on('--test') do
     ENV['ENV'] = 'test'
@@ -22,11 +20,11 @@ optparse = OptionParser.new do |opts|
 end
 optparse.parse!
 
-require dir + '/lib/derailed'
+require dir + '/lib/derailed/daemon'
 
-cm = Derailed::Manager::Interface.new
+manager = Derailed::Manager::Interface.new
 
 Derailed::Daemon.manager.daemonize do
-  cm.daemonize
+  manager.daemonize
 end
 
