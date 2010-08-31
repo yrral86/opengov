@@ -1,9 +1,13 @@
 require 'drb'
-require 'drb/unix'
+# TODO: why/do we need to include this?
 require 'rubygems'
+# TODO: move to Derailed::Component::Model?
 require 'active_record'
+# TODO: move authlogic to Derailed::Component::Authenticator
 require 'authlogic'
+# TODO: remove daemons once we have Derailed::Daemon done
 require 'daemons'
+# TODO: check where we use these
 require 'rack/request'
 require 'rack/logger'
 

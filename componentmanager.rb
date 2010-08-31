@@ -5,8 +5,9 @@ dir = File.expand_path(File.dirname(__FILE__))
 require 'drb'
 require 'drb/unix'
 require 'rubygems'
-require 'daemons'
 require 'optparse'
+
+require dir + '/lib/derailed/daemon.rb'
 
 optparse = OptionParser.new do |opts|
   opts.on('--test') do
@@ -25,8 +26,7 @@ require dir + '/lib/derailed'
 
 cm = Derailed::Manager::Interface.new
 
-Daemons.run_proc('OpenGovManager',
-                 {:dir_mode => :normal, :dir => dir}) do
+Derailed::Daemon.manager.daemonize do
   cm.daemonize
 end
 
