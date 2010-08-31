@@ -5,7 +5,8 @@ module Derailed
   # model which implements the type, has two methods:
   # 1. abstract_map, which is a hash with maps any abstract attributes that
   #    don't have the same name as database fields to the appropriate field.
-  # 2. type, which specifies the name of the type implemented in CamelCase.
+  # 2. self.abstract_type, which specifies the name of the type implemented in
+  #    CamelCase.
   # ==== example:
   #   module Type
   #     class Primate < DataType
@@ -22,7 +23,7 @@ module Derailed
   #       {:age => :years} # db field is 'years'
   #     end
   #
-  #     def type
+  #     def self.abstract_type
   #       'Primate'
   #     end
   #   end

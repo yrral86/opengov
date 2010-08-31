@@ -21,9 +21,9 @@ module Derailed
         {} # return empty hash, db fields align with abstract fields
       end
 
-      # self.type specifies the abstract data type this model implements (default:
-      # nil)
-      def self.type
+      # self.abstract_type specifies the abstract data type this model
+      # implements (default: nil)
+      def self.abstract_type
         nil
       end
 

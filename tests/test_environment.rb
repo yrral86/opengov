@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby1.9.1
+#!/usr/bin/env ruby
 
 require 'debian'
 require 'test/unit'
@@ -21,7 +21,7 @@ class OpenGovEnvironmentTest < Test::Unit::TestCase
     gems = File.read('requirements/rubypackages').split "\n"
     gems.each do |g|
       unless g == "" then
-        assert not(Gem.source_index.find_name(g).empty?), "Gem " + g + " not installed"
+        assert Gem.source_index.find_name(g).empty? == false, "Gem " + g + " not installed"
       end
     end
   end

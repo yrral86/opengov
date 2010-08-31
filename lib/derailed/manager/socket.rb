@@ -15,7 +15,7 @@ module Derailed
         config_file = "#{Config::RootDir}/config/environments.yml"
         config = YAML::load(File.open(config_file))[Config::Environment]
         @@dir = config['socket_dir']
-        @@dir = "#{Config::RootDir}/#{@@dir}" if @@dir[0] == '.'
+        @@dir = "#{Config::RootDir}/#{@@dir}" if @@dir.match('^\.')
       end
 
       # self.uri returns the socket uri for a given name

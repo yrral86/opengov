@@ -1,11 +1,11 @@
 require 'rake/testtask'
+require 'rubygems'
 
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 
 Rake::TestTask.new(:do_test) do |t|
   `mkdir -p sockets/test`
   `./componentmanager.rb start --test`
-  sleep 1.0
   t.test_files = FileList['tests/test*.rb']
   t.verbose = true
 end
@@ -22,7 +22,6 @@ end
 namespace :db do
   task :ar_init do
     # Load the database config
-    require 'active_record'
     database_yml = YAML::load(File.open(APP_BASE + "/db/config.yml"))['default']
     current_env = ENV['ENV'] || "development"
     ActiveRecord::Base.establish_connection(database_yml[current_env])

@@ -4,7 +4,7 @@
   </head>
   <body>
     <%= error_box(object) %>
-    <form id="form" method="post" action="/personlocator/person/<%= object.id %>">
+    <form id="form" method="post" action="/personlocator/person/<%= object[:id] %>">
       <input type="hidden" name="_method" value="<%= method %>" />
       First Name: <input type="text" name="fname" value="<%= object.fname %>" /><br />
       Last Name: <input type="text" name="lname" value="<%= object.lname %>" /><br />

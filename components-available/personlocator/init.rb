@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby1.9.1
+#!/usr/bin/env ruby
 
 dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../../lib/derailed/daemon'

@@ -1,8 +1,7 @@
 require 'drb'
-# TODO: why/do we need to include this?
 require 'rubygems'
 # TODO: move to Derailed::Component::Model?
-require 'active_record'
+#require 'active_record'
 # TODO: move authlogic to Derailed::Component::Authenticator
 require 'authlogic'
 # TODO: remove daemons once we have Derailed::Daemon done
@@ -97,7 +96,9 @@ module Derailed
       def model_types
         types = []
         @models.each_value do |m|
-          types << m.type if m.respond_to?(:type) && m.type
+          if m.respond_to?(:abstract_type) && m.abstract_type
+            types << m.abstract_type
+          end
         end
         types
       end

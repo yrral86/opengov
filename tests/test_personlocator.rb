@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby1.9.1
+#!/usr/bin/env ruby
 
 require 'lib/derailed/testcase'
 require 'nokogiri'
@@ -18,7 +18,7 @@ class OpenGovPersonLocatorTest < Derailed::TestCase
     follow_redirects
     person_model = @cc.get_model("PersonLocator::person")
     p = person_model.find_by_lname(person[:lname])
-    assert_equal "/personlocator/person/#{p.id}", last_request.path
+    assert_equal "/personlocator/person/#{p[:id]}", last_request.path
     p.destroy
   end
 

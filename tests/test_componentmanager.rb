@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby1.9.1
+#!/usr/bin/env ruby
 
 require 'lib/derailed/testcase'
 
@@ -50,7 +50,7 @@ class OpenGovComponentManagerTest < Derailed::TestCase
 
     larry2 = Derailed::Type::Person.new(larry)
 
-    assert_equal(larry.id, larry2.id)
+    assert_equal(larry[:id], larry2[:id])
     assert_equal(larry.fname, larry2.first_name)
     assert_equal(larry.lname, larry2.last_name)
 

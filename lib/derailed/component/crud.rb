@@ -82,7 +82,7 @@ module Derailed
           if object.save then
             redirect('/' + @name.downcase +
                      '/' + model.name.downcase +
-                     '/' + object.id.to_s)
+                     '/' + object[:id].to_s)
           else
             render_form(model, object, 'post')
           end

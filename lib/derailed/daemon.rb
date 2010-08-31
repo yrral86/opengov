@@ -1,4 +1,5 @@
-require 'daemons'
+require 'rubygems'
+#require 'daemons'
 
 dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../derailed'
