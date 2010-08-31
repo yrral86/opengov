@@ -25,7 +25,7 @@ module Derailed
     end
 
     def require_models
-      dir = Config::RootDir + "/components/#{@name.downcase}"
+      dir = Config::RootDir + "/components-enabled/#{@name.downcase}"
       original = class_list
       require_dir(dir)
       new = class_list
@@ -46,7 +46,7 @@ module Derailed
       old_dir = Dir.pwd
       Dir.chdir dir
       Dir.glob '**/*.rb' do |f|
-        require f
+        require f unless f == 'init.rb'
       end
       Dir.chdir old_dir
     end

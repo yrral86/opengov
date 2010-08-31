@@ -1,6 +1,5 @@
 FILES = componentmanager.rb \
 	components \
-	config/components \
 	config/environments.yml \
 	db/config.yml \
 	javascript \

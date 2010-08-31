@@ -34,27 +34,38 @@ module Derailed
       def daemonize
         DRb.start_service Socket.uri('Manager'), self
 
-        dir = Config::RootDir
+        dir = Config::RootDir + '/components-enabled'
 
-        component_file = File.read(dir + '/config/components')
-        component_list = component_file.split "\n"
+        old_dir = Dir.pwd
+        Dir.chdir dir
+        component_list = resolve_dependencies(Dir.glob '*')
+        Dir.chdir old_dir
 
         component_list.each do |c|
-          unless c == '' then
-          `#{dir}/components/#{c}.rb start`
-          end
+          `#{dir}/#{c}/init.rb start`
         end
 
         at_exit {
           component_list.each do |c|
             unless c == '' then
-              `#{dir}/components/#{c}.rb stop`
+              `#{dir}/#{c}/init.rb stop`
             end
           end
           DRb.stop_service
         }
 
         DRb.thread.join
+      end
+
+      private
+
+      def resolve_dependencies(array)
+        # hax for now- put static first
+        new_array = ['static']
+        array.each do |c|
+          new_array.push(c) unless c == 'static'
+        end
+        new_array
       end
     end
   end

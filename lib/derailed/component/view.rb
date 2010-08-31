@@ -74,10 +74,10 @@ module Derailed
       # view_file returns the filename of a given view
       # ==== example:
       # view_file('modelnamelist') returns
-      # RootDir/components/componentname/v/nodelnamelist.html.erb
+      # RootDir/components-enabled/componentname/v/nodelnamelist.html.erb
       def view_file(name)
         Config::RootDir + '/' +
-          'components' + '/' +
+          'components-enabled' + '/' +
           @name.downcase + '/' +
           'v' + '/' +
           name + '.html.erb'
