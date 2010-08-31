@@ -14,6 +14,7 @@ module Derailed
   # authentication, as in test_authenticator.rb)
   class TestCase < Test::Unit::TestCase
     include Rack::Test::Methods
+    undef_method :default_test
 
     # app returns the app built from the config file by Rack::Builder
     def app
