@@ -14,7 +14,7 @@ dir = File.expand_path(File.dirname(__FILE__))
 
 [
  'authentication',
- 'controller',
+ 'environment',
  'crud',
  'helpers',
  'model',
@@ -32,7 +32,7 @@ module Derailed
     # models via the Derailed::Component::Crud module
     class Base
       include Authentication
-      include Controller
+      include Environment
       include Crud
       include Helpers
       include View
