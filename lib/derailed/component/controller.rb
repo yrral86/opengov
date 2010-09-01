@@ -10,11 +10,11 @@ module Derailed
     # of a component.  Methods defined in a subclass of this class will be
     # called when a request for the path matching the function name comes in.
     # ==== example:
-    # component = PersonLocator
-    # request path = /personlocator/example
+    #  component = PersonLocator
+    #  request path = /personlocator/example
     #
-    # Component will call controller.example, and if it is not defined,
-    # we will return a 404
+    #  Component will call controller.example, and if it is not defined,
+    #  we will return a 404
     class Controller
       include Crud
       include Environment
