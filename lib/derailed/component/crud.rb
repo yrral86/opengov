@@ -12,15 +12,17 @@ module Derailed
     #    ('object')... also needs a hidden input named _method with value
     #    <%= method =>
     module Crud
+      private
+
       # crud handles determining which model we are working with and then
       # handing control off the the appropriate function based on what we
       # are trying to do with that model
       def crud(env)
-        model_name = next_path
-        id = next_path
+        model_name = path(2)
+        id = path(3)
         r = controller.request
 
-        model = @models[model_name]
+        model = @component.model(model_name)
 
         if model then
           if r.post? then
@@ -34,7 +36,7 @@ module Derailed
             end
           elsif r.get? then # READ
             if id == 'edit' then
-              if next_path
+              if path(4)
                 update(model,r)
               else
                 create(model,r)
@@ -56,7 +58,7 @@ module Derailed
           not_found('Model ' +
                     model_name +
                     ' not found in component ' +
-                    @name)
+                    @component.name)
         end
       end
 
@@ -80,7 +82,7 @@ module Derailed
         else
           object = model.new(params)
           if object.save then
-            redirect('/' + @name.downcase +
+            redirect('/' + @component.name.downcase +
                      '/' + model.name.downcase +
                      '/' + object[:id].to_s)
           else
@@ -96,7 +98,7 @@ module Derailed
           render_erb_from_file(view_file(model.name.downcase),binding)
         elsif id then
           not_found('Record  #' + id + ' not found for model ' +
-                    model.name + ' in component ' + @name)
+                    model.name + ' in component ' + @component.name)
         else
           objects = model.find :all
           render_erb_from_file(view_file(model.name.downcase + 'list'),
@@ -125,7 +127,7 @@ module Derailed
             render_form(model, object, 'put')
           else
             if object.update_attributes(params) then
-              redirect('/' + @name.downcase +
+              redirect('/' + @component.name.downcase +
                        '/' + model.name.downcase +
                        '/' + id)
             else
@@ -138,7 +140,7 @@ module Derailed
                     ' not found for model ' +
                     model.name +
                     ' in component ' +
-                    @name)
+                    @component.name)
         end
       end
 
@@ -147,7 +149,7 @@ module Derailed
         object = model.find_by_id(id)
         if object then
           object.delete
-          redirect('/' + @name.downcase +
+          redirect('/' + @component.name.downcase +
                    '/' + model.name.downcase)
         else
           not_found('Record # ' +
@@ -155,7 +157,7 @@ module Derailed
                     ' not found for model ' +
                     model.name +
                     ' in component ' +
-                    @name)
+                    @component.name)
         end
       end
     end

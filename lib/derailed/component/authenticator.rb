@@ -19,18 +19,22 @@ module Derailed
 
       # call handles routing the various paths to the functions to handle them
       def call(env)
-        super(env, false)
-        case path(1)
-        when "login"
-          login(env)
-        when "logout"
-          logout(env)
-        when 'home'
-          render_string("logged in username: #{current_user.username}, <a href='/logout'>logout</a>")
-        when 'newuser'
-          create_user(env)
-        when 'edituser'
-          edit_user(env)
+        status, headers, body = super(env)
+        if status == 404
+          case path(1)
+          when "login"
+            login(env)
+          when "logout"
+            logout(env)
+          when 'home'
+            render_string("logged in username: #{current_user.username}, <a href='/logout'>logout</a>")
+          when 'newuser'
+            create_user(env)
+          when 'edituser'
+            edit_user(env)
+          end
+        else
+          [status, headers, body]
         end
       end
 

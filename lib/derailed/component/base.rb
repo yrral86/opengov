@@ -8,7 +8,6 @@ dir = File.expand_path(File.dirname(__FILE__))
 [
  'authentication',
  'controller',
- 'crud',
  'environment',
  'helpers',
  'loader',
@@ -23,12 +22,10 @@ module Derailed
     # = Derailed::Component::Base
     # This class is the base of all components, and handles
     # registering/deregistering with the Manager, database initilization, and
-    # access to models.  It also provides basic CRUD functionality for all
-    # models via the Derailed::Component::Crud module
+    # access to models.
     class Base
       include Authentication
       include Environment
-      include Crud
       include Helpers
       include View
       include Loader
@@ -41,9 +38,10 @@ module Derailed
         @name = name
         @dependencies = dependencies
 
-        models, @controller = require_libraries
-        @models = {}
+        models, controller_class = require_libraries
+        @controller = controller_class.new(self) if controller_class
 
+        @models = {}
         add_models(models)
 
         @cc = ComponentClient.new
@@ -121,25 +119,17 @@ module Derailed
       end
 
       # call handles the request.  It always sets up the environment, and
-      # by default it provides CRUD functionality for the models.  To override
-      # call in the component to do something besides CRUD, do a call(env,false)
-      # to setup your environment, then handle the request
-      def call(env, model_crud = true)
+      # calls the appropriate method on the controller
+      def call(env)
         setup_env(env)
 
-        if model_crud then
-          status, headers, body = crud(env)
-        end
-
-        # if we have a status and it's not a 404, return it
-        if status && status != 404
-          [status, headers, body]
-        # otherwise, send it to the controller if we have one
-        elsif @controller
-          @controller.send(next_path)
+        path = next_path
+        # send it to the controller if we have one
+        if @controller && path
+          @controller.send(path)
         # or return a 404
         else
-          View.not_found "No controller found for component #{@name}"
+          not_found "No controller found for component #{@name}"
         end
       end
     end

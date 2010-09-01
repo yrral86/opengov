@@ -6,6 +6,8 @@ module Derailed
     # = Derailed::Component::View
     # This module generates Rack formatted responses.
     module View
+      private
+
       # Renders and erb template given a filename and a binding
       def render_erb_from_file(fn, b)
         string = File.read(fn)
@@ -69,18 +71,24 @@ module Derailed
         render_erb_from_file_to_string(view_file('_' + name), binding)
       end
 
-      private
-
       # view_file returns the filename of a given view
       # ==== example:
       # view_file('modelnamelist') returns
       # RootDir/components-enabled/componentname/v/nodelnamelist.html.erb
       def view_file(name)
-        Config::RootDir + '/' +
-          'components-enabled' + '/' +
-          @name.downcase + '/' +
-          'v' + '/' +
-          name + '.html.erb'
+        "#{Config::RootDir}/components-enabled/#{component_dir}" +
+          "/v/#{name}.html.erb"
+      end
+
+      # component_dir switches between @name.downcase (when we are called from
+      # the component) and @component.name.downcase (when we are called from
+      # the controller)
+      def component_dir
+        if @name
+          @name.downcase
+        else
+          @component.name.downcase
+        end
       end
     end
   end

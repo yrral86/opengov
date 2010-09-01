@@ -4,6 +4,8 @@ module Derailed
     # This module provides convenience functions to interact with the
     # Derailed::RequestRouter side controller (Derailed::Controller::Controller)
     module Environment
+      private
+
       # controller extracts the controller from the environment for the current
       # thread (set in Derailed::Component::Authentication.setup_env)
       def controller

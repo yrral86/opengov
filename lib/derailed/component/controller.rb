@@ -1,3 +1,8 @@
+dir = File.expand_path(File.dirname(__FILE__))
+require dir + '/crud'
+require dir + '/environment'
+require dir + '/view'
+
 module Derailed
   module Component
     # = Derailed::Component::Controller
@@ -11,8 +16,16 @@ module Derailed
     # Component will call controller.example, and if it is not defined,
     # we will return a 404
     class Controller
+      include Crud
+      include Environment
+      include View
+
+      def initialize(component)
+        @component = component
+      end
+
       def method_missing(id, *args)
-        View.not_found "Method not found: #{id}"
+        crud(Thread.current[:env])
       end
     end
   end
