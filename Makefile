@@ -1,5 +1,6 @@
 FILES = componentmanager.rb \
-	components \
+	components-available \
+	components-enabled \
 	config/environments.yml \
 	db/config.yml \
 	javascript \
@@ -11,7 +12,7 @@ FILES = componentmanager.rb \
 USER=root
 
 deploy:
-	ENV=production /var/lib/gems/1.9.1/bin/rake db:migrate
+	ENV=production rake db:migrate
 	service apache2 stop
 	service opengov stop
 	rm -rf /var/www/opengov

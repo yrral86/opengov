@@ -1,2 +1,2 @@
 export ENV=production
-exec '/usr/bin/ruby' $@
+exec '/usr/local/bin/ruby' $@

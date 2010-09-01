@@ -1,5 +1,5 @@
-LoadModule passenger_module /var/lib/gems/1.9.1/gems/passenger-2.2.15/ext/apache2/mod_passenger.so
-PassengerRoot /var/lib/gems/1.9.1/gems/passenger-2.2.15
+LoadModule passenger_module /usr/local/lib/ruby/gems/1.8/gems/passenger-2.2.15/ext/apache2/mod_passenger.so
+PassengerRoot /usr/local/lib/ruby/gems/1.8/gems/passenger-2.2.15
 PassengerRuby /var/www/opengov/production-ruby
 PassengerAppRoot /var/www/opengov
 #PassengerDefaultUser www-data

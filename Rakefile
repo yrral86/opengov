@@ -1,5 +1,8 @@
 require 'rake/testtask'
 require 'rubygems'
+require 'yaml'
+require 'active_record'
+require 'rack/logger'
 
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 
