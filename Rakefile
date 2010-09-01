@@ -16,7 +16,7 @@ end
 
 task :doc do
   `rm -rf doc/`
-  `rdoc1.9.1 -Sd lib`
+  `rdoc -Sd lib`
 end
 
 namespace :db do
