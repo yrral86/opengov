@@ -1,9 +1,5 @@
 require 'yaml'
 
-dir = File.expand_path(File.dirname(__FILE__))
-
-require dir + '/../config'
-
 module Derailed
   module Manager
     # = Derailed::Manager::Socket
