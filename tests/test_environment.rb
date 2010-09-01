@@ -5,7 +5,7 @@ require 'test/unit'
 
 class OpenGovEnvironmentTest < Test::Unit::TestCase
   def test_system_packages
-    pass
+    assert true
 #    assert false, "can not test system packages with enterprise ruby, make " +
 #      "sure you run 'sudo apt-get install `cat requirements/packages`'"
   end
