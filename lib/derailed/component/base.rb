@@ -14,9 +14,11 @@ dir = File.expand_path(File.dirname(__FILE__))
 
 [
  'authentication',
- 'environment',
+ 'controller',
  'crud',
+ 'environment',
  'helpers',
+ 'loader',
  'model',
  'view'
 ].each do |library|
@@ -36,25 +38,20 @@ module Derailed
       include Crud
       include Helpers
       include View
+      include Loader
 
       # initialize sets up the database from the config file, initializes the
       # list of models, checks for dependencies, and then registers the
       # component with the Manager
-      def initialize(name, models, views, dependencies = [])
+      def initialize(name, dependencies = [])
         @registered = false;
         @name = name
         @dependencies = dependencies
 
+        models, @controller = require_libraries
         @models = {}
 
         add_models(models)
-
-        #    not yet used
-        #    @views = {}
-        #    views.each do |v|
-        #      @views[v.name.downcase] = v
-        #    end
-
 
         @cc = ComponentClient.new
         need = @cc.dependencies_not_satisfied(@dependencies)

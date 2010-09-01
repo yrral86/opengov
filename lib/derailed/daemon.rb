@@ -1,9 +1,7 @@
 require 'rubygems'
-#require 'daemons'
 
 dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../derailed'
-
 
 module Derailed
   class Daemon
@@ -16,7 +14,6 @@ module Derailed
 
       if type == Component
         init_ar(db)
-        require_models
       end
     end
 
@@ -34,7 +31,7 @@ module Derailed
         if block_given?
           yield
         else # assumes component as manager has a block
-          klass.new(@name, @new_models, [], requirements).daemonize
+          klass.new(@name, requirements).daemonize
         end
       end
     end
@@ -44,37 +41,6 @@ module Derailed
     def init_ar(db)
       conf = YAML::load(File.open(Config::RootDir + '/db/config.yml'))[db]
       ActiveRecord::Base.establish_connection(conf[Config::Environment])
-    end
-
-    def require_models
-      dir = Config::RootDir + "/components-enabled/#{@name.downcase}"
-      original = class_list
-      require_dir(dir)
-      new = class_list
-      new_modules = new - original
-      @new_models = new_modules.select do |m|
-        subclass?(m, Derailed::Component::Model) ||
-        subclass?(m, Authlogic::Session::Base)
-      end
-    end
-
-    def subclass?(m,klass)
-      m.ancestors.include?(klass)
-    end
-
-    def class_list
-      array = []
-      ObjectSpace.each_object(Class) {|m| array << m }
-      array
-    end
-
-    def require_dir(dir)
-      old_dir = Dir.pwd
-      Dir.chdir dir
-      Dir.glob '**/*.rb' do |f|
-        require f unless f == 'init.rb'
-      end
-      Dir.chdir old_dir
     end
   end
 end
