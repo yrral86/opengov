@@ -1,14 +1,7 @@
 require 'drb'
 require 'rubygems'
-# TODO: move to Derailed::Component::Model?
-#require 'active_record'
-# TODO: move authlogic to Derailed::Component::Authenticator
 require 'authlogic'
-# TODO: remove daemons once we have Derailed::Daemon done
 require 'daemons'
-# TODO: check where we use these
-require 'rack/request'
-require 'rack/logger'
 
 dir = File.expand_path(File.dirname(__FILE__))
 
