@@ -128,7 +128,18 @@ module Derailed
         setup_env(env)
 
         if model_crud then
-          crud(env)
+          status, headers, body = crud(env)
+        end
+
+        # if we have a status and it's not a 404, return it
+        if status && status != 404
+          [status, headers, body]
+        # otherwise, send it to the controller if we have one
+        elsif @controller
+          @controller.send(next_path)
+        # or return a 404
+        else
+          View.not_found "No controller found for component #{@name}"
         end
       end
     end
