@@ -12,6 +12,7 @@ module Derailed
     # ==== example:
     #  component = PersonLocator
     #  request path = /personlocator/example
+    #
     #  Component will call controller.example, and if it is not defined,
     #  we will return a 404
     class Controller
