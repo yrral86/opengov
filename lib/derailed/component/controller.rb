@@ -22,10 +22,23 @@ module Derailed
 
       def initialize(component)
         @component = component
+        @safe_names = whitelist
       end
 
+      def allowed(name)
+        @safe_names.include?(name)
+      end
+
+      private
       def method_missing(id, *args)
         crud(Thread.current[:env])
+      end
+
+      def whitelist
+        array = self.public_methods - Object.new.public_methods
+        array -= ['allowed']
+        array += @component.model_names
+        array
       end
     end
   end

@@ -1,11 +1,4 @@
-#dir = File.expand_path(File.dirname(__FILE__))
-#require dir + '/../../lib/derailed'
-
 class StaticController < Derailed::Component::Controller
-  def test_method
-    Derailed::Component::View.render_string "Yo"
-  end
-
   def javascript
     path = "#{Derailed::Config::RootDir}/javascript/#{next_path}"
     render_path(path)
@@ -18,11 +11,11 @@ class StaticController < Derailed::Component::Controller
 
   private
   def render_path(path)
-    file = File.read path
-    render_string file
-  end
-
-  def next_path
-    'prototype.js'
+    begin
+      file = File.read path
+      render_string file
+    rescue
+      not_found "Not found: #{full_path}"
+    end
   end
 end

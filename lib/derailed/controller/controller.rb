@@ -34,18 +34,6 @@ module Derailed
         @cookies = init_cookies
       end
 
-      # init_cookies initialized the cookies hash by copying all key value pairs
-      # from the request
-      def init_cookies
-        c = {}
-        c.extend(DRbUndumped)
-        c.extend(CookieFix)
-        @r.cookies.keys.each do |k|
-          c[k] = @r.cookies[k]['value']
-        end
-        c
-      end
-
       # next returns the next piece of the path
       # ===== example: /extra/long/test/path/
       # 1st call:: 'extra'
@@ -72,15 +60,6 @@ module Derailed
       def request
         @r
       end
-
-      # save_session saves the session and cookie hashes back into the response
-      def save_session(response)
-        @env['rack.session'] = @session.dup
-        @cookies.keys.each do |k|
-          response.set_cookie k, @cookies[k]
-        end
-      end
-
       # params returns the request params
       def params
         @r.params
@@ -101,6 +80,27 @@ module Derailed
       # set the domain for cookies (required by Authlogic)
       def cookie_domain
         @env['HTTP_HOST']
+      end
+
+      # save_session saves the session and cookie hashes back into the response
+      def save_session(response)
+        @env['rack.session'] = @session.dup
+        @cookies.keys.each do |k|
+          response.set_cookie k, @cookies[k]
+        end
+      end
+
+      private
+      # init_cookies initialized the cookies hash by copying all key value pairs
+      # from the request
+      def init_cookies
+        c = {}
+        c.extend(DRbUndumped)
+        c.extend(CookieFix)
+        @r.cookies.keys.each do |k|
+          c[k] = @r.cookies[k]['value']
+        end
+        c
       end
     end
   end

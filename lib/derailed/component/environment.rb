@@ -45,6 +45,10 @@ module Derailed
       def next_path
         controller.next
       end
+
+      def full_path
+        controller.request.path
+      end
     end
   end
 end

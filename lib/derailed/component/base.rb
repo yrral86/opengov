@@ -39,10 +39,14 @@ module Derailed
         @dependencies = dependencies
 
         models, controller_class = require_libraries
-        @controller = controller_class.new(self) if controller_class
 
         @models = {}
         add_models(models)
+
+        # must be after add_models as controller creates a whitelist
+        # of what can be called and that list needs to include the models
+        # for CRUD to work
+        @controller = controller_class.new(self) if controller_class
 
         @cc = ComponentClient.new
         need = @cc.dependencies_not_satisfied(@dependencies)
@@ -125,11 +129,11 @@ module Derailed
 
         path = next_path
         # send it to the controller if we have one
-        if @controller && path
+        if @controller && path && @controller.allowed(path)
           @controller.send(path)
         # or return a 404
         else
-          not_found "No controller found for component #{@name}"
+          not_found "File not found."
         end
       end
     end
