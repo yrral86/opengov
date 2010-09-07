@@ -1,5 +1,8 @@
 module Derailed
   module Manager
+    # = Derailed::Manager::Components
+    # This module provides functions for accessing the components and their
+    # models.
     module Components
       # get_model returns a DRbObject representing the given model
       def get_model(name)

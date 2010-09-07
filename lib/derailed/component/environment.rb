@@ -46,6 +46,7 @@ module Derailed
         controller.next
       end
 
+      # full_path returns the full request path
       def full_path
         controller.request.path
       end

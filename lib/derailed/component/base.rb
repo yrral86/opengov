@@ -120,11 +120,12 @@ module Derailed
         [@name.downcase]
       end
 
-      # call handles the request.  It always sets up the environment, and
-      # calls the appropriate method on the controller
+      # call handles the request.  It sets up the environment, and
+      # calls the appropriate method on the controller.  The method it calls
+      # defaults to next_path, but if a value is passed in for path_position
+      # it grabs that part of the path as the method name.
       def call(env, path_position=nil)
         setup_env(env)
-
         method = path_position ? path(path_position) : next_path
         @controller.send(method)
       end

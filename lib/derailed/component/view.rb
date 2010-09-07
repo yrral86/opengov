@@ -7,7 +7,6 @@ module Derailed
     # This module generates Rack formatted responses.
     module View
       private
-
       # Renders and erb template given a filename and a binding
       def render_erb_from_file(fn, b)
         string = File.read(fn)

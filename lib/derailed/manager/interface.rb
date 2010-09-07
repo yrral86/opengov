@@ -56,6 +56,8 @@ module Derailed
 
       private
 
+      # resolve_dependencies should reorder the components based on dependencies
+      # so that they can start in that order.
       def resolve_dependencies(array)
         # hax for now- put static first
         new_array = ['static']

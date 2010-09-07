@@ -1,7 +1,13 @@
 module Derailed
   module Component
+    # = Derailed::Component::Loader
+    # This module provides the require_libraries function to require the models
+    # and controller for the component.
     module Loader
       private
+      # require_libraries pulls in all the ruby files in the component's
+      # directory and keeps track of the classes that are added.  These
+      # classes are the models and the controller class.
       def require_libraries
         dir = Config::RootDir + "/components-enabled/#{@name.downcase}"
         original = class_list
@@ -18,16 +24,19 @@ module Derailed
         [new_models,controller_array[0]] # we should only have one controller
       end
 
+      # subclass returns true if klass is an ancestor of m
       def subclass?(m,klass)
         m.ancestors.include?(klass)
       end
 
+      # class_list returns a list of currently defined classes
       def class_list
         array = []
         ObjectSpace.each_object(Class) {|m| array << m }
         array
       end
 
+      # require_dir requires all ruby files in the specified directory
       def require_dir(dir)
         old_dir = Dir.pwd
         Dir.chdir dir

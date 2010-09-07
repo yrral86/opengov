@@ -26,16 +26,22 @@ module Derailed
       include Helpers
       include View
 
+      # initialize sets the component and generates a whitelist of method names
+      # that can be called as URLs
       def initialize(component)
         @component = component
         @safe_names = whitelist
       end
 
       private
+      # allowed determines if the given name is on the whitelist
       def allowed(name)
         @safe_names.include?(name)
       end
 
+      # method_missing checks if the function name is allowed and if it is
+      # (and it's not defined, as we're in method_missing), it is a model, so
+      # we call crud.  Otherwise, it returns a 404.
       def method_missing(id, *args)
         if allowed(id.to_s)
           crud(Thread.current[:env])
@@ -45,6 +51,7 @@ module Derailed
         end
       end
 
+      # whitelist generates a list of methods that can be called as URLs
       def whitelist
         array = self.public_methods - Object.new.public_methods
         array += @component.model_names

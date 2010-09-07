@@ -1,7 +1,10 @@
 module Derailed
   module Manager
+    # = Derailed::Manager::Information
+    # This module provides functions to request information from the Manager
     module Information
-      # available_routes returns the routes hash
+      # available_routes returns the routes hash built by scanning
+      # collecting the routes from each component.
       def available_routes
         routes = {}
         @components.each_value do |c|

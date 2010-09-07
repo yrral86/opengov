@@ -4,7 +4,6 @@ module Derailed
     # This module is where our view helpers are defined.
     module Helpers
       private
-
       # error_box returns a string containing an unordered list of model
       # validation errors
       def error_box(record)

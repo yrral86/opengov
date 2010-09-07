@@ -1,5 +1,8 @@
 module Derailed
   module Component
+    # = Derailed::Component::AuthenticatorController
+    # This class subclasses Controller to provide the default actions for
+    # an Authenticator component.
     class AuthenticatorController < Controller
       # login handles displaying the login form and processing its submission
       def login
@@ -55,6 +58,7 @@ module Derailed
         end
       end
 
+      # home renders the username and a logout link... this is temporary
       def home
         render_string "logged in username: " +
           "#{@component.current_user.username}, <a href='/logout'>logout</a>"

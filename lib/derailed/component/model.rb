@@ -4,12 +4,12 @@ require 'drb'
 
 module Derailed
   module Component
-    # = Deraild::Component::Model
+    # = Derailed::Component::Model
     # This class is an ActiveRecord::Base sublass that adds some extra
     # functionality component models need: an abstract_map that allows the
     # model to act as an abstract data type, and we include DRbUndumped so
     # the model is kept in the Component's process and interacted with over
-    # the socket
+    # the socket.
     class Model < ActiveRecord::Base
       # required to subclass ActiveRecord::Base without it trying to
       # find an open_gov_model table

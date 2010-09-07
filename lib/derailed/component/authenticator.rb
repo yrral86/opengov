@@ -17,6 +17,8 @@ module Derailed
         UserSession.find
       end
 
+      # call invokes Component::Base.call with a value of 1 for the
+      # path_position
       def call(env)
         super(env,1)
       end
