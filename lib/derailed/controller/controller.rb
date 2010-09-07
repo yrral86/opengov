@@ -6,7 +6,7 @@ module Derailed
   module Controller
     # = Derailed::Controller::Controller
     # This module provides a controller object that is used both in the
-    # components (functions provided by Derailed::Component::Controller),
+    # components (functions provided by Derailed::Component::Environment),
     # and also by Authlogic (set in
     # Derailed::Component::Authentication.setup_env)
     class Controller
