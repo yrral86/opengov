@@ -12,9 +12,9 @@ FILES = componentmanager.rb \
 USER=root
 
 deploy:
-	ENV=production rake db:migrate
-	service apache2 stop
 	service opengov stop
+	service apache2 stop
+	ENV=production rake db:migrate
 	rm -rf /var/www/opengov
 	mkdir -p /var/www/opengov
 	cp -a --parents $(FILES) /var/www/opengov
