@@ -1,3 +1,3 @@
-class AuthenticatorController < Derailed::Component::Controller
+class AuthenticatorController < Derailed::Component::AuthenticatorController
 
 end

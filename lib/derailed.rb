@@ -10,4 +10,5 @@ require dir + '/derailed/requestrouter'
 
 require dir + '/derailed/component/base'
 require dir + '/derailed/component/authenticator'
+require dir + '/derailed/component/authenticatorcontroller'
 require dir + '/derailed/controller/middleware'

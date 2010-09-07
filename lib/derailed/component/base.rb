@@ -126,13 +126,13 @@ module Derailed
 
       # call handles the request.  It always sets up the environment, and
       # calls the appropriate method on the controller
-      def call(env)
+      def call(env, path_position=nil)
         setup_env(env)
 
-        path = next_path
+        method = path_position ? path(path_position) : next_path
         # send it to the controller if we have one
-        if @controller && path && @controller.allowed(path)
-          @controller.send(path)
+        if @controller && method && @controller.allowed(method)
+          @controller.send(method)
         # or return a 404
         else
           not_found "File not found."
