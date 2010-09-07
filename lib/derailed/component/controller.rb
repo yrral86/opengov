@@ -31,11 +31,11 @@ module Derailed
         @safe_names = whitelist
       end
 
+      private
       def allowed(name)
         @safe_names.include?(name)
       end
 
-      private
       def method_missing(id, *args)
         if allowed(id.to_s)
           crud(Thread.current[:env])
@@ -47,7 +47,6 @@ module Derailed
 
       def whitelist
         array = self.public_methods - Object.new.public_methods
-        array -= ['allowed']
         array += @component.model_names
         array.map {|m| m.to_s}
       end
