@@ -126,13 +126,7 @@ module Derailed
         setup_env(env)
 
         method = path_position ? path(path_position) : next_path
-        # send it to the controller if we have one
-        if @controller && method && @controller.allowed(method)
-          @controller.send(method)
-        # or return a 404
-        else
-          not_found "File not found."
-        end
+        @controller.send(method)
       end
     end
   end
