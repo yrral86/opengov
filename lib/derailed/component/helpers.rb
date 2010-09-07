@@ -1,13 +1,9 @@
-#require 'action_view/helpers'
-
 module Derailed
   module Component
     # = Derailed::Component::Helpers
-    # This module includes ActionView::Helpers, but only some of them work
-    # without an ActionController.  It is also where our helpers are defined.
+    # This module is where our view helpers are defined.
     module Helpers
       private
- #     include ActionView::Helpers
 
       # error_box returns a string containing an unordered list of model
       # validation errors
