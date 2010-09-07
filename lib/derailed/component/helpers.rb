@@ -6,6 +6,7 @@ module Derailed
     # This module includes ActionView::Helpers, but only some of them work
     # without an ActionController.  It is also where our helpers are defined.
     module Helpers
+      private
  #     include ActionView::Helpers
 
       # error_box returns a string containing an unordered list of model
