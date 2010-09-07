@@ -1,6 +1,7 @@
 module Derailed
   module Component
     module Loader
+      private
       def require_libraries
         dir = Config::RootDir + "/components-enabled/#{@name.downcase}"
         original = class_list
