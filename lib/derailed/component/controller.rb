@@ -38,7 +38,7 @@ module Derailed
         array = self.public_methods - Object.new.public_methods
         array -= ['allowed']
         array += @component.model_names
-        array
+        array.map {|m| m.to_s}
       end
     end
   end

@@ -36,3 +36,4 @@ Identify and Document entry points and minimize unneeded code
 -- 1 Manager process
 -- X Component processes
 
+Update routes in Manager from components each time... don't store it in Manager

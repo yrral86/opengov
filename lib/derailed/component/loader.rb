@@ -31,7 +31,7 @@ module Derailed
         old_dir = Dir.pwd
         Dir.chdir dir
         Dir.glob '**/*.rb' do |f|
-          require f unless f == 'init.rb'
+          require "#{dir}/#{f}" unless f == 'init.rb'
         end
         Dir.chdir old_dir
       end

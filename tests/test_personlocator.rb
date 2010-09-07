@@ -1,6 +1,7 @@
 #!/usr/bin/env ruby
 
-require 'lib/derailed/testcase'
+dir = File.expand_path(File.dirname(__FILE__))
+require dir + '/../lib/derailed/testcase'
 require 'nokogiri'
 
 class OpenGovPersonLocatorTest < Derailed::TestCase
