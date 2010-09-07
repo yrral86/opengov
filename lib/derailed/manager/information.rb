@@ -3,7 +3,17 @@ module Derailed
     module Information
       # available_routes returns the routes hash
       def available_routes
-        @routes
+        routes = {}
+        @components.each_value do |c|
+          c.routes.each do |r|
+            if routes[r] == nil
+              routes[r] = c
+            else
+              raise "Route '#{r}' already handled by component #{routes[r].name}"
+            end
+          end
+        end
+        routes
       end
 
       # available_models returns a list of all models provided by registered

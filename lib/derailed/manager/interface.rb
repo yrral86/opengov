@@ -23,9 +23,7 @@ module Derailed
       # mutex for each hash
       def initialize
         @components = {}
-        @routes = {}
         @c_mutex = Mutex.new
-        @r_mutex = Mutex.new
         @self
       end
 
