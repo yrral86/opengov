@@ -9,6 +9,7 @@ dir = File.expand_path(File.dirname(__FILE__))
  'authentication',
  'controller',
  'environment',
+# TODO: remove helpers after we fix up Authenticator
  'helpers',
  'loader',
  'model',
@@ -26,6 +27,7 @@ module Derailed
     class Base
       include Authentication
       include Environment
+#TODO: see require above
       include Helpers
       include View
       include Loader

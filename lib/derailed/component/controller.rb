@@ -1,7 +1,12 @@
 dir = File.expand_path(File.dirname(__FILE__))
-require dir + '/crud'
-require dir + '/environment'
-require dir + '/view'
+[
+ 'crud',
+ 'environment',
+ 'helpers',
+ 'view'
+].each do |library|
+  require "#{dir}/#{library}"
+end
 
 module Derailed
   module Component
@@ -18,6 +23,7 @@ module Derailed
     class Controller
       include Crud
       include Environment
+      include Helpers
       include View
 
       def initialize(component)
@@ -31,7 +37,12 @@ module Derailed
 
       private
       def method_missing(id, *args)
-        crud(Thread.current[:env])
+        if allowed(id.to_s)
+          crud(Thread.current[:env])
+        else
+          not_found "Method #{id.to_s} not found in component " +
+            @component.name
+        end
       end
 
       def whitelist
