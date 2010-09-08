@@ -39,13 +39,13 @@ module Derailed
         Dir.chdir old_dir
 
         component_list.each do |c|
-          `#{dir}/#{c}/init.rb start`
+          `#{Config::RootDir}/component.rb -c #{c} start`
         end
 
         at_exit {
           component_list.each do |c|
             unless c == '' then
-              `#{dir}/#{c}/init.rb stop`
+              `#{Config::RootDir}/component.rb -c #{c} stop`
             end
           end
           DRb.stop_service
