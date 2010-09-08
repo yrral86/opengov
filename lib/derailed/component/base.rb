@@ -93,6 +93,12 @@ module Derailed
         types
       end
 
+      # has_type? returns true if the component provides the given type,
+      # false otherwise
+      def has_type?(type)
+        model_types.include?(type)
+      end
+
       # model returns the requested model (name is downcased)
       def model(name)
         @models[name]
