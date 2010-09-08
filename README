@@ -50,6 +50,6 @@ path(n) (nth component of request path)
 next_path (next component of request path)
 current_user (see authentication above)
 
-ENV environment variable controls which configuration to use: development, test,
-or production, also componentmanager takes --test, --development, or
---production
+ENV environment variable controls which configuration to use: development,
+test, or production.  control.rb will also accept --test, --development, or
+--production to set the environment
