@@ -68,16 +68,15 @@ module Derailed
       end
 
       # add_models adds the models passed to it to the component's list of
-      # available models, indexed by the downcased model name
+      # available models, indexed by the model name
       def add_models(models)
         models.each do |m|
           m.extend(DRbUndumped)
-          @models[m.name.downcase] = m
+          @models[m.name] = m
         end
       end
 
-      # model_names returns the list of available model names (which are all
-      # downcased)
+      # model_names returns the list of available model names
       def model_names
         @models.keys
       end
@@ -99,9 +98,19 @@ module Derailed
         model_types.include?(type)
       end
 
-      # model returns the requested model (name is downcased)
+      # model returns the requested model
       def model(name)
+        puts @models.inspect
         @models[name]
+      end
+
+      # model_by_url returns the requested model
+      def model_by_url(model_url)
+        @models.keys.each do |k|
+          if k.downcase == model_url
+            return @models[k]
+          end
+        end
       end
 
       # name returns the name of the component as set in initialize
@@ -121,7 +130,8 @@ module Derailed
       end
 
       # routes returns the list of routes this component will handle.
-      # The default (defined here) is simply the downcased name of the component
+      # The default (defined here) is simply the downcased name of the
+      # component
       def routes
         [@name.downcase]
       end

@@ -54,7 +54,7 @@ module Derailed
       # whitelist generates a list of methods that can be called as URLs
       def whitelist
         array = self.public_methods - Object.new.public_methods
-        array += @component.model_names
+        array += @component.model_names.map {|n| n.downcase}
         array.map {|m| m.to_s}
       end
     end

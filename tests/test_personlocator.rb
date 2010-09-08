@@ -8,7 +8,7 @@ class OpenGovPersonLocatorTest < Derailed::TestCase
   def test_personlist
     get '/personlocator/person'
     doc = Nokogiri::HTML(last_response.body)
-    records = @cc.get_model("PersonLocator::person").find(:all).length
+    records = @cc.get_model("PersonLocator::Person").find(:all).length
     assert_equal records + 1, doc.css('a').length
   end
 
@@ -17,7 +17,7 @@ class OpenGovPersonLocatorTest < Derailed::TestCase
     post '/personlocator/person', person
     assert_equal 302, last_response.status
     follow_redirects
-    person_model = @cc.get_model("PersonLocator::person")
+    person_model = @cc.get_model("PersonLocator::Person")
     p = person_model.find_by_lname(person[:lname])
     assert_equal "/personlocator/person/#{p[:id]}", last_request.path
     p.destroy
@@ -30,7 +30,7 @@ class OpenGovPersonLocatorTest < Derailed::TestCase
     params['_method'] = 'delete'
     follow_redirects
     id = last_request.path.split('/')[3]
-    person_model = @cc.get_model("PersonLocator::person")
+    person_model = @cc.get_model("PersonLocator::Person")
     p = person_model.find_by_id(id)
     assert_equal person[:fname], p.fname
     post "/personlocator/person/#{id}", params

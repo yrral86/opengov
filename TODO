@@ -37,7 +37,5 @@ Identify and Document entry points and minimize unneeded code
 -- X Component processes
 
 
-fix model names to not be downcased
-
 simplify render_erb_from_file(view_file(name), binding) patttern
 (and rendering in general)

@@ -38,7 +38,7 @@ module Derailed
     # seed_users creates two users, a db user defined by login_credentials
     # and a pam user with login 'larry'
     def seed_users
-      u = @cc.get_model('Authenticator::user')
+      u = @cc.get_model('Authenticator::User')
       u.create(login_credentials['user_session'])
       u.new({:pam_login => 'larry'}).save(false)
     end
@@ -47,7 +47,7 @@ module Derailed
     # Authenticator::usersession, which has no db backing
     def clear_db
       @cc.cm.available_models.each do |m|
-        next if m == 'Authenticator::usersession'
+        next if m == 'Authenticator::UserSession'
         model = @cc.get_model(m)
         model.destroy_all
       end

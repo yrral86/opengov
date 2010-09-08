@@ -6,17 +6,17 @@ require dir + '/../lib/derailed/testcase'
 class OpenGovComponentManagerTest < Derailed::TestCase
   def test_component_register
     assert_equal(
-                 ['Authenticator::user',
-                  'Authenticator::usersession',
-                  'PersonLocator::address',
-                  'PersonLocator::person'],
+                 ['Authenticator::User',
+                  'Authenticator::UserSession',
+                  'PersonLocator::Address',
+                  'PersonLocator::Person'],
                  @cc.cm.available_models.sort
                  )
   end
 
   def test_component_unregister
     @cc.cm.unregister_component('PersonLocator')
-    assert_equal(['Authenticator::user','Authenticator::usersession'],
+    assert_equal(['Authenticator::User','Authenticator::UserSession'],
                  @cc.cm.available_models.sort)
     @cc.cm.register_component(Derailed::Manager::Socket.uri('PersonLocator'))
   end
@@ -27,7 +27,7 @@ class OpenGovComponentManagerTest < Derailed::TestCase
 
   def test_component_get_model
     begin
-      person = @cc.get_model("PersonLocator::person")
+      person = @cc.get_model("PersonLocator::Person")
     rescue DRb::DRbServerNotFound
       fail 'Could not connect to PersonLocator component'
     end
@@ -42,7 +42,7 @@ class OpenGovComponentManagerTest < Derailed::TestCase
 
   def test_abstract_data_type
     begin
-      person = @cc.get_model("PersonLocator::person")
+      person = @cc.get_model("PersonLocator::Person")
     rescue DRb::DRbServerNotFound
       fail 'Could not connect to PersonLocator component'
     end

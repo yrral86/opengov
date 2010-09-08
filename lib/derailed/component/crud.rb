@@ -22,7 +22,7 @@ module Derailed
         id = path(3)
         r = controller.request
 
-        model = @component.model(model_name)
+        model = @component.model_by_url(model_name)
 
         if model then
           if r.post? then

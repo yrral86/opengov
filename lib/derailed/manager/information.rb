@@ -20,9 +20,8 @@ module Derailed
       end
 
       # available_models returns a list of all models provided by registered
-      # components.  Model names are ComponentName::modelname
-      # (CamelCase::downcase)... I can't think of any reason not to get it
-      # working with CamelCase though for consistency
+      # components.  Model names are ComponentName::ModelName
+      # (CamelCase::CamelCase)
       def available_models
         gather do |c|
           c.model_names
