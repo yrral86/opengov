@@ -8,13 +8,13 @@ APP_BASE = File.dirname(File.expand_path(__FILE__))
 
 Rake::TestTask.new(:do_test) do |t|
   `mkdir -p sockets/test`
-  `./componentmanager.rb start --test`
+  `./control.rb -tm start`
   t.test_files = FileList['tests/test*.rb']
   t.verbose = true
 end
 
 task :test => :do_test do
-  `./componentmanager.rb stop`
+  `./control.rb -tm stop`
 end
 
 task :doc do

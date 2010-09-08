@@ -1,0 +1,45 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+dir = File.expand_path(File.dirname(__FILE__))
+
+component = nil
+OptionParser.new do |opts|
+  opts.on('-t', '--test', 'use test environment') do
+    ENV['ENV'] = 'test'
+  end
+  opts.on('-d', '--development', 'use development environment') do
+    ENV['ENV'] = 'development'
+  end
+  opts.on('-p', '--production', 'use production environment') do
+    ENV['ENV'] = 'production'
+  end
+  opts.on('-m', '--manager', 'start/stop Manager') do
+    component = :manager
+  end
+  opts.on('-c', '--component COMPONENT',
+          'start/stop the specified component') do |c|
+    component = c
+  end
+end.parse!
+
+require dir + '/lib/derailed/daemon'
+
+if component == :manager
+  manager = Derailed::Manager::Interface.new
+  daemon = Derailed::Daemon.manager
+  daemon.daemonize do
+    manager.daemonize
+  end
+elsif component
+  config = YAML::load(File.open(Derailed::Config::RootDir +
+                                "/components-enabled/#{component}/config.yml"))
+  daemon = Derailed::Daemon.component(config['name'])
+  config['class'] ||= 'Base'
+  config['class'] = Derailed::Component.const_get(config['class'])
+  config['requirements'] ||= []
+  daemon.daemonize(config['class'],config['requirements'])
+else
+  puts "You must specify -m or -c"
+end

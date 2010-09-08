@@ -15,7 +15,7 @@
 
 # Do NOT "set -e"
 
-DAEMON=/var/www/opengov/componentmanager.rb
+DAEMON=/var/www/opengov/control.rb
 SCRIPT_NAME=/etc/init.d/opengov
 #USER=www-data
 USER=root
@@ -26,16 +26,18 @@ USER=root
 case "$1" in
   start)
 	mkdir -p /tmp/opengov
-        su -c "ENV=production $DAEMON start" $USER
+        su -c "$DAEMON -pm start" $USER
         ;;
   stop)
-        su -c "ENV=production $DAEMON stop" $USER
+        su -c "$DAEMON -pm stop" $USER
         ;;
   restart)
-        su -c "ENV=production $DAEMON restart" $USER
+        su -c "$DAEMON -pm stop" $USER
+	sleep 5
+	su -c "$DAEMON -pm start" $USER
         ;;
   status)
-	su -c "ENV=production $DAEMON status" $USER
+	su -c "$DAEMON -pm status" $USER
 	;;
   *)
         echo "Usage: $SCRIPT_NAME {start|status|stop|restart}" >&2
