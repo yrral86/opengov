@@ -7,20 +7,6 @@ module Derailed
     # This module generates Rack formatted responses.
     module View
       private
-      # Renders and erb template given a filename and a binding
-      def render_erb_from_file(fn, b)
-        string = File.read(fn)
-        render_erb(string,b)
-      end
-      module_function :render_erb_from_file
-
-      # Renders an erb template to a string given a file name and a binding
-      def render_erb_from_file_to_string(fn, b)
-        string = File.read(fn)
-        execute_template(string,b)
-      end
-      module_function :render_erb_from_file_to_string
-
       # Renders a string
       def render_string(string)
         [200,
@@ -28,22 +14,6 @@ module Derailed
          [string]]
       end
       module_function :render_string
-
-      # Renders an erb template given as a string using the given binding
-      def render_erb(string,b)
-        [200,
-         {'Content-Type' => 'text/html'},
-         [execute_template(string,b)]
-        ]
-      end
-      module_function :render_erb
-
-      # Executes a template given a string and a binding.  Returns the string
-      # result of executing the template
-      def execute_template(string, b)
-        ERB.new(string).result b
-      end
-      module_function :execute_template
 
       # Renders a redirect to the given url
       def redirect(url)
@@ -65,18 +35,41 @@ module Derailed
       end
       module_function :method_not_allowed
 
-      # Renders a template from it's name and a binding
+      # Renders a template to a string from it's name and a binding
+      def render_partial(name, binding)
+        string = read_view_file('_' + name)
+        execute_template(string, binding)
+      end
+      module_function :render_partial
+
+      # Renders a template to a rack response from it's name and a binding
       def render(name, binding)
-        render_erb_from_file_to_string(view_file('_' + name), binding)
+        string = read_view_file(name)
+        render_erb(string, binding)
+      end
+      module_function :render
+
+      # Renders an erb template given as a string using the given binding
+      def render_erb(string,b)
+        [200,
+         {'Content-Type' => 'text/html'},
+         [execute_template(string,b)]
+        ]
       end
 
-      # view_file returns the filename of a given view
+      # Executes a template given a string and a binding.  Returns the string
+      # result of executing the template
+      def execute_template(string, b)
+        ERB.new(string).result b
+      end
+
+      # read_view_file returns the template specified by name as a string
       # ==== example:
-      # view_file('modelnamelist') returns
-      # RootDir/components-enabled/componentname/v/nodelnamelist.html.erb
-      def view_file(name)
-        "#{Config::RootDir}/components-enabled/#{component_dir}" +
-          "/v/#{name}.html.erb"
+      # read_view_file('modelnamelist') returns the contents of
+      # RootDir/components-enabled/componentname/v/modelnamelist.html.erb
+      def read_view_file(name)
+        File.read("#{Config::RootDir}/components-enabled/#{component_dir}" +
+                  "/v/#{name}.html.erb")
       end
 
       # component_dir switches between @name.downcase (when we are called from

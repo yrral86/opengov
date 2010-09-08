@@ -35,7 +35,3 @@ Identify and Document entry points and minimize unneeded code
 -- X RequestRouter/Controller processes
 -- 1 Manager process
 -- X Component processes
-
-
-simplify render_erb_from_file(view_file(name), binding) patttern
-(and rendering in general)

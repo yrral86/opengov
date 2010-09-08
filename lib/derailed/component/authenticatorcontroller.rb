@@ -44,7 +44,7 @@ module Derailed
           UserSession.create(user)
           redirect '/home'
         else
-          render_erb_from_file(view_file('newuser'),binding)
+          render('newuser', binding)
         end
       end
 
@@ -54,7 +54,7 @@ module Derailed
         if user.update_attributes(params['user'])
           redirect '/home'
         else
-          render_erb_from_file(view_file('edituser'),binding)
+          render('edituser', binding)
         end
       end
 
@@ -68,7 +68,7 @@ module Derailed
       # login_fail displays the login form when login failed to authenticate
       # the user
       def login_fail(user_session)
-        render_erb_from_file(view_file("newsession"),binding)
+        render("newsession", binding)
       end
 
       # login_success handles redirecting the user to their previously requested

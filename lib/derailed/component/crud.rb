@@ -95,22 +95,20 @@ module Derailed
       def read(model, id)
         object = model.find_by_id(id)
         if object then
-          render_erb_from_file(view_file(model.name.downcase),binding)
+          render(model.name.downcase, binding)
         elsif id then
           not_found('Record  #' + id + ' not found for model ' +
                     model.name + ' in component ' + @component.name)
         else
           objects = model.find :all
-          render_erb_from_file(view_file(model.name.downcase + 'list'),
-                               binding)
+          render(model.name.downcase + 'list', binding)
         end
       end
 
       # render_form renders the form for creation/update
       def render_form(model,object,method)
         object = model.new unless object
-        render_erb_from_file(view_file(model.name.downcase + 'form'),
-                             binding)
+        render(model.name.downcase + 'form', binding)
       end
 
       # update updated the given record
