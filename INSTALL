@@ -1,14 +1,20 @@
-apt-get update
 apt-get install `cat requirements/packages`
+
+# install rvm, ruby, gems, and build passenger module
+bash < <( curl -L http://bit.ly/rvm-install-system-wide )
+# add this next line to end of /etc/profile
+[[ -s "/usr/local/lib/rvm" ]] && . "/usr/local/lib/rvm"  # This loads RVM into a shell session
+rvm install 1.9.2
 gem install `cat requirements/rubypackages`
-
-PATH=$PATH:/var/lib/gems/1.9.1/bin
-
 passenger-install-apache2-module
+create symlink: /usr/local/rvm/gems/default -> ruby-1.9.2-p0
+(this should be added to rvm soon and kept up to date with the selected ruby)
 
 # create databases (opengov_[development|test|production])
 
 # install software/configuration
 make deploy
 
-# run db migrations
+# run db migrations (deploy does production)
+ENV=test rake db:migrate
+ENV=development rake db:migrate
