@@ -2,8 +2,6 @@ better testing
 script/generate
 better configuration handling(DRY)
 
-handle views with no model in component class
-
 Abstract data types that models can implement, component can respond
 to queries about what datatypes its models  can provide: mapping component can
 ask component manager for all model addresses ('ComponentName::modelname') that
@@ -27,11 +25,4 @@ Messages component (maybe two different components: Triggers, Messages):
 	<long>-130</long>
  </event>
 read/unread
-
-
-CLEAN UP DEPENDENCIES IN Derailed
-Identify and Document entry points and minimize unneeded code
-* three types of processes
--- X RequestRouter/Controller processes
--- 1 Manager process
--- X Component processes
+kk

@@ -5,8 +5,36 @@ module Derailed
   module Component
     # = Derailed::Component::View
     # This module generates Rack formatted responses.
+    # == Overview:
+    # The following Rack responses are available:
+    #  render(name, binding) renders the named template using the binding
+    #  render_string(string) responds with the given string as the body
+    #  redirect(url) redirects to url
+    #  not_found(msg) responds with 404 with msg ast the body
+    #  method_not_allowed responds with a 405, Method Not Allowed
+    #
+    # We also have:
+    #  render_partial(name, binding) same as render, but returns a string
+    #  instead of a rack response (and adds an _ before the name)
+    #
+    # All other functions are internal and not intended to be called outside
+    # this module
     module View
       private
+      # Renders a template to a rack response from it's name and a binding
+      def render(name, binding)
+        string = read_view_file(name)
+        render_erb(string, binding)
+      end
+      module_function :render
+
+      # Renders a template to a string from it's name and a binding
+      def render_partial(name, binding)
+        string = read_view_file('_' + name)
+        execute_template(string, binding)
+      end
+      module_function :render_partial
+
       # Renders a string
       def render_string(string)
         [200,
@@ -34,20 +62,6 @@ module Derailed
         [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
       end
       module_function :method_not_allowed
-
-      # Renders a template to a string from it's name and a binding
-      def render_partial(name, binding)
-        string = read_view_file('_' + name)
-        execute_template(string, binding)
-      end
-      module_function :render_partial
-
-      # Renders a template to a rack response from it's name and a binding
-      def render(name, binding)
-        string = read_view_file(name)
-        render_erb(string, binding)
-      end
-      module_function :render
 
       # Renders an erb template given as a string using the given binding
       def render_erb(string,b)
