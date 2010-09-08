@@ -18,7 +18,8 @@ module Derailed
     #  instead of a rack response (and adds an _ before the name)
     #
     # All other functions are internal and not intended to be called outside
-    # this module
+    # this module.  Also, render will only work within a component...
+    # RequestRouter and Manager do not have templates.
     module View
       private
       # Renders a template to a rack response from it's name and a binding
