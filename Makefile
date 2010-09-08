@@ -1,4 +1,5 @@
 FILES = componentmanager.rb \
+	component.rb \
 	components-available \
 	components-enabled \
 	config/environments.yml \
