@@ -11,11 +11,10 @@ require APP_BASE + '/lib/derailed/testcase'
 
 Rake::TestTask.new(:do_test) do |t|
   t.test_files = FileList['tests/test*.rb']
-  t.verbose = true
 end
 
 Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = ""
+  t.cucumber_opts = "-f progress"
 end
 
 task :setup_test do
