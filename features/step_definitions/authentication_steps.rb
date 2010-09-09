@@ -1,3 +1,7 @@
+Given /^I log out$/ do
+  visit '/logout'
+end
+
 Given /^I log in using '(\S+)' and '(\S+)'$/ do |username, password|
   visit '/login'
   fill_in "user_session[username]", :with => username

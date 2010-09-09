@@ -13,8 +13,7 @@ module Derailed
   # It assembles the app by reading config.ru, ensures the components are
   # started, seeds the database and authenticates a user (unless you disable
   # authentication, as in test_authenticator.rb)
-#  class TestCase < Test::Unit::TestCase
-  module TestCase
+  class TestCase < Test::Unit::TestCase
     include Test::Unit::Assertions
     include Rack::Test::Methods
 
@@ -93,10 +92,6 @@ module Derailed
           sleep 0.05
         end
       end
-    end
-
-    class Unit < Test::Unit::TestCase
-      include Derailed::TestCase
     end
   end
 end
