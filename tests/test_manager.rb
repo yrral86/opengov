@@ -3,7 +3,7 @@
 dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../lib/derailed/testcase'
 
-class OpenGovManagerTest < Derailed::TestCase
+class OpenGovManagerTest < Derailed::TestCase::Unit
   def test_component_register
     assert_equal(
                  ['Authenticator::User',

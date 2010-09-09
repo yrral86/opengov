@@ -4,7 +4,7 @@ dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../lib/derailed/testcase'
 require 'nokogiri'
 
-class OpenGovPersonLocatorTest < Derailed::TestCase
+class OpenGovPersonLocatorTest < Derailed::TestCase::Unit
   def test_personlist
     get '/personlocator/person'
     doc = Nokogiri::HTML(last_response.body)

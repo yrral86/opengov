@@ -11,3 +11,5 @@ rack
 nokogiri
 activesupport
 actionpack
+webrat
+cucumber

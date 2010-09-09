@@ -3,7 +3,7 @@
 dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../lib/derailed/testcase'
 
-class OpenGovRequestRouterTest < Derailed::TestCase
+class OpenGovRequestRouterTest < Derailed::TestCase::Unit
   def test_personlist
     get '/personlocator/person'
     assert_equal 200, last_response.status

@@ -3,7 +3,7 @@
 dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../lib/derailed/testcase'
 
-class OpenGovStaticTest < Derailed::TestCase
+class OpenGovStaticTest < Derailed::TestCase::Unit
   def test_javascript
     get '/static/javascript/prototype.js'
     string1 = last_response.body

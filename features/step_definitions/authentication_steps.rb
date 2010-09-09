@@ -1,11 +1,13 @@
 Given /^I go to '(\S+)'$/ do |url|
-  pending
+  visit url
 end
 
 Given /^I login with '(\S+)' and '(\S+)'$/ do |username, password|
-  pending
+  fill_in "user_session[username]", :with => username
+  fill_in "user_session[password]", :with => password
+  click_button "login"
 end
 
-Then /^I should be logged in and redirected to '(\S+)'$/ do |url|
-  pending
+Then /^I should be logged in as '(\S+)'$/ do |username|
+  assert_contain "logged in username: #{username}"
 end

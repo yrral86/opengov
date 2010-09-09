@@ -3,7 +3,7 @@
 dir = File.expand_path(File.dirname(__FILE__))
 require dir + '/../lib/derailed/testcase'
 
-class OpenGovAuthenticatorTest < Derailed::TestCase
+class OpenGovAuthenticatorTest < Derailed::TestCase::Unit
   def setup
     super(false)
   end
