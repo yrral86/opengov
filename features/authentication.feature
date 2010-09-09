@@ -5,6 +5,7 @@ Feature: Authentication
     Then I am logged in as 'test_user'
 
   Scenario: User logs out
+    Given I am logged in as 'test_user'
     When I go to '/logout'
     And I go to '/home'
     Then I am at '/login'
