@@ -1,4 +1,5 @@
 require 'rake/testtask'
+require 'cucumber/rake/task'
 require 'rubygems'
 require 'yaml'
 require 'active_record'
@@ -6,14 +7,24 @@ require 'rack/logger'
 
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 
+require APP_BASE + '/lib/derailed/testcase'
+
 Rake::TestTask.new(:do_test) do |t|
-  `mkdir -p sockets/test`
-  `./control.rb -tm start`
   t.test_files = FileList['tests/test*.rb']
   t.verbose = true
 end
 
-task :test => :do_test do
+Cucumber::Rake::Task.new(:features) do |t|
+  t.cucumber_opts = ""
+end
+
+task :setup_test do
+  `mkdir -p sockets/test`
+  `./control.rb -tm start`
+  Derailed::TestCase.socket_wait('sock', 4)
+end
+
+task :test => [:setup_test, :features, :do_test] do
   `./control.rb -tm stop`
 end
 

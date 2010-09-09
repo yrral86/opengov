@@ -72,15 +72,18 @@ module Derailed
     # calls seed_db, and authenticates the user unless false is passed in
     def setup(authenticate=true)
       # make sure the sockets are ready
-      socket_wait('sock', 4)
+      TestCase.socket_wait('sock', 4)
 
       @cc = ComponentClient.new
       seed_db
       do_auth if authenticate
     end
 
-    # socket_wait waits until all the component sockets are ready
-    def socket_wait(name, qty)
+    # self.socket_wait waits until all the component sockets are ready
+    # this should probably be better defined somewhere else... also called
+    # from Rakefile during setup_test task... also, qty should be determined
+    # by counting directories in components-enabled dir
+    def self.socket_wait(name, qty)
       waiting = true
       while waiting do
         sockets = Dir.entries(Manager::Socket.dir).find_all {|e|
