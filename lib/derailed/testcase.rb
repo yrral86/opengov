@@ -25,9 +25,9 @@ module Derailed
     # login_credentials returns a hash with login credentials
     def login_credentials
       {'user_session' => {
-          :username => 'yrral86',
-          :password => 'password',
-          :password_confirmation => 'password'}}
+          :username => 'test_user',
+          :password => 'test_password',
+          :password_confirmation => 'test_password'}}
     end
 
     # seed_db clears the db and seeds the users
