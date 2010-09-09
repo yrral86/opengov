@@ -1,6 +1,6 @@
 Feature: Authentication
   Scenario: User logs in
-    Given I log out
+    Given I am logged out
     When I log in using 'yrral86' and 'password'
     Then I am logged in as 'yrral86'
 

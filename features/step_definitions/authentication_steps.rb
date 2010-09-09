@@ -1,4 +1,4 @@
-Given /^I log out$/ do
+Given /^I am logged out$/ do
   visit '/logout'
 end
 
