@@ -37,11 +37,11 @@ module Derailed
     end
 
     # seed_users creates two users, a db user defined by login_credentials
-    # and a pam user with login 'larry'
+    # and a pam user with login `whoami`
     def seed_users
       u = @cc.get_model('Authenticator::User')
       u.create(login_credentials['user_session'])
-      u.new({:pam_login => 'larry'}).save(false)
+      u.new({:pam_login => `whoami`.chomp}).save(false)
     end
 
     # clear_db calls destroy_all on all available models except

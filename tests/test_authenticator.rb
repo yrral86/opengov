@@ -66,7 +66,7 @@ class OpenGovAuthenticatorTest < Derailed::TestCase
   end
 
   def test_pam_login
-    do_auth({'user_session'=>{'username'=>'larry','password'=>'redacted'}})
+    do_auth({'user_session'=>{'username'=> `whoami`.chomp,'password'=>'redacted'}})
     get '/home'
     assert_equal 200, last_response.status
   end

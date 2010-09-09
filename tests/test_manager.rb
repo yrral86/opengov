@@ -32,12 +32,12 @@ class OpenGovManagerTest < Derailed::TestCase
       fail 'Could not connect to PersonLocator component'
     end
 
-    larry = person.new(:fname => 'Larry', :lname => 'Reaves')
-    larry.save
+    bob = person.new(:fname => 'Bob', :lname => 'Smith')
+    bob.save
 
-    assert_equal('Larry', person.find_by_lname('Reaves').fname)
+    assert_equal('Bob', person.find_by_lname('Smith').fname)
 
-    larry.delete
+    bob.delete
   end
 
   def test_abstract_data_type
@@ -46,15 +46,15 @@ class OpenGovManagerTest < Derailed::TestCase
     rescue DRb::DRbServerNotFound
       fail 'Could not connect to PersonLocator component'
     end
-    larry = person.new(:fname => 'Larry', :lname => 'Reaves')
-    larry.save
+    bob = person.new(:fname => 'Bob', :lname => 'Smith')
+    bob.save
 
-    larry2 = Derailed::Type::Person.new(larry)
+    abob = Derailed::Type::Person.new(bob)
 
-    assert_equal(larry[:id], larry2[:id])
-    assert_equal(larry.fname, larry2.first_name)
-    assert_equal(larry.lname, larry2.last_name)
+    assert_equal(bob[:id], abob[:id])
+    assert_equal(bob.fname, abob.first_name)
+    assert_equal(bob.lname, abob.last_name)
 
-    larry.delete
+    bob.delete
   end
 end
