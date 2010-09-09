@@ -19,13 +19,21 @@ end
 
 task :setup_test do
   `mkdir -p sockets/test`
+  puts "Starting OpenGov..."
   `./control.rb -tm start`
-  Derailed::TestCase.socket_wait('sock', 4)
+  Derailed::TestCase.socket_wait
+  puts "OpenGov started."
 end
 
-task :test => [:setup_test, :features, :do_test] do
+task :teardown_test do
+  puts "Stopping OpenGov"
   `./control.rb -tm stop`
 end
+
+task :test => [:setup_test, :features, :do_test, :teardown_test] do
+
+end
+
 
 task :doc do
   `rm -rf doc/`
