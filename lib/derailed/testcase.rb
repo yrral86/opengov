@@ -44,8 +44,7 @@ module Derailed
       u.new({:pam_login => `whoami`.chomp}).save(false)
     end
 
-    # clear_db calls destroy_all on all available models except
-    # Authenticator::usersession, which has no db backing
+    # clear_db calls clear_models on all available components
     def clear_db
       @cc.cm.available_components.each do |c|
         @cc.get_component(c).clear_models
