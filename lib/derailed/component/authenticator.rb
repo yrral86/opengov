@@ -1,3 +1,5 @@
+require 'derailed/component/authenticatorcontroller'
+
 module Derailed
   module Component
     # = Derailed::Component::Authenticator

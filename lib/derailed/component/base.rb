@@ -165,5 +165,6 @@ module Derailed
         end
       end
     end
+    autoload :Authenticator, 'derailed/component/authenticator'
   end
 end
