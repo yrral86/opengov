@@ -5,15 +5,12 @@ module Derailed
   # This class provides the basic daemon structure for components and the
   # Manager
   class Daemon
-    Component = 0
-    Manager = 1
-
     # initialize stes the name, type and selects the db
-    def initialize(name, type=Component, db='default')
+    def initialize(name, type=:component, db='default')
       @name = name
       @type = type
 
-      if type == Component
+      if type == :component
         init_ar(db)
       end
     end
@@ -25,13 +22,13 @@ module Derailed
 
     # self.manager creates a new manager type instance
     def self.manager
-      new('OpenGovManager', Manager)
+      new('OpenGovManager', :manager)
     end
 
     # daemonize runs the given block as a daemon, or if no block is given,
     # instantiates a new instance of klass and calls daemonize on that instance
     def daemonize(klass=Derailed::Component::Base,requirements=[])
-      name = @type == Component ? "OpenGov#{@name}Component" : @name
+      name = @type == :component ? "OpenGov#{@name}Component" : @name
       Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
         if block_given?
           yield
