@@ -7,8 +7,6 @@ require 'rack/logger'
 
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 
-require APP_BASE + '/lib/derailed/testcase'
-
 Rake::TestTask.new(:do_test) do |t|
   t.test_files = FileList['tests/test*.rb']
 end
@@ -18,6 +16,7 @@ Cucumber::Rake::Task.new(:features) do |t|
 end
 
 task :setup_test do
+  require APP_BASE + '/lib/derailed/testcase'
   `mkdir -p sockets/test`
   puts "Starting OpenGov..."
   `./control.rb -tm start`
