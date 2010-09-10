@@ -60,12 +60,16 @@ class #{component}Controller < Derailed::Component::Controller
 end
 eof
 
+  puts "creating directory #{folder}"
   FileUtils.mkdir_p(folder) unless File.exist?(folder)
   config_fn = "#{folder}/config.yml"
   controller_fn = "#{folder}/controller.rb"
+  puts "writing #{config_fn}"
   File.open(config_fn, "w") { |f| f.write config_file }
+  puts "writing #{controller_fn}"
   File.open(controller_fn, "w") { |f| f.write controller_file }
-  File.symlink(folder, active_link)
+  puts "enabling component (creating symlink)"
+  File.symlink("../#{folder}", active_link)
   puts "Created component #{component}"
 end
 
