@@ -6,6 +6,8 @@ require 'active_record'
 require 'rack/logger'
 
 APP_BASE = File.dirname(File.expand_path(__FILE__))
+libraries = APP_BASE + '/lib'
+$:.unshift libraries
 
 Rake::TestTask.new(:do_test) do |t|
   t.test_files = FileList['tests/test*.rb']
@@ -26,7 +28,7 @@ task :setup_test do
 
   MiniTest::Unit.disable_autorun
 
-  require APP_BASE + '/lib/derailed/testcase'
+  require 'derailed/testcase'
   `mkdir -p sockets/test`
   puts "Starting OpenGov..."
   `./control.rb -tm start`

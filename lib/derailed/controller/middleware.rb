@@ -1,9 +1,7 @@
 require 'rack'
 require 'drb'
 
-dir = File.expand_path(File.dirname(__FILE__))
-
-require "#{dir}/controller"
+require "derailed/controller/controller"
 
 module Derailed
   module Controller

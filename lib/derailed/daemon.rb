@@ -1,5 +1,4 @@
-dir = File.expand_path(File.dirname(__FILE__))
-require dir + '/../derailed'
+require 'derailed'
 
 module Derailed
   # = Derailed::Daemon

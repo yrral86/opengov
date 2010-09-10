@@ -1,6 +1,4 @@
-dir = File.expand_path(File.dirname(__FILE__))
-
-require "#{dir}/cookiefix"
+require "derailed/controller/cookiefix"
 
 module Derailed
   module Controller

@@ -1,11 +1,10 @@
-dir = File.expand_path(File.dirname(__FILE__))
 [
  'crud',
  'environment',
  'helpers',
  'view'
 ].each do |library|
-  require "#{dir}/#{library}"
+  require "derailed/component/#{library}"
 end
 
 module Derailed

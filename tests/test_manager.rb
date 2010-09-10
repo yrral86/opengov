@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-dir = File.expand_path(File.dirname(__FILE__))
-require dir + '/../lib/derailed/testcase'
+require 'derailed/testcase'
 
 class OpenGovManagerTest < Derailed::TestCase
   def test_component_register

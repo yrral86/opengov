@@ -1,14 +1,12 @@
-dir = File.expand_path(File.dirname(__FILE__))
+require 'derailed/config'
 
-require dir + '/derailed/config'
+require 'derailed/componentclient'
+require 'derailed/datatype'
+require 'derailed/type/person.rb'
+require 'derailed/manager/interface'
+require 'derailed/requestrouter'
 
-require dir + '/derailed/componentclient'
-require dir + '/derailed/datatype'
-require dir + '/derailed/type/person.rb'
-require dir + '/derailed/manager/interface'
-require dir + '/derailed/requestrouter'
-
-require dir + '/derailed/component/base'
-require dir + '/derailed/component/authenticator'
-require dir + '/derailed/component/authenticatorcontroller'
-require dir + '/derailed/controller/middleware'
+require 'derailed/component/base'
+require 'derailed/component/authenticator'
+require 'derailed/component/authenticatorcontroller'
+require 'derailed/controller/middleware'

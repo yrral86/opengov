@@ -1,5 +1,3 @@
-dir = File.expand_path(File.dirname(__FILE__))
-
 [
  'components',
  'information',
@@ -7,7 +5,7 @@ dir = File.expand_path(File.dirname(__FILE__))
  'registration',
  'socket'
 ].each do |library|
-  require "#{dir}/#{library}"
+  require "derailed/manager/#{library}"
 end
 
 module Derailed

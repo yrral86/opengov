@@ -1,6 +1,6 @@
 dir = File.expand_path(File.dirname(__FILE__))
-
-require dir + '/lib/derailed'
+libraries = "#{dir}/lib"
+require 'derailed'
 
 use Rack::Session::Cookie
 use Derailed::Controller::Middleware

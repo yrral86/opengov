@@ -1,8 +1,7 @@
 require 'rack/test'
 require 'webrat'
 
-dir = File.expand_path(File.dirname(__FILE__))
-require dir + '/../../lib/derailed/testcase'
+require 'derailed/testcase'
 
 Webrat.configure do |config|
   config.mode = :rack

@@ -4,8 +4,6 @@ require 'rubygems'
 require 'authlogic'
 require 'daemons'
 
-dir = File.expand_path(File.dirname(__FILE__))
-
 [
  'authentication',
  'controller',
@@ -14,7 +12,7 @@ dir = File.expand_path(File.dirname(__FILE__))
  'model',
  'view'
 ].each do |library|
-  require "#{dir}/#{library}"
+  require "derailed/component/#{library}"
 end
 
 module Derailed

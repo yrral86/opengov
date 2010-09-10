@@ -3,6 +3,8 @@
 require 'optparse'
 
 dir = File.expand_path(File.dirname(__FILE__))
+libraries = "#{dir}/lib"
+$:.unshift libraries
 
 component = nil
 OptionParser.new do |opts|
@@ -24,7 +26,7 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-require dir + '/lib/derailed/daemon'
+require 'derailed/daemon'
 
 if component == :manager
   manager = Derailed::Manager::Interface.new
