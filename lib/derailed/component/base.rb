@@ -137,7 +137,7 @@ module Derailed
 
       # stop stops the daemon
       def stop
-        p 'component manager shutting down, exiting ' + self.class.name.to_s
+        p "component #{self..name} shutting down"
         exit
       end
 
