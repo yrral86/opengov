@@ -32,7 +32,9 @@ module Derailed
       Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
         if block_given?
           yield
-        else # assumes component, because manager has a block
+        elsif @type == :manager
+           Derailed::Manager::Interface.new.daemonize
+        else
           klass.new(@name, requirements).daemonize
         end
       end

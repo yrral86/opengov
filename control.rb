@@ -29,11 +29,7 @@ end.parse!
 require 'derailed/daemon'
 
 if component == :manager
-  manager = Derailed::Manager::Interface.new
-  daemon = Derailed::Daemon.manager
-  daemon.daemonize do
-    manager.daemonize
-  end
+  Derailed::Daemon.manager.daemonize
 elsif component
   config = YAML::load(File.open(Derailed::Config::ComponentDir +
                                 "/#{component}/config.yml"))
