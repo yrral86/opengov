@@ -1,4 +1,6 @@
-require 'derailed'
+require 'daemons'
+
+require 'derailed/config'
 
 module Derailed
   # = Derailed::Daemon
@@ -11,7 +13,10 @@ module Derailed
       @type = type
 
       if type == :component
+        require 'derailed'
         init_ar(db)
+      else
+        require 'derailed/manager/interface'
       end
     end
 
@@ -27,7 +32,7 @@ module Derailed
 
     # daemonize runs the given block as a daemon, or if no block is given,
     # instantiates a new instance of klass and calls daemonize on that instance
-    def daemonize(klass=Derailed::Component::Base,requirements=[])
+    def daemonize(klass=nil,requirements=[])
       name = @type == :component ? "OpenGov#{@name}Component" : @name
       Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
         if block_given?
@@ -35,6 +40,7 @@ module Derailed
         elsif @type == :manager
            Derailed::Manager::Interface.new.daemonize
         else
+          klass ||= Derailed::Component::Base
           klass.new(@name, requirements).daemonize
         end
       end

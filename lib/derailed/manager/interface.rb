@@ -1,3 +1,8 @@
+require 'drb'
+require 'drb/timeridconv'
+
+require 'derailed/config'
+
 [
  'components',
  'information',
