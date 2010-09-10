@@ -160,7 +160,11 @@ module Derailed
       def call(env, path_position=nil)
         setup_env(env)
         method = path_position ? path(path_position) : next_path
-        @controller.send(method)
+        if method
+          @controller.send(method)
+        else
+          @controller.send(:index)
+        end
       end
     end
   end

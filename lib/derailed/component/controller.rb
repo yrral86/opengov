@@ -33,6 +33,11 @@ module Derailed
         @safe_names = whitelist
       end
 
+      # index defaults to saying hi
+      def index
+        render_string "Hello, from the #{@component.name} controller"
+      end
+
       private
       # allowed determines if the given name is on the whitelist
       def allowed(name)
