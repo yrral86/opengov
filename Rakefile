@@ -40,6 +40,35 @@ task :doc do
   `rdoc -d lib`
 end
 
+desc "Create a new component"
+task :new_component do |t|
+  unless component = ENV['name']
+    puts "Error: must provide name of component to generate."
+    puts "For example: rake #{t.name} name=Authenticator"
+    abort
+  end
+
+  folder = "components-available/#{component.downcase}"
+  active_link = "components-enabled/#{component.downcase}"
+  config_file = <<eof
+name: #{component}
+eof
+
+  controller_file = <<eof
+class #{component}Controller < Derailed::Component::Controller
+
+end
+eof
+
+  FileUtils.mkdir_p(folder) unless File.exist?(folder)
+  config_fn = "#{folder}/config.yml"
+  controller_fn = "#{folder}/controller.rb"
+  File.open(config_fn, "w") { |f| f.write config_file }
+  File.open(controller_fn, "w") { |f| f.write controller_file }
+  File.symlink(folder, active_link)
+  puts "Created component #{component}"
+end
+
 namespace :db do
   task :ar_init do
     # Load the database config
