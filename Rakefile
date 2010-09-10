@@ -16,6 +16,16 @@ Cucumber::Rake::Task.new(:features) do |t|
 end
 
 task :setup_test do
+  module MiniTest
+    class Unit
+      def self.disable_autorun
+          @@installed_at_exit = true
+      end
+    end
+  end
+
+  MiniTest::Unit.disable_autorun
+
   require APP_BASE + '/lib/derailed/testcase'
   `mkdir -p sockets/test`
   puts "Starting OpenGov..."
