@@ -79,9 +79,8 @@ module Derailed
     # this should probably be better defined somewhere else... also called
     # from Rakefile during setup_test task
     def self.socket_wait
-      component_dir = Config::RootDir + '/components-enabled'
       old_dir = Dir.pwd
-      Dir.chdir component_dir
+      Dir.chdir Config::ComponentDir
       qty = Dir.glob('*').length + 1
       Dir.chdir old_dir
 

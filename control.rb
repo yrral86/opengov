@@ -35,8 +35,8 @@ if component == :manager
     manager.daemonize
   end
 elsif component
-  config = YAML::load(File.open(Derailed::Config::RootDir +
-                                "/components-enabled/#{component}/config.yml"))
+  config = YAML::load(File.open(Derailed::Config::ComponentDir +
+                                "/#{component}/config.yml"))
   daemon = Derailed::Daemon.component(config['name'])
   config['class'] ||= 'Base'
   config['class'] = Derailed::Component.const_get(config['class'])

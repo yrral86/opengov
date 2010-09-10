@@ -9,7 +9,7 @@ module Derailed
       # directory and keeps track of the classes that are added.  These
       # classes are the models and the controller class.
       def require_libraries
-        dir = Config::RootDir + "/components-enabled/#{@name.downcase}"
+        dir = Config::ComponentDir + "/#{@name.downcase}"
         original = class_list
         require_dir(dir)
         new = class_list

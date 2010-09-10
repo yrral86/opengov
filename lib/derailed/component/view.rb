@@ -81,21 +81,22 @@ module Derailed
       # read_view_file returns the template specified by name as a string
       # ==== example:
       # read_view_file('modelnamelist') returns the contents of
-      # RootDir/components-enabled/componentname/v/modelnamelist.html.erb
+      # component_dir/v/modelnamelist.html.erb
       def read_view_file(name)
-        File.read("#{Config::RootDir}/components-enabled/#{component_dir}" +
-                  "/v/#{name}.html.erb")
+        File.read("#{component_dir}/v/#{name}.html.erb")
       end
 
       # component_dir switches between @name.downcase (when we are called from
       # the component) and @component.name.downcase (when we are called from
-      # the controller)
+      # the controller) to return Config::ComponentDir/componentname
       def component_dir
+        dir = Config::ComponentDir + '/'
         if @name
-          @name.downcase
+          dir += @name.downcase
         else
-          @component.name.downcase
+          dir += @component.name.downcase
         end
+        dir
       end
     end
   end

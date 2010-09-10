@@ -35,9 +35,8 @@ module Derailed
         DRb.install_id_conv DRb::TimerIdConv.new(10)
         DRb.start_service Socket.uri('Manager'), self
 
-        dir = Config::RootDir + '/components-enabled'
         old_dir = Dir.pwd
-        Dir.chdir dir
+        Dir.chdir Config::ComponentDir
         component_list = resolve_dependencies(Dir.glob '*')
         Dir.chdir old_dir
 
