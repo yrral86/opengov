@@ -47,10 +47,8 @@ module Derailed
     # clear_db calls destroy_all on all available models except
     # Authenticator::usersession, which has no db backing
     def clear_db
-      @cc.cm.available_models.each do |m|
-        next if m == 'Authenticator::UserSession'
-        model = @cc.get_model(m)
-        model.destroy_all
+      @cc.cm.available_components.each do |c|
+        @cc.get_component(c).clear_models
       end
     end
 

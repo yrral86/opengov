@@ -1,10 +1,14 @@
 dir = File.expand_path(File.dirname(__FILE__))
 
-require dir + '/components'
-require dir + '/information'
-require dir + '/mux'
-require dir + '/registration'
-require dir + '/socket'
+[
+ 'components',
+ 'information',
+ 'mux',
+ 'registration',
+ 'socket'
+].each do |library|
+  require "#{dir}/#{library}"
+end
 
 module Derailed
   module Manager
@@ -30,6 +34,7 @@ module Derailed
       # daemonize starts the DRb service, reads the components to start from the
       # config file, and starts the components.
       def daemonize
+        DRb.install_id_conv DRb::TimerIdConv.new(10)
         DRb.start_service Socket.uri('Manager'), self
 
         dir = Config::RootDir + '/components-enabled'

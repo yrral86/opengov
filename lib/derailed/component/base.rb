@@ -1,4 +1,5 @@
 require 'drb'
+require 'drb/timeridconv'
 require 'rubygems'
 require 'authlogic'
 require 'daemons'
@@ -50,6 +51,7 @@ module Derailed
         need = @cc.dependencies_not_satisfied(@dependencies)
         if need == [] then
           socket = Manager::Socket.uri @name
+          DRb.install_id_conv DRb::TimerIdConv.new(10)
           DRb.start_service socket, self
           @cc.cm.register_component(socket)
           @registered = true
@@ -110,6 +112,21 @@ module Derailed
           if k.downcase == model_url
             return @models[k]
           end
+        end
+      end
+
+      # def clear_models destroys all records if we are
+      # in the test environment
+      def clear_models
+        if Config::Environment == 'test'
+          @models.values.each do |m|
+            puts m.name
+            unless @name == 'Authenticator' && m.name == 'UserSession'
+              m.destroy_all
+            end
+          end
+        else
+          throw "clear_models called in non-test environment"
         end
       end
 

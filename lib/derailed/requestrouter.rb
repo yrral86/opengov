@@ -1,5 +1,3 @@
-dir = File.expand_path(File.dirname(__FILE__))
-
 module Derailed
   # = Deraild::RequestRouter
   # This class is a Rack application that takes incoming requests and routes
@@ -12,6 +10,7 @@ module Derailed
     def initialize
       @cc = ComponentClient.new
       @routes = {}
+      DRb.install_id_conv DRb::TimerIdConv.new(10)
       DRb.start_service
       self
     end
