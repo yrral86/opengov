@@ -48,14 +48,14 @@ module Derailed
         @controller = controller_class.new(self, @client) if controller_class
 
         need = @client.dependencies_not_satisfied(@dependencies)
-        if need == [] then
+        if need == []
           socket = Manager::Socket.uri @name
           DRb.install_id_conv DRb::TimerIdConv.new(10)
           DRb.start_service socket, self
           @client.cm.register_component(socket)
           @registered = true
           at_exit {
-            if @registered then
+            if @registered
               @client.cm.unregister_component(@name)
             end
             DRb.stop_service

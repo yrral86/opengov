@@ -27,7 +27,7 @@ module Derailed
       @routes = @cc.get_routes if @routes.empty?
 
       component = env[:controller].next
-      if @routes[component] == nil then
+      if @routes[component] == nil
         Component::View.not_found 'Not Found'
       else
         begin

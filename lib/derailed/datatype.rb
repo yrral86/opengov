@@ -46,7 +46,7 @@ module Derailed
     # case that name is sent.
     def method_missing(id, *args)
       target = @record.abstract_map[id]
-      if target then
+      if target
         @record.send(target, *args)
       else
         @record.send(id, *args)

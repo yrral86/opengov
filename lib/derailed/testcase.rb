@@ -89,7 +89,7 @@ module Derailed
         sockets = Dir.entries(Manager::Socket.dir).find_all {|e|
           e.match /sock$/
         }
-        if sockets.length == qty then
+        if sockets.length == qty
           waiting = false
         else
           sleep 0.05

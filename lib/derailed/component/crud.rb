@@ -24,8 +24,8 @@ module Derailed
 
         model = @component.model_by_url(model_name)
 
-        if model then
-          if r.post? then
+        if model
+          if r.post?
             case r.params['_method']
             when 'put' # UPDATE
               update(model,r)
@@ -34,8 +34,8 @@ module Derailed
             else # CREATE
               create(model,r)
             end
-          elsif r.get? then # READ
-            if id == 'edit' then
+          elsif r.get? # READ
+            if id == 'edit'
               if path(4)
                 update(model,r)
               else
@@ -44,9 +44,9 @@ module Derailed
             else
               read(model,id)
             end
-          elsif r.delete? then # IN CASE WE EVER USE THE ACTUAL METHODS
+          elsif r.delete? # IN CASE WE EVER USE THE ACTUAL METHODS
             delete(model,id) # INSTEAD OF TUNNELING OVER POST
-          elsif r.put? then
+          elsif r.put?
             update(model,r)
           else
             method_not_allowed
@@ -65,7 +65,7 @@ module Derailed
         new_params = {}
         attributes = model.new.attributes.keys - model.protected_attributes.to_a
         attributes.each do |a|
-          if params[a] then
+          if params[a]
             new_params[a] = params[a]
           end
         end
@@ -79,7 +79,7 @@ module Derailed
           render_form(model, nil, 'post')
         else
           object = model.new(params)
-          if object.save then
+          if object.save
             redirect "/#{@component.name.downcase}/#{model.name.downcase}/" +
               object[:id].to_s
           else
@@ -91,9 +91,9 @@ module Derailed
       # read displays modelname.html.erb for the given record
       def read(model, id)
         object = model.find_by_id(id)
-        if object then
+        if object
           render(model.name.downcase, binding)
-        elsif id then
+        elsif id
           not_found "Record  ##{id} not found for model " +
             "@{model.name} in component #{@component.name}"
         else
@@ -121,7 +121,7 @@ module Derailed
           if params.empty?
             render_form(model, object, 'put')
           else
-            if object.update_attributes(params) then
+            if object.update_attributes(params)
               redirect "/#{@component.name.downcase}/" +
                 "#{model.name.downcase}/#{id}"
             else
@@ -137,7 +137,7 @@ module Derailed
       # delete deletes the given record
       def delete(model, id)
         object = model.find_by_id(id)
-        if object then
+        if object
           object.delete
           redirect "/#{@component.name.downcase}/#{model.name.downcase}"
         else

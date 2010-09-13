@@ -12,7 +12,7 @@ module Derailed
 
       # get_component_socket returns the socket URI for the named Component
       def get_component_socket(name)
-        if @components[name] then
+        if @components[name]
           @components[name].__drburi
         else
           nil
