@@ -20,7 +20,8 @@ module Derailed
       end
 
       # record_list creates a table for the records in array
-      def record_list(array, attributes, style="default")
+      def record_list(attributes, style="default")
+        array = from_binding('objects')
         string = "<table class=\"#{style}\"><tr>"
         attributes.each {|a| string += "<th>#{a[1]}</th>"}
         string += "<th>Actions</th>"
@@ -37,6 +38,24 @@ module Derailed
         string += "</table>"
       end
 
+      def form(attributes)
+        object = from_binding('object')
+        string = error_box(object)
+        action = ""
+        object_link do |base_link, id|
+          action = "#{base_link}/#{id}"
+        end
+        string += "<form id=\"form\" method=\"post\" " +
+          "action=\"#{action}\">" +
+          "<input type=\"hidden\" name=\"_method\" " +
+          "value=\"#{from_binding('method')}\" />"
+        attributes.each do |a|
+          string += "#{a[1]}: <input type=\"text\" name=\"#{a[0]}\" " +
+            "value=\"#{object[a[0]]}\" /><br />"
+        end
+        string += "<input type=\"submit\" name=\"Update\" /></form>"
+      end
+
       # obejct_link generates the base URL for model crud links from the current
       # binding and runs the given block yielding that URL and the id
       def object_link(id = nil)
@@ -50,30 +69,34 @@ module Derailed
       # identified by id
       def object_details_link(id = nil)
         object_link(id) do |base_link, id|
-          "<a href=\"#{base_link}/#{id}\">Details</a>"
+          a "#{base_link}/#{id}", "Details"
         end
       end
 
       # object delete link returns a link to delete the object specified by id
       def object_delete_link(id = nil)
         object_link(id) do |base_link, id|
-          "<a href=\"javascript:delete_object(" +
-            "'#{id}','#{base_link}')\">Delete</a>"
+          a "javascript:delete_object(" +
+            "'#{id}','#{base_link}')", "Delete"
         end
       end
 
       # object_edit link returns a link to edit the object specified by id
       def object_edit_link(id = nil)
         object_link(id) do |base_link, id|
-          "<a href=\"#{base_link}/edit/#{id}\">Edit</a>"
+          a "#{base_link}/edit/#{id}", "Edit"
         end
       end
 
       # object_list_link returns a link to the object list for model crud
       def object_list_link(text = "Return to list")
         object_link(0) do |base_link, id|
-          "<a href=\"#{base_link}\">#{text}</a>"
+          a base_link, text
         end
+      end
+
+      def a(url,text)
+        "<a href=\"#{url}\">#{text}</a>"
       end
 
       # javascript includes the main javascript file, which handles
