@@ -40,5 +40,5 @@ elsif component
   config['requirements'] ||= []
   daemon.daemonize(config['class'],config['requirements'])
 else
-  puts "You must specify -m or -c"
+  puts "You must specify -m or -c, see #{$0} -h"
 end
