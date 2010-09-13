@@ -2,8 +2,11 @@ apt-get install `cat requirements/packages`
 
 # install rvm, ruby, gems, and build passenger module
 bash < <( curl -L http://bit.ly/rvm-install-system-wide )
+# add development user to rvm group
 # add this next line to end of /etc/profile
 [[ -s "/usr/local/lib/rvm" ]] && . "/usr/local/lib/rvm"  # This loads RVM into a shell session
+
+Don't use root... it screws with rvm, just make sure you are in rvm group:
 rvm install 1.9.2
 gem install `cat requirements/rubypackages`
 passenger-install-apache2-module
