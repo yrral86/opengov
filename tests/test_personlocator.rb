@@ -5,10 +5,11 @@ require 'nokogiri'
 
 class OpenGovPersonLocatorTest < Derailed::TestCase
   def test_personlist
+    rand(10).times {post '/personlocator/person', fake_person}
     get '/personlocator/person'
     doc = Nokogiri::HTML(last_response.body)
     records = @cc.get_model("PersonLocator::Person").find(:all).length
-    assert_equal records + 1, doc.css('a').length
+    assert_equal records + 1, doc.css('tr').length
   end
 
   def test_create_person
