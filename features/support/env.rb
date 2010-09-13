@@ -5,6 +5,9 @@ require 'derailed/testcase'
 
 Webrat.configure do |config|
   config.mode = :rack
+# this will work with webrat from git, but there hasn't been a release yet
+#  config.mode = :selenium
+#  config.application_framework = :rack
 end
 
 class OpenGovWorld < Derailed::TestCase
