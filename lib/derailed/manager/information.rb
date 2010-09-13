@@ -12,7 +12,8 @@ module Derailed
             if routes[r] == nil
               routes[r] = c
             else
-              raise "Route '#{r}' already handled by component #{routes[r].name}"
+              raise "Route '#{r}' already handled by component " +
+                routes[r].name
             end
           end
         end
