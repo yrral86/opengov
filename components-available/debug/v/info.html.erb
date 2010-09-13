@@ -1,0 +1,13 @@
+<h3>Components</h3>
+<%= available_components.join "<br />" %>
+<br />
+<h3>Models</h3>
+<%= available_models.join "<br />" %>
+<br />
+<h3>Routes</h3>
+<% available_routes.keys.each do |k| %>
+<%= "#{k} => #{available_routes[k].name}" %><br />
+<% end %>
+<br />
+<h3>Types</h3>
+<%= available_types.join "<br />" %>

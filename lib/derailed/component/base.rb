@@ -40,22 +40,23 @@ module Derailed
         @models = {}
         add_models(models)
 
+        @client = ComponentClient.new
+
         # must be after add_models as controller creates a whitelist
         # of what can be called and that list needs to include the models
         # for CRUD to work
-        @controller = controller_class.new(self) if controller_class
+        @controller = controller_class.new(self, @client) if controller_class
 
-        @cc = ComponentClient.new
-        need = @cc.dependencies_not_satisfied(@dependencies)
+        need = @client.dependencies_not_satisfied(@dependencies)
         if need == [] then
           socket = Manager::Socket.uri @name
           DRb.install_id_conv DRb::TimerIdConv.new(10)
           DRb.start_service socket, self
-          @cc.cm.register_component(socket)
+          @client.cm.register_component(socket)
           @registered = true
           at_exit {
             if @registered then
-              @cc.cm.unregister_component(@name)
+              @client.cm.unregister_component(@name)
             end
             DRb.stop_service
             ActiveRecord::Base.remove_connection

@@ -25,10 +25,11 @@ module Derailed
       include Helpers
       include View
 
-      # initialize sets the component and generates a whitelist of method names
-      # that can be called as URLs
-      def initialize(component)
+      # initialize sets the component and component client and generates a
+      # whitelist of method names that can be called as URLs
+      def initialize(component, client)
         @component = component
+        @client = client
         @safe_names = whitelist
       end
 
