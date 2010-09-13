@@ -33,11 +33,13 @@ module Derailed
       # If there is no logged in user, any other url is stored for redirecting
       # after login, and the user is redirected to the login form.
       def authenticate(env)
-        if @cc.get_current_session(env) or env[:controller].request.path == '/login'
+        if @cc.get_current_session(env) or
+            env[:controller].request.path == '/login'
           yield env
         else
           path = env[:controller].request.path
-          env[:controller].session[:onlogin] = path unless path == '/favicon.ico'
+          env[:controller].session[:onlogin] =
+            path unless path == '/favicon.ico'
           Component::View.redirect('/login')
         end
       end
