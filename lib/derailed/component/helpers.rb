@@ -37,6 +37,8 @@ module Derailed
         string += "</table>"
       end
 
+      # obejct_link generates the base URL for model crud links from the current
+      # binding and runs the given block yielding that URL and the id
       def object_link(id = nil)
         c_name = from_binding('@component.name.downcase')
         m_name = from_binding('model.name.downcase')
@@ -44,12 +46,15 @@ module Derailed
         yield "/#{c_name}/#{m_name}", id
       end
 
+      # object_details_link returns a link to the details page for the object
+      # identified by id
       def object_details_link(id = nil)
         object_link(id) do |base_link, id|
           "<a href=\"#{base_link}/#{id}\">Details</a>"
         end
       end
 
+      # object delete link returns a link to delete the object specified by id
       def object_delete_link(id = nil)
         object_link(id) do |base_link, id|
           "<a href=\"javascript:delete_object(" +
@@ -57,18 +62,21 @@ module Derailed
         end
       end
 
+      # object_edit link returns a link to edit the object specified by id
       def object_edit_link(id = nil)
         object_link(id) do |base_link, id|
           "<a href=\"#{base_link}/edit/#{id}\">Edit</a>"
         end
       end
 
+      # object_list_link returns a link to the object list for model crud
       def object_list_link(text = "Return to list")
         object_link(0) do |base_link, id|
           "<a href=\"#{base_link}\">#{text}</a>"
         end
       end
 
+      # javascript includes the main javascript file, which handles
       def javascript
         '<script type="text/javascript" src="/static/javascript/main.js">' +
           '</script>'
