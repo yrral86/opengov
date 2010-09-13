@@ -14,8 +14,9 @@ module Derailed
     #  method_not_allowed responds with a 405, Method Not Allowed
     #
     # We also have:
-    #  render_partial(name, binding) same as render, but returns a string
+    #  render_partial(name) same as render, but returns a string
     #  instead of a rack response (and adds an _ before the name)
+    #  It uses current_binding, which is set in render
     #
     # All other functions are internal and not intended to be called outside
     # this module.  Also, render and render_partial will only work within a
@@ -25,14 +26,17 @@ module Derailed
       # Renders a template to a rack response from it's name and a binding
       def render(name, binding)
         string = read_view_file(name)
-        render_erb(string, binding)
+        Thread.current[:binding] = binding
+        result = render_erb(string, binding)
+        Thread.current[:binding] = nil
+        result
       end
       module_function :render
 
-      # Renders a template to a string from it's name and a binding
-      def render_partial(name, binding)
-        string = read_view_file('_' + name)
-        execute_template(string, binding)
+      # Renders a template to a string from it's name
+      def render_partial(name)
+        string = read_view_file '_' + name
+        execute_template(string, current_binding)
       end
       module_function :render_partial
 
@@ -75,10 +79,17 @@ module Derailed
       # Executes a template given a string and a binding.  Returns the string
       # result of executing the template
       def execute_template(string, b)
-        Thread.current[:binding] = b
-        string = ERB.new(string).result b
-        Thread.current[:binding] = nil
-        string
+        ERB.new(string).result b
+      end
+
+      # current_binding retreives the current binding during template execution
+      def current_binding
+        Thread.current[:binding]
+      end
+
+      # from_binding evaluates code with the current binding
+      def from_binding(code)
+        eval code, current_binding
       end
 
       # read_view_file returns the template specified by name as a string
