@@ -55,10 +55,8 @@ module Derailed
           unless model_name then
             model_name = 'Nil'
           end
-          not_found('Model ' +
-                    model_name +
-                    ' not found in component ' +
-                    @component.name)
+          not_found "Model #{model_name} not found " +
+            "in component #{@component.name}"
         end
       end
 
@@ -82,9 +80,8 @@ module Derailed
         else
           object = model.new(params)
           if object.save then
-            redirect('/' + @component.name.downcase +
-                     '/' + model.name.downcase +
-                     '/' + object[:id].to_s)
+            redirect "/#{@component.name.downcase}/#{model.name.downcase}/" +
+              object[:id].to_s
           else
             render_form(model, object, 'post')
           end
@@ -97,8 +94,8 @@ module Derailed
         if object then
           render(model.name.downcase, binding)
         elsif id then
-          not_found('Record  #' + id + ' not found for model ' +
-                    model.name + ' in component ' + @component.name)
+          not_found "Record  ##{id} not found for model " +
+            "@{model.name} in component #{@component.name}"
         else
           objects = model.find :all
           render(model.name.downcase + 'list', binding)
@@ -125,20 +122,15 @@ module Derailed
             render_form(model, object, 'put')
           else
             if object.update_attributes(params) then
-              redirect('/' + @component.name.downcase +
-                       '/' + model.name.downcase +
-                       '/' + id)
+              redirect "/#{@component.name.downcase}/" +
+                "#{model.name.downcase}/#{id}"
             else
               render_form(model, object, 'put')
             end
           end
         else
-          not_found('Record # ' +
-                    id.to_s +
-                    ' not found for model ' +
-                    model.name +
-                    ' in component ' +
-                    @component.name)
+          not_found "'Record ##{id.to_s} not found for model #{model.name} " +
+            "in component #{@component.name}"
         end
       end
 
@@ -147,15 +139,10 @@ module Derailed
         object = model.find_by_id(id)
         if object then
           object.delete
-          redirect('/' + @component.name.downcase +
-                   '/' + model.name.downcase)
+          redirect "/#{@component.name.downcase}/#{model.name.downcase}"
         else
-          not_found('Record # ' +
-                    id +
-                    ' not found for model ' +
-                    model.name +
-                    ' in component ' +
-                    @component.name)
+          not_found "Record ##{id} not found for model #{model.name} " +
+            "in component #{@component.name}"
         end
       end
     end
