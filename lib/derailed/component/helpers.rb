@@ -7,9 +7,14 @@ module Derailed
       # error_box returns a string containing an unordered list of model
       # validation errors
       def error_box(record)
+        ul record.errors.full_messages
+      end
+
+      # ul turns the given array into an unordered list
+      def ul(array)
         string = "<ul>"
-        record.errors.full_messages.each do |m|
-          string += "<li>#{m}</li>"
+        array.each do |e|
+          string += "<li>#{e}</li>"
         end
         string += "</ul>"
       end

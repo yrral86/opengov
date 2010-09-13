@@ -1,15 +1,11 @@
 <h3>Components</h3>
-<%= available_components.join "<br />" %>
-<br /><br />
+<%= ul available_components %>
+<br />
 <h3>Models</h3>
-<%= available_models.join "<br />" %>
-<br /><br />
+<%= ul available_models %>
+<br />
 <h3>Routes</h3>
-<% available_routes.keys.each_index do |i| %>
-<% k = available_routes.keys[i] %>
-<%= "#{k} => #{available_routes[k].name}" %>
-<%= available_routes.keys.length - 1 > i ? "<br />" : "" %>
-<% end %>
-<br /><br />
+<%= ul available_routes %>
+<br />
 <h3>Types</h3>
-<%= available_types.join "<br />" %>
+<%= ul available_types %>
