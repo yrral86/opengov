@@ -1,5 +1,5 @@
 <%= javascript %>
 <%= object.fname %> <%= object.lname %><br />
-<a href="/personlocator/person/edit/<%= object[:id] %>">Edit</a>
-<a href="javascript:delete_object('<%= object[:id] %>','<%= "/#{@component.name.downcase}/#{model.name.downcase}" %>')">Delete</a>
-<a href="/personlocator/person">Back to list</a>
+<%= object_edit_link %>
+<%= object_delete_link %>
+<%= object_list_link %>

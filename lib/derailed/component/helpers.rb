@@ -21,7 +21,6 @@ module Derailed
 
       # record_list creates a table for the records in array
       def record_list(array, attributes, style="default")
-        model = from_binding('model')
         string = "<table class=\"#{style}\"><tr>"
         attributes.each {|a| string += "<th>#{a[1]}</th>"}
         string += "<th>Actions</th>"
@@ -29,10 +28,45 @@ module Derailed
         array.each do |record|
           string += "<tr>"
           attributes.each {|a| string += "<td>#{record[a[0]]}</td>"}
-          string += "<td><a href=\"/#{@component.name.downcase}/#{model.name.downcase}/#{record[:id]}\">Details</a></td>"
+          id = record[:id]
+          string += "<td>#{object_details_link(id)}<br />" +
+            "#{object_edit_link(id)}<br />" +
+            "#{object_delete_link(id)}</td>"
           string += "</tr>"
         end
         string += "</table>"
+      end
+
+      def object_link(id = nil)
+        c_name = from_binding('@component.name.downcase')
+        m_name = from_binding('model.name.downcase')
+        id ||= from_binding('object[:id]')
+        yield "/#{c_name}/#{m_name}", id
+      end
+
+      def object_details_link(id = nil)
+        object_link(id) do |base_link, id|
+          "<a href=\"#{base_link}/#{id}\">Details</a>"
+        end
+      end
+
+      def object_delete_link(id = nil)
+        object_link(id) do |base_link, id|
+          "<a href=\"javascript:delete_object(" +
+            "'#{id}','#{base_link}')\">Delete</a>"
+        end
+      end
+
+      def object_edit_link(id = nil)
+        object_link(id) do |base_link, id|
+          "<a href=\"#{base_link}/edit/#{id}\">Edit</a>"
+        end
+      end
+
+      def object_list_link(text = "Return to list")
+        object_link(0) do |base_link, id|
+          "<a href=\"#{base_link}\">#{text}</a>"
+        end
       end
 
       def javascript
