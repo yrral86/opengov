@@ -1,23 +1,5 @@
-<html>
-  <head>
-    <title>PersonLocator::person view</title>
-    <script type="text/javascript" src="/static/javascript/prototype.js">
-    </script>
-    <script type="text/javascript">
-      function delete_object(id) {
-      new Ajax.Request('/personlocator/person/' + id, {
-      method:'delete',
-      onSuccess: function(response) {
-      document.location.href = '/personlocator/person';
-      }
-      });
-      }
-    </script>
-  </head>
-  <body>
-    <%= object.fname %> <%= object.lname %><br />
-    <a href="/personlocator/person/edit/<%= object[:id] %>">Edit</a>
-    <a href="javascript:delete_object('<%= object[:id] %>')">Delete</a>
-    <a href="/personlocator/person">Back to list</a>
-  </body>
-</html>
+<%= javascript %>
+<%= object.fname %> <%= object.lname %><br />
+<a href="/personlocator/person/edit/<%= object[:id] %>">Edit</a>
+<a href="javascript:delete_object('<%= object[:id] %>','<%= "/#{@component.name.downcase}/#{model.name.downcase}" %>')">Delete</a>
+<a href="/personlocator/person">Back to list</a>

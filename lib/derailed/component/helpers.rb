@@ -35,6 +35,11 @@ module Derailed
         string += "</table>"
       end
 
+      def javascript
+        '<script type="text/javascript" src="/static/javascript/main.js">' +
+          '</script>'
+      end
+
       # from_binding evaluates code with the current binding
       def from_binding(code)
         eval code, Thread.current[:binding]
