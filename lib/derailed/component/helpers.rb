@@ -36,6 +36,7 @@ module Derailed
           string += "</tr>"
         end
         string += "</table>"
+        string += object_new_link
       end
 
       def record_details(attributes, style="default")
@@ -96,6 +97,13 @@ module Derailed
       def object_edit_link(id = nil)
         object_link(id) do |base_link, id|
           a "#{base_link}/edit/#{id}", "Edit"
+        end
+      end
+
+      def object_new_link
+        name = from_binding('model.name')
+        object_link(0) do |base_link, id|
+          a "#{base_link}/edit", "New #{name}"
         end
       end
 
