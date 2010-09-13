@@ -75,7 +75,10 @@ module Derailed
       # Executes a template given a string and a binding.  Returns the string
       # result of executing the template
       def execute_template(string, b)
-        ERB.new(string).result b
+        Thread.current[:binding] = b
+        string = ERB.new(string).result b
+        Thread.current[:binding] = nil
+        string
       end
 
       # read_view_file returns the template specified by name as a string
