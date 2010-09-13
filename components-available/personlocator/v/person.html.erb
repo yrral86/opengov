@@ -1,5 +1,2 @@
 <%= javascript %>
-<%= object.fname %> <%= object.lname %><br />
-<%= object_edit_link %>
-<%= object_delete_link %>
-<%= object_list_link %>
+<%= record_details [[:fname, 'First Name'], [:lname, 'Last Name']] %>

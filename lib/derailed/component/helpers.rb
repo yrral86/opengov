@@ -38,6 +38,17 @@ module Derailed
         string += "</table>"
       end
 
+      def record_details(attributes, style="default")
+        object = from_binding('object')
+        string = "<table class=\"#{style}\">"
+        attributes.each do |a|
+          string += "<tr><td>#{a[1]}:</td><td>#{object[a[0]]}</td></tr>"
+        end
+        string += "</table>"
+        string +=
+          "#{object_edit_link} #{object_delete_link} #{object_list_link}"
+      end
+
       def form(attributes)
         object = from_binding('object')
         string = error_box(object)
