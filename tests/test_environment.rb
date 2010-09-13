@@ -12,7 +12,7 @@ class OpenGovEnvironmentTest < Test::Unit::TestCase
 #  def test_system_packages
 #    packages = File.read('requirements/packages').split "\n"
 #    packages.each do |p|
-#      unless p == "" then
+#      unless p == ""
 #        package = Debian::Dpkg.status([p]).packages[0]
 #        assert package, "System package " + p + " not installed"
 #        assert_equal "installed",
@@ -25,7 +25,7 @@ class OpenGovEnvironmentTest < Test::Unit::TestCase
   def test_gem_packages
     gems = File.read('requirements/rubypackages').split "\n"
     gems.each do |g|
-      unless g == "" then
+      unless g == ""
         assert Gem.source_index.find_name(g).empty? == false, "Gem " + g + " not installed"
       end
     end

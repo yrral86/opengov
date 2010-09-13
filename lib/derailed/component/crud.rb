@@ -52,7 +52,7 @@ module Derailed
             method_not_allowed
           end
         else
-          unless model_name then
+          unless model_name
             model_name = 'Nil'
           end
           not_found "Model #{model_name} not found " +

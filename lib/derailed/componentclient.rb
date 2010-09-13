@@ -57,7 +57,7 @@ module Derailed
       not_available = []
       deps.each do |d|
 
-        unless available[d] then
+        unless available[d]
           not_available << d
         end
       end

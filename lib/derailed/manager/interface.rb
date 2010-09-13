@@ -51,7 +51,7 @@ module Derailed
 
         at_exit {
           component_list.each do |c|
-            unless c == '' then
+            unless c == ''
               `#{Config::RootDir}/control.rb -c #{c} stop`
             end
           end
