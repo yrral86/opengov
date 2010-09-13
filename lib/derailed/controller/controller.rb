@@ -63,15 +63,9 @@ module Derailed
         @r.params
       end
 
-      # I'm not sure where I ripped this from, but it seems to work.
-      # Simply returning false might work too (required by Authlogic)
-      def authenticate_with_http_basic(&block)
-        @auth = Rack::Auth::Basic::Request.new(@env)
-        if @auth.provided? and @auth.basic?
-          block.call(*@auth.credentials)
-        else
-          false
-        end
+      # Disable http_basic authentication
+      def authenticate_with_http_basic
+        false
       end
 
       # cookie_domain returns the HTTP_HOST header, which will be used to
