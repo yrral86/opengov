@@ -65,8 +65,8 @@ class OpenGovAuthenticatorTest < Derailed::TestCase
   end
 
   def test_pam_login
-    do_auth({'user_session'=>{'username'=> `whoami`.chomp,'password'=>'redacted'}})
+    do_auth({'user_session'=>{'username'=> `whoami`.chomp,'password'=>`cat .password`.chomp}})
     get '/home'
-    assert_equal 200, last_response.status
+    assert_equal 200, last_response.status, "PAM login failed, make sure the file .password contains your current login password"
   end
 end
