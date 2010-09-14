@@ -1,7 +1,7 @@
 Feature: Authentication
   In order to ensure information security
   As an administrator
-  I want require authentication for users
+  I want to require authentication for users
 
   Scenario: User logs in
     Given I am logged out
