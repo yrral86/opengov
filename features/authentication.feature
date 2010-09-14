@@ -1,4 +1,8 @@
 Feature: Authentication
+  In order to ensure information security
+  As an administrator
+  I want require authentication for users
+
   Scenario: User logs in
     Given I am logged out
     When I log in using 'test_user' and 'test_password'
@@ -9,3 +13,10 @@ Feature: Authentication
     When I go to '/logout'
     And I go to '/home'
     Then I am at '/login'
+
+  Scenario: Create new user
+    Given I am logged in as 'test_user'
+    When I go to '/newuser'
+    And I create a user 'newuser' with password 'newpassword'
+    And I log in using 'newuser' and 'newpassword'
+    Then I am logged in as 'newuser'

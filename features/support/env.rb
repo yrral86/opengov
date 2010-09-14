@@ -1,6 +1,9 @@
 require 'rack/test'
 require 'webrat'
 
+dir = File.expand_path(File.dirname(__FILE__) + '/../../')
+$:.unshift "#{dir}/lib"
+
 require 'derailed/testcase'
 
 Webrat.configure do |config|
