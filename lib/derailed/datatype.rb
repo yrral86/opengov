@@ -41,6 +41,11 @@ module Derailed
       @record = record
     end
 
+    # [] calls method_missing so record[:attribute] works
+    def [](id)
+      method_missing(id)
+    end
+
     # method_missing sends the requested attribute to the record unless there is
     # a match in the abstract map that overrides the attribute name, in which
     # case that name is sent.

@@ -10,5 +10,5 @@ Feature: Debug
   Scenario: Display all people
     Given I create a person 'first last' via PersonLocator
     When I go to '/debug/people'
-#    Then I should see 'first'
-#    And I should see 'last'
+    Then I should see 'first'
+    And I should see 'last'
