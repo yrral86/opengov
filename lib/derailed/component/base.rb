@@ -101,7 +101,6 @@ module Derailed
 
       # model returns the requested model
       def model(name)
-        puts @models.inspect
         @models[name]
       end
 
@@ -114,12 +113,20 @@ module Derailed
         end
       end
 
+      # model_by_type returns the model of the requested type
+      def model_by_type(type)
+        @models.values.each do |m|
+          return m if m.respond_to?(:abstract_type) &&
+            m.abstract_type == type
+        end
+        nil
+      end
+
       # def clear_models destroys all records if we are
       # in the test environment
       def clear_models
         if Config::Environment == 'test'
           @models.values.each do |m|
-            puts m.name
             unless @name == 'Authenticator' && m.name == 'UserSession'
               m.destroy_all
             end

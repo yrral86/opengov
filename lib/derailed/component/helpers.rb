@@ -65,7 +65,7 @@ module Derailed
           string += "#{a[1]}: <input type=\"text\" name=\"#{a[0]}\" " +
             "value=\"#{object[a[0]]}\" /><br />"
         end
-        string += "<input type=\"submit\" name=\"Update\" /></form>"
+        string += "<input type=\"submit\" value=\"Update\" /></form>"
       end
 
       # obejct_link generates the base URL for model crud links from the current

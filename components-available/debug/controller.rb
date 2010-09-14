@@ -14,4 +14,22 @@ class DebugController < Derailed::Component::Controller
     end
     render 'info', binding
   end
+
+  def people
+    type = 'Person'
+    objects = []
+    @client.cm.components_with_type(type).each do |component|
+      if model = @client.get_component(component).model_by_type(type)
+        objects.concat(model.find(:all))
+      else
+        throw ThisShouldNotBePossible
+        # If the component does not have a model with the specified type
+        # then components_with_type lied to us
+      end
+    end
+    #hax
+    model = @client.get_model 'PersonLocator::Person'
+    puts objects
+    render 'people', binding
+  end
 end
