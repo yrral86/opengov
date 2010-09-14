@@ -1,6 +1,5 @@
 dir = File.expand_path(File.dirname(__FILE__))
-libraries = "#{dir}/lib"
-$:.unshift libraries
+$:.unshift "#{dir}/lib"
 require 'derailed/rack'
 
 use Rack::Session::Cookie

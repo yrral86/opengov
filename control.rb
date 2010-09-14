@@ -4,8 +4,7 @@ require 'yaml'
 require 'optparse'
 
 dir = File.expand_path(File.dirname(__FILE__))
-libraries = "#{dir}/lib"
-$:.unshift libraries
+$:.unshift "#{dir}/lib"
 
 component = nil
 OptionParser.new do |opts|

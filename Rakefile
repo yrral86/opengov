@@ -6,8 +6,7 @@ require 'active_record'
 require 'rack/logger'
 
 APP_BASE = File.dirname(File.expand_path(__FILE__))
-libraries = APP_BASE + '/lib'
-$:.unshift libraries
+$:.unshift APP_BASE + '/lib'
 
 Rake::TestTask.new(:do_test) do |t|
   t.test_files = FileList['tests/test*.rb']
