@@ -16,3 +16,8 @@ Feature: PersonLocator
     When I create a person 'Testy McTesterson' via PersonLocator
     And I delete 'Testy McTesterson' via PersonLocator
     Then there is no person named 'Testy McTesterson' via PersonLocator
+
+  Scenario: Create, Edit person
+    When I create a person 'Testy McTesterson' via PersonLocator
+    And I rename 'Testy McTesterson' to 'Tally McTallerson' via PersonLocator
+    Then I am viewing the details of person 'McTallerson' via PersonLocator

@@ -37,3 +37,15 @@ Then /^there is no person named '(.*)' via PersonLocator$/ do |name|
   person = @cc.get_model('PersonLocator::Person').find_by_lname(name[1])
   assert_equal nil, person
 end
+
+When /^I rename '(.*)' to '(.*)' via PersonLocator$/ do |original, new|
+  original = original.split
+  new = new.split
+  model = @cc.get_model('PersonLocator::Person')
+  person = model.find_by_lname original[1]
+  visit "/personlocator/person/#{person[:id]}"
+  click_link "Edit"
+  fill_in 'fname', :with => new[0]
+  fill_in 'lname', :with => new[1]
+  click_button 'Update'
+end
