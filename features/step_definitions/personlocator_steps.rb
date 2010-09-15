@@ -24,3 +24,16 @@ Then /^I am viewing the details of person '(.*)' via PersonLocator$/ do |lname|
   And "the HTML should contain 'a[href=\"javascript:delete_object('" +
     "#{person[:id]}','/personlocator/person')\"]'"
 end
+
+When /^I delete '(.*)' via PersonLocator$/ do |name|
+  name = name.split
+  params = {:fname => name[0], :lname => name[1], :_method => :delete}
+  person = @cc.get_model('PersonLocator::Person').find_by_lname(name[1])
+  post "/personlocator/person/#{person[:id]}", params
+end
+
+Then /^there is no person named '(.*)' via PersonLocator$/ do |name|
+  name = name.split
+  person = @cc.get_model('PersonLocator::Person').find_by_lname(name[1])
+  assert_equal nil, person
+end

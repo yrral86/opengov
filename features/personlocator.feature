@@ -11,3 +11,8 @@ Feature: PersonLocator
   Scenario: Create Person
     When I create a person 'Testy McTesterson' via PersonLocator
     Then I am viewing the details of person 'McTesterson' via PersonLocator
+
+  Scenario: Create, Destroy person
+    When I create a person 'Testy McTesterson' via PersonLocator
+    And I delete 'Testy McTesterson' via PersonLocator
+    Then there is no person named 'Testy McTesterson' via PersonLocator
