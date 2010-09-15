@@ -17,3 +17,10 @@ end
 Then /^the HTML should contain '(.*)'$/ do |selector|
   assert_have_selector selector
 end
+
+Then /^there should be one more row than '(.*)' records$/ do |model|
+  records = @cc.get_model(model).find(:all).length
+  nodes = Nokogiri::HTML(last_response.body).css('tr').length
+  assert_equal nodes, records + 1,
+  "There are #{nodes} nodes and #{records} records"
+end
