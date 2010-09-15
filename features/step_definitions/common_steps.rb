@@ -24,7 +24,3 @@ Then /^there should be one more row than '(.*)' records$/ do |model|
   assert_equal nodes, records + 1,
   "There are #{nodes} nodes and #{records} records"
 end
-
-def assert_have_link_to(url)
-  assert_have_selector "a[href=\"#{url}\"]"
-end

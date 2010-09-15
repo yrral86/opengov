@@ -18,6 +18,16 @@ class OpenGovWorld < Derailed::TestCase
   include Webrat::Matchers
 
   Webrat::Methods.delegate_to_session :response_code, :response_body
+
+  def assert_have_link_to(url)
+    assert_have_selector "a[href=\"#{url}\"]"
+  end
+
+  def person_record_from_full_name(name)
+    name = name.split
+    model = @cc.get_model('PersonLocator::Person')
+    model.find_by_fname_and_lname(name[0], name[1])
+  end
 end
 
 World do
