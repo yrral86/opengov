@@ -14,6 +14,6 @@ Given /^I inspect the body$/ do
   puts last_response.body
 end
 
-Given /^it should contain '(.*)'$/ do |selector|
+Given /^the HTML should contain '(.*)'$/ do |selector|
   assert_have_selector selector
 end

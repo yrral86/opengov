@@ -12,4 +12,4 @@ Feature: Debug
     When I go to '/debug/people'
     Then I should see 'TestFirstName'
     And I should see 'TestLastName'
-    And it should contain 'table tr td a[href*="/personlocator/person"]'
+    And the HTML should contain 'table tr td a[href*="/personlocator/person"]'
