@@ -10,7 +10,7 @@ Feature: PersonLocator
 
   Scenario: Create Person
     When I create a person 'Testy McTesterson' via PersonLocator
-    Then I am viewing the details of person 'McTesterson' via PersonLocator
+    Then I see the details of person 'Testy McTesterson' via PersonLocator
 
   Scenario: Create, Destroy person
     When I create a person 'Testy McTesterson' via PersonLocator
@@ -20,4 +20,4 @@ Feature: PersonLocator
   Scenario: Create, Edit person
     When I create a person 'Testy McTesterson' via PersonLocator
     And I rename 'Testy McTesterson' to 'Tally McTallerson' via PersonLocator
-    Then I am viewing the details of person 'McTallerson' via PersonLocator
+    Then I see the details of person 'Tally McTallerson' via PersonLocator

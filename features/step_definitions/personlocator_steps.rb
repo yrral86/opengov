@@ -12,8 +12,8 @@ Given /^there are people records in PersonLocator$/ do
       :lname => "LastName#{rand(100)}"}}
 end
 
-Then /^I am viewing the details of person '(.*)' via PersonLocator$/ do |lname|
-  person = @cc.get_model('PersonLocator::Person').find_by_lname(lname)
+Then /^I see the details of person '(.*)' via PersonLocator$/ do |name|
+  person = person_record_from_full_name(name)
   Then "I am at '/personlocator/person/#{person[:id]}'"
   And "I should see '#{person[:fname]}'"
   And "I should see '#{person[:lname]}'"
@@ -26,26 +26,32 @@ Then /^I am viewing the details of person '(.*)' via PersonLocator$/ do |lname|
 end
 
 When /^I delete '(.*)' via PersonLocator$/ do |name|
-  name = name.split
-  params = {:fname => name[0], :lname => name[1], :_method => :delete}
-  person = @cc.get_model('PersonLocator::Person').find_by_lname(name[1])
+  person = person_record_from_full_name(name)
+  params = {:fname => person[:fname],
+    :lname => person[:lname], :_method => :delete}
   post "/personlocator/person/#{person[:id]}", params
+  # when we have selenium (js support), this can be:
+  # visit "/personlocator/person/#{person[:id]}"
+  # click_link 'Delete'
 end
 
 Then /^there is no person named '(.*)' via PersonLocator$/ do |name|
-  name = name.split
-  person = @cc.get_model('PersonLocator::Person').find_by_lname(name[1])
+  person = person_record_from_full_name(name)
   assert_equal nil, person
 end
 
 When /^I rename '(.*)' to '(.*)' via PersonLocator$/ do |original, new|
-  original = original.split
   new = new.split
-  model = @cc.get_model('PersonLocator::Person')
-  person = model.find_by_lname original[1]
+  person = person_record_from_full_name(original)
   visit "/personlocator/person/#{person[:id]}"
   click_link "Edit"
   fill_in 'fname', :with => new[0]
   fill_in 'lname', :with => new[1]
   click_button 'Update'
+end
+
+def person_record_from_full_name(name)
+  name = name.split
+  model = @cc.get_model('PersonLocator::Person')
+  model.find_by_fname_and_lname(name[0], name[1])
 end
