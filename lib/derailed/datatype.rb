@@ -46,6 +46,12 @@ module Derailed
       method_missing(id)
     end
 
+    # full_model_name gives us access to the full model name stored in the
+    # record's class
+    def full_model_name
+      @record.remote_class.full_model_name
+    end
+
     # method_missing sends the requested attribute to the record unless there is
     # a match in the abstract map that overrides the attribute name, in which
     # case that name is sent.

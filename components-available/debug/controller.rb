@@ -28,9 +28,6 @@ class DebugController < Derailed::Component::Controller
       end
     end
     objects.map! {|record| Derailed::Type::Person.new(record)}
-    # hax so we can use record_list function
-    # (urls are going to be broken)
-    model = @client.get_model 'PersonLocator::Person'
     render 'people', binding
   end
 end

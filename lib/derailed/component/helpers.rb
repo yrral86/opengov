@@ -29,10 +29,9 @@ module Derailed
         array.each do |record|
           string += "<tr>"
           attributes.each {|a| string += "<td>#{record[a[0]]}</td>"}
-          id = record[:id]
-          string += "<td>#{object_details_link(id)}<br />" +
-            "#{object_edit_link(id)}<br />" +
-            "#{object_delete_link(id)}</td>"
+          string += "<td>#{object_details_link(record)}<br />" +
+            "#{object_edit_link(record)}<br />" +
+            "#{object_delete_link(record)}</td>"
           string += "</tr>"
         end
         string += "</table>"
@@ -68,48 +67,52 @@ module Derailed
         string += "<input type=\"submit\" value=\"Update\" /></form>"
       end
 
-      # obejct_link generates the base URL for model crud links from the current
-      # binding and runs the given block yielding that URL and the id
-      def object_link(id = nil)
-        c_name = from_binding('@component.name.downcase')
-        m_name = from_binding('model.name.downcase')
-        id ||= from_binding('object[:id]')
-        yield "/#{c_name}/#{m_name}", id
+      # obejct_link generates the base URL for model crud links from the object,
+      # grabbing it from the current binding if necessary and yields that URL
+      # and the object's id
+      def object_link(object = nil)
+        object ||= from_binding('object')
+        name = object.full_model_name.split '::'
+        yield "/#{name[0].downcase}/#{name[1].downcase}", object[:id]
       end
 
       # object_details_link returns a link to the details page for the object
       # identified by id
-      def object_details_link(id = nil)
-        object_link(id) do |base_link, id|
+      def object_details_link(object = nil)
+        object_link(object) do |base_link, id|
           a "#{base_link}/#{id}", "Details"
         end
       end
 
       # object delete link returns a link to delete the object specified by id
-      def object_delete_link(id = nil)
-        object_link(id) do |base_link, id|
+      def object_delete_link(object = nil)
+        object_link(object) do |base_link, id|
           a "javascript:delete_object(" +
             "'#{id}','#{base_link}')", "Delete"
         end
       end
 
       # object_edit link returns a link to edit the object specified by id
-      def object_edit_link(id = nil)
-        object_link(id) do |base_link, id|
+      def object_edit_link(object = nil)
+        object_link(object) do |base_link, id|
           a "#{base_link}/edit/#{id}", "Edit"
         end
       end
 
       def object_new_link
-        name = from_binding('model.name')
-        object_link(0) do |base_link, id|
-          a "#{base_link}/edit", "New #{name}"
+        model = from_binding('model')
+        if model.class == Array
+          ''
+        else
+          object_link(model.new) do |base_link, id|
+            a "#{base_link}/edit", "New #{model.name}"
+          end
         end
       end
 
       # object_list_link returns a link to the object list for model crud
       def object_list_link(text = "Return to list")
-        object_link(0) do |base_link, id|
+         object_link do |base_link, id|
           a base_link, text
         end
       end

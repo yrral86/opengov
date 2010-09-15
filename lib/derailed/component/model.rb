@@ -11,8 +11,20 @@ module Derailed
     # the model is kept in the Component's process and interacted with over
     # the socket.
     class Model < ActiveRecord::Base
+      def self.full_model_name=(name)
+        @full_model_name = name
+      end
+
+      def self.full_model_name
+        @full_model_name
+      end
+
+      def full_model_name
+        self.class.full_model_name
+      end
+
       # required to subclass ActiveRecord::Base without it trying to
-      # find an open_gov_model table
+      # find a 'model' table
       self.abstract_class = true
 
       # abstract_map provides a map from the db fields to the abstract datatype
@@ -25,6 +37,12 @@ module Derailed
       # implements (default: nil)
       def self.abstract_type
         nil
+      end
+
+      # remote_class allows us to access the class from a remote process
+      # as object.class returns DRbObject
+      def remote_class
+        self.class
       end
 
       # forces model objects to be sent over the socket as references

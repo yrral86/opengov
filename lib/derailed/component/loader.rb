@@ -9,18 +9,26 @@ module Derailed
       # directory and keeps track of the classes that are added.  These
       # classes are the models and the controller class.
       def require_libraries
-        dir = Config::ComponentDir + "/#{@name.downcase}"
         original = class_list
-        require_dir(dir)
+        require_dir Config::ComponentDir + "/#{@name.downcase}"
         new = class_list
+
         new_modules = new - original
         new_models = new_modules.select do |m|
           subclass?(m, Derailed::Component::Model) ||
           subclass?(m, Authlogic::Session::Base)
         end
+
         controller_array = new_modules.select do |m|
           subclass?(m, Derailed::Component::Controller)
         end
+
+        new_models.each do |m|
+          if subclass?(m, Derailed::Component::Model)
+            m.full_model_name = "#{name}::#{m.name}"
+          end
+        end
+
         [new_models,controller_array[0]] # we should only have one controller
       end
 
