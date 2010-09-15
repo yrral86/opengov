@@ -25,12 +25,14 @@ end
 
 When /^I delete '(.*)' via PersonLocator$/ do |name|
   person = person_record_from_full_name(name)
-  params = {:fname => person[:fname],
-    :lname => person[:lname], :_method => :delete}
-  post "/personlocator/person/#{person[:id]}", params
-  # when we have selenium (js support), this can be:
-  # visit "/personlocator/person/#{person[:id]}"
-  # click_link 'Delete'
+  if Webrat.configuration.mode == :rack
+    params = {:fname => person[:fname],
+      :lname => person[:lname], :_method => :delete}
+    post "/personlocator/person/#{person[:id]}", params
+  else  # we have selenium (js support)
+    visit "/personlocator/person/#{person[:id]}"
+    click_link 'Delete'
+  end
 end
 
 Then /^there is no person named '(.*)' via PersonLocator$/ do |name|
