@@ -9,3 +9,11 @@ end
 Given /^I should see '(.*)'$/ do |message|
   assert_contain message
 end
+
+Given /^I inspect the body$/ do
+  puts last_response.body
+end
+
+Given /^it should contain '(.*)'$/ do |selector|
+  assert_have_selector selector
+end
