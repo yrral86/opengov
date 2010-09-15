@@ -4,8 +4,8 @@ Feature: Authentication
   I want to require authentication for users
 
   Scenario: User logs in
-    Given I am logged out
-    When I log in using 'test_user' and 'test_password'
+    When I log out
+    And I log in using 'test_user' and 'test_password'
     Then I am logged in as 'test_user'
 
   Scenario: User logs out

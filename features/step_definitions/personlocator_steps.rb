@@ -1,4 +1,4 @@
-Given /^I create a person '(.*)' via PersonLocator/ do |name|
+When /^I create a person '(.*)' via PersonLocator/ do |name|
   first, last = name.split
   visit '/personlocator/person/edit'
   fill_in 'fname', :with => first

@@ -8,8 +8,8 @@ Feature: Debug
     Then I should see 'DebugController says hi!'
 
   Scenario: Display all people
-    Given I create a person 'TestFirstName TestLastName' via PersonLocator
-    When I go to '/debug/people'
+    When I create a person 'TestFirstName TestLastName' via PersonLocator
+    And I go to '/debug/people'
     Then I should see 'TestFirstName'
     And I should see 'TestLastName'
     And the HTML should contain 'table tr td a[href*="/personlocator/person"]'
