@@ -17,12 +17,10 @@ Then /^I see the details of person '(.*)' via PersonLocator$/ do |name|
   Then "I am at '/personlocator/person/#{person[:id]}'"
   And "I should see '#{person[:fname]}'"
   And "I should see '#{person[:lname]}'"
-  And "the HTML should contain " +
-    "'a[href=\"/personlocator/person/edit/#{person[:id]}\"]'"
-  And "the HTML should contain " +
-    "'a[href=\"/personlocator/person\"]'"
-  And "the HTML should contain 'a[href=\"javascript:delete_object('" +
-    "#{person[:id]}','/personlocator/person')\"]'"
+  assert_have_link_to "/personlocator/person/edit/#{person[:id]}"
+  assert_have_link_to "/personlocator/person"
+  assert_have_link_to "javascript:delete_object(" +
+    "'#{person[:id]}','/personlocator/person')"
 end
 
 When /^I delete '(.*)' via PersonLocator$/ do |name|
