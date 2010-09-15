@@ -39,12 +39,6 @@ module Derailed
         nil
       end
 
-      # remote_class allows us to access the class from a remote process
-      # as object.class returns DRbObject
-      def remote_class
-        self.class
-      end
-
       # forces model objects to be sent over the socket as references
       # instead of copied... if they are copied, they won't have their
       # DB connection... and we want to keep DB interactions local anyway
