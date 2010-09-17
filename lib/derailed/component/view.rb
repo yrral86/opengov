@@ -41,8 +41,8 @@ module Derailed
       module_function :render_partial
 
       # Renders a string
-      def render_string(string)
-        render_response string
+      def render_string(string, headers={})
+        render_response string, 200, headers
       end
       module_function :render_string
 
@@ -73,8 +73,14 @@ module Derailed
         render_response execute_template(string,b)
       end
 
+      # render_response renders the response in Rack format
       def render_response(body, status=200, headers={})
-        unless body.class == Array
+        if body.class != Array
+          if status == 200 &&
+              params['_ajax'] != 'yes' &&
+              !headers.has_key?('Content-Type')
+            body = template_wrap(body)
+          end
           body = [body]
         end
 
@@ -117,6 +123,14 @@ module Derailed
           dir += @component.name.downcase
         end
         dir
+      end
+
+      # template_wrap wraps the content in the template, using the binding in
+      # this function.  This means layouts are limited to the compontent
+      # controller level functions, and the content variable
+      def template_wrap(content, template='default')
+        layout = File.read(Config::RootDir + "/layouts/#{template}.html.erb")
+        ERB.new(layout).result binding
       end
     end
   end
