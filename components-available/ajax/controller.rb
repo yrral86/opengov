@@ -11,4 +11,11 @@ class AjaxController < Derailed::Component::Controller
 </table>
 eof
   end
+
+  def updatable_table
+    code = "update_div('table','/ajax/table')"
+    render_erb '<div id="table"></div>' +
+      a("javascript:#{code}", 'update') +
+      "<script type=\"text/javascript\">#{code}</script>", binding
+  end
 end

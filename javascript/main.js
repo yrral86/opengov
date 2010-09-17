@@ -14,3 +14,9 @@ function delete_object(id, url) {
 	    }
     });
 }
+
+function update_div(id, url) {
+    new Ajax.Updater(id, url, {
+	    parameters: { _ajax: 'yes' }
+    });
+}
