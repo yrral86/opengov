@@ -42,9 +42,7 @@ module Derailed
 
       # Renders a string
       def render_string(string)
-        [200,
-         {'Content-Type' => 'text/html'},
-         [string]]
+        render_response string
       end
       module_function :render_string
 
@@ -52,29 +50,37 @@ module Derailed
       def redirect(url)
         response = Rack::Response.new
         response.redirect(url)
-        response.finish
+        status, headers, body = response.finish
+        body = body.body
+        render_response body, status, headers
       end
       module_function :redirect
 
       # Renders a 404, Not found with the given message
       def not_found(msg)
-        [404, {'Content-Type' => 'text/html'}, [msg]]
+        render_response msg, 404
       end
       module_function :not_found
 
       # Renders a 405, Method not allowed
       def method_not_allowed
-        [405, {'Content-Type' => 'text/html'}, ['Method Not Allowed']]
+        render_response 'Method Not Allowed', 405
       end
       module_function :method_not_allowed
 
       # Renders an erb template given as a string using the given binding
       def render_erb(string,b)
-        [200,
-         {'Content-Type' => 'text/html'},
-         [execute_template(string,b)]
-        ]
+        render_response execute_template(string,b)
       end
+
+      def render_response(body, status=200, headers={})
+        unless body.class == Array
+          body = [body]
+        end
+
+        [status, headers, body]
+      end
+      module_function :render_response
 
       # Executes a template given a string and a binding.  Returns the string
       # result of executing the template
