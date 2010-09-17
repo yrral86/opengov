@@ -81,6 +81,9 @@ eof
   puts "enabling component (creating symlink)"
   File.symlink("../#{folder}", active_link)
   puts "Created component #{component}"
+  `git add #{folder} #{active_link}`
+  `git commit -am 'added component #{component}'`
+  puts 'Commited to repository'
 end
 
 namespace :db do
