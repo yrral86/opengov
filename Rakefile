@@ -58,6 +58,8 @@ task :new_component do |t|
     abort
   end
 
+  component.capitalize!
+
   `git diff --exit-code`
   unless $?.to_i == 0
     puts "Error: git repository has outstanding changes, please commit"
