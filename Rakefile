@@ -58,6 +58,12 @@ task :new_component do |t|
     abort
   end
 
+  `git diff --exit-code`
+  unless $?.to_i == 0
+    puts "Error: git repository has outstanding changes, please commit"
+    abort
+  end
+
   folder = "components-available/#{component.downcase}"
   active_link = "components-enabled/#{component.downcase}"
   config_file = <<eof
