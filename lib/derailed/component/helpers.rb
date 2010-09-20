@@ -14,6 +14,7 @@ module Derailed
       def ul(array, style="default")
         string = "<ul class=\"#{style}\">"
         array.each do |e|
+          e = yield e if block_given?
           string += "<li>#{e}</li>"
         end
         string += "</ul>"
