@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100804210623) do
+ActiveRecord::Schema.define(:version => 20100920190359) do
 
   create_table "addresses", :force => true do |t|
     t.string   "street_address"
@@ -18,6 +18,29 @@ ActiveRecord::Schema.define(:version => 20100804210623) do
     t.string   "city"
     t.string   "state"
     t.string   "zip"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "locations", :force => true do |t|
+    t.string   "title"
+    t.text     "description"
+    t.string   "address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zip"
+    t.decimal  "latitude",    :precision => 10, :scale => 8
+    t.decimal  "longitude",   :precision => 10, :scale => 7
+    t.boolean  "mobile",                                     :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "maps", :force => true do |t|
+    t.integer  "users_id"
+    t.decimal  "center_latitude",  :precision => 10, :scale => 8, :default => 39.987
+    t.decimal  "center_longitude", :precision => 10, :scale => 7, :default => -80.7319
+    t.integer  "scale",                                           :default => 4
     t.datetime "created_at"
     t.datetime "updated_at"
   end
