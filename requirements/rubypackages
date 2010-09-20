@@ -13,3 +13,4 @@ activesupport
 actionpack
 webrat
 cucumber
+mime-types

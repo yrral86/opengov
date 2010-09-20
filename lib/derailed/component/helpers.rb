@@ -123,8 +123,12 @@ module Derailed
 
       # javascript includes the main javascript file, which handles
       def javascript
-        '<script type="text/javascript" src="/static/javascript/main.js">' +
-          '</script>'
+        unless path(1) == 'login'
+          '<script type="text/javascript" src="/static/javascript/main.js">' +
+            '</script>'
+        else
+          ''
+        end
       end
     end
   end
