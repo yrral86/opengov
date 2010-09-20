@@ -7,6 +7,9 @@ class OpenGovManagerTest < Derailed::TestCase
     assert_equal(
                  ['Authenticator::User',
                   'Authenticator::UserSession',
+                  'Map::Location',
+                  'Map::Map',
+                  'Map::MapLocation',
                   'PersonLocator::Address',
                   'PersonLocator::Person'],
                  @cc.cm.available_models.sort
@@ -15,7 +18,11 @@ class OpenGovManagerTest < Derailed::TestCase
 
   def test_component_unregister
     @cc.cm.unregister_component('PersonLocator')
-    assert_equal(['Authenticator::User','Authenticator::UserSession'],
+    assert_equal(['Authenticator::User',
+                  'Authenticator::UserSession',
+                  'Map::Location',
+                  'Map::Map',
+                  'Map::MapLocation'],
                  @cc.cm.available_models.sort)
     @cc.cm.register_component(Derailed::Manager::Socket.uri('PersonLocator'))
   end
