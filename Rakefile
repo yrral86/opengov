@@ -58,7 +58,7 @@ task :new_component do |t|
     abort
   end
 
-  component.capitalize!
+  component = component.capitalize
 
   `git diff --exit-code`
   unless $?.to_i == 0
