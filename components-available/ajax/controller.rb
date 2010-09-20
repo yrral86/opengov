@@ -16,6 +16,6 @@ eof
     code = "update_div('table','/ajax/table')"
     render_erb '<div id="table"></div>' +
       a("javascript:#{code}", 'update') +
-      "<script type=\"text/javascript\">#{code}</script>", binding
+      run_js(code), binding
   end
 end

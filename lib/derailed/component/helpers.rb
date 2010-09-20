@@ -122,6 +122,7 @@ module Derailed
       end
 
       # javascript includes the main javascript file, which handles
+      # including any other javascript we need
       def javascript
         unless path(1) == 'login'
           '<script type="text/javascript" src="/static/javascript/main.js">' +
@@ -129,6 +130,11 @@ module Derailed
         else
           ''
         end
+      end
+
+      # run_js returns the HTML to run the javascript code specified
+      def run_js(code)
+        "<script type=\"text/javascript\">#{code}</script>"
       end
     end
   end
