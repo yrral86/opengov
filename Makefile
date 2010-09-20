@@ -4,6 +4,7 @@ FILES = control.rb \
 	config/environments.yml \
 	db/config.yml \
 	javascript \
+	layouts \
 	lib \
 	config.ru \
 	production-ruby
