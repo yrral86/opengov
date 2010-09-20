@@ -1,8 +1,8 @@
 class CreateMapLocations < ActiveRecord::Migration
   def self.up
     create_table :map_locations do |t|
-      t.references :maps
-      t.references :locations
+      t.references :map
+      t.references :location
     end
   end
 

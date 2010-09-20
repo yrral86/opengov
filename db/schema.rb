@@ -37,12 +37,12 @@ ActiveRecord::Schema.define(:version => 20100920200423) do
   end
 
   create_table "map_locations", :force => true do |t|
-    t.integer "maps_id"
-    t.integer "locations_id"
+    t.integer "map_id"
+    t.integer "location_id"
   end
 
   create_table "maps", :force => true do |t|
-    t.integer  "users_id"
+    t.integer  "user_id"
     t.decimal  "center_latitude",  :precision => 10, :scale => 8, :default => 39.987
     t.decimal  "center_longitude", :precision => 10, :scale => 7, :default => -80.7319
     t.integer  "scale",                                           :default => 4

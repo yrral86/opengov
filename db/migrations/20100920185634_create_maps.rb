@@ -1,7 +1,7 @@
 class CreateMaps < ActiveRecord::Migration
   def self.up
     create_table :maps do |t|
-      t.references :users
+      t.references :user
       t.decimal :center_latitude, :precision => 10, :scale => 8,
       :default => 39.987
       t.decimal :center_longitude, :precision => 10, :scale => 7,
