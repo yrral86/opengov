@@ -35,9 +35,7 @@ module Derailed
     def daemonize(klass=nil,requirements=[])
       name = @type == :component ? "OpenGov#{@name}Component" : @name
       Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
-        if block_given?
-          yield
-        elsif @type == :manager
+        if @type == :manager
            Derailed::Manager::Interface.new.daemonize
         else
           klass ||= Derailed::Component::Base
