@@ -1,5 +1,8 @@
 require 'drb'
 
+require 'derailed/config'
+require 'derailed/manager/socket'
+
 module Derailed
   # = Derailed::ComponentClient
   # This class provides an interface to the components as well as the

@@ -26,12 +26,19 @@ OptionParser.new do |opts|
   end
 end.parse!
 
-require 'derailed/daemon'
-
 if component == :manager
+  require 'derailed/daemon'
   Derailed::Daemon.manager.daemonize
 elsif component
-  Derailed::Daemon.component(component).daemonize
+  require 'derailed/componentclient'
+  command = ARGV.first
+  unless command == 'run'
+    Derailed::ComponentClient.new.cm.component_command(component, command)
+  else
+    require 'derailed/daemon'
+    Derailed::ComponentClient.new.cm.component_pid(component, Process.pid)
+    Derailed::Daemon.component(component).component_proc.call
+  end
 else
   puts "You must specify -m or -c, see #{$0} -h"
 end

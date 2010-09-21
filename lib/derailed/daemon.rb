@@ -43,19 +43,40 @@ module Derailed
     # daemonize runs the given block as a daemon, or if no block is given,
     # instantiates a new instance of klass and calls daemonize on that instance
     def daemonize
-      name = @type == :component ? "OpenGov#{@name}Component" : @name
-      if @type == :manager
-        Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
-          Derailed::Manager::Interface.new.daemonize
-        end
-      else
-        component = proc do
-          #          Daemonize.daemonize
-          @component_class ||= Derailed::Component::Base
-          @component_class.new(@name, @requirements).daemonize
-        end
-        Daemonize.call_as_daemon component, nil, name
+      Daemons.run_proc(@name, {:dir_mode => :normal,
+                         :dir => Config::RootDir}) do
+        Derailed::Manager::Interface.new.daemonize
       end
+    end
+
+    def component_proc
+      proc do
+        @component_class ||= Derailed::Component::Base
+        @component_class.new(@name, @requirements).daemonize
+      end
+
+    end
+
+    def start
+      component = component_proc
+      @pid = Daemonize.call_as_daemon component, nil, "OpenGov#{@name}Component"
+    end
+
+    def pid=(pid)
+      @pid = pid
+    end
+
+    def stop
+      Process.kill 'TERM', @pid
+    end
+
+    def restart
+      stop(@pid)
+      start
+    end
+
+    def running?
+      Pid.running?(@pid)
     end
 
     private

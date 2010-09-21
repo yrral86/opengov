@@ -30,6 +30,7 @@ module Derailed
       # mutex for each hash
       def initialize
         @components = {}
+        @daemons = {}
         @c_mutex = Mutex.new
         @self
       end
@@ -46,13 +47,16 @@ module Derailed
         Dir.chdir old_dir
 
         component_list.each do |c|
-          `#{Config::RootDir}/control.rb -c #{c} start`
+          init_component c
+          component_command c, 'start'
+#          `#{Config::RootDir}/control.rb -c #{c} start`
         end
 
         at_exit {
           component_list.each do |c|
             unless c == ''
-              `#{Config::RootDir}/control.rb -c #{c} stop`
+              component_command c, 'stop'
+#              `#{Config::RootDir}/control.rb -c #{c} stop`
             end
           end
           DRb.stop_service

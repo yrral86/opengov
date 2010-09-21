@@ -19,6 +19,19 @@ module Derailed
         end
       end
 
+      def component_command(component, command)
+        @daemons[component].send command
+      end
+
+
+      def init_component(component)
+        @daemons[component] = Derailed::Daemon.component(component)
+      end
+
+      def component_pid(component, pid)
+        @daemons[component].pid = pid
+      end
+
       def self.read_component_config(name)
         config = YAML::load(File.open(Derailed::Config::ComponentDir +
                                       "/#{name}/config.yml"))
