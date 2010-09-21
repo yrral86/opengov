@@ -44,7 +44,7 @@ module Derailed
           klass ||= Derailed::Component::Base
           klass.new(@name, requirements).daemonize
         end
-        Daemonize.call_as_daemon component
+        Daemonize.call_as_daemon component, nil, name
       end
     end
 
