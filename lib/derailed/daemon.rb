@@ -18,6 +18,7 @@ module Derailed
       else
         require 'derailed/manager/interface'
       end
+      self
     end
 
     # self.component creates a new component type instance
