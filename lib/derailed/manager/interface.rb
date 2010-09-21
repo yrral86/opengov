@@ -43,39 +43,24 @@ module Derailed
 
         old_dir = Dir.pwd
         Dir.chdir Config::ComponentDir
-        component_list = resolve_dependencies(Dir.glob '*')
+        component_list = Dir.glob '*'
         Dir.chdir old_dir
 
         component_list.each do |c|
           init_component c
           component_command c, 'start'
-#          `#{Config::RootDir}/control.rb -c #{c} start`
         end
 
         at_exit {
           component_list.each do |c|
             unless c == ''
               component_command c, 'stop'
-#              `#{Config::RootDir}/control.rb -c #{c} stop`
             end
           end
           DRb.stop_service
         }
 
         DRb.thread.join
-      end
-
-      private
-
-      # resolve_dependencies should reorder the components based on dependencies
-      # so that they can start in that order.
-      def resolve_dependencies(array)
-        # hax for now- put static first
-        new_array = ['static']
-        array.each do |c|
-          new_array.push(c) unless c == 'static'
-        end
-        new_array
       end
     end
   end
