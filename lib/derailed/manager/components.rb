@@ -23,7 +23,6 @@ module Derailed
         @daemons[component].send command
       end
 
-
       def init_component(component)
         @daemons[component] = Derailed::Daemon.component(component)
       end
