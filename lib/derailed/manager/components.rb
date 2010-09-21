@@ -30,14 +30,6 @@ module Derailed
       def component_pid(component, pid)
         @daemons[component].pid = pid
       end
-
-      def self.read_component_config(name)
-        config = YAML::load(File.open(Derailed::Config::ComponentDir +
-                                      "/#{name}/config.yml"))
-        config['class'] ||= 'Base'
-        config['requirements'] ||= []
-        config
-      end
     end
   end
 end

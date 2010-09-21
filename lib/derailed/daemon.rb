@@ -24,15 +24,10 @@ module Derailed
 
     # self.component creates a new component type instance
     def self.component(name)
-      config = Manager::Components.read_component_config(name)
+      config = read_component_config(name)
       component = new(config['name'])
       component.configure(config)
       component
-    end
-
-    def configure(config)
-      @component_class = Component.const_get(config['class'])
-      @requirements = config['requirements']
     end
 
     # self.manager creates a new manager type instance
@@ -40,8 +35,7 @@ module Derailed
       new('OpenGovManager', :manager)
     end
 
-    # daemonize runs the given block as a daemon, or if no block is given,
-    # instantiates a new instance of klass and calls daemonize on that instance
+    # daemonize runs the Manager
     def daemonize
       Daemons.run_proc(@name, {:dir_mode => :normal,
                          :dir => Config::RootDir}) do
@@ -49,17 +43,9 @@ module Derailed
       end
     end
 
-    def component_proc
-      proc do
-        @component_class ||= Derailed::Component::Base
-        @component_class.new(@name, @requirements).daemonize
-      end
-
-    end
-
     def start
       component = component_proc
-      pid = Daemonize.call_as_daemon component, nil, "OpenGov#{@name}Component"
+      @pid = Daemonize.call_as_daemon component, nil, "OpenGov#{@name}Component"
     end
 
     def pid=(pid)
@@ -81,12 +67,9 @@ module Derailed
         (running? ? "running [pid #{@pid}]" : "not running")
     end
 
-    def running?
-      begin
-        Process.getpgid(@pid)
-      rescue
-        false
-      end
+    def configure(config)
+      @component_class = Component.const_get(config['class'])
+      @requirements = config['requirements']
     end
 
     private
@@ -94,6 +77,34 @@ module Derailed
     def init_ar(db)
       conf = YAML::load(File.open(Config::RootDir + '/db/config.yml'))[db]
       ActiveRecord::Base.establish_connection(conf[Config::Environment])
+    end
+
+    def component_proc
+      proc do
+        @component_class ||= Derailed::Component::Base
+        @component_class.new(@name, @requirements).daemonize
+      end
+
+    end
+
+    def running?
+      begin
+        if @pid
+          Process.getpgid(@pid)
+        else
+          false
+        end
+      rescue
+        false
+      end
+    end
+
+    def self.read_component_config(component)
+      config = YAML::load(File.open(Config::ComponentDir +
+                                    "/#{component}/config.yml"))
+      config['class'] ||= 'Base'
+      config['requirements'] ||= []
+      config
     end
   end
 end
