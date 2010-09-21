@@ -34,13 +34,17 @@ module Derailed
     # instantiates a new instance of klass and calls daemonize on that instance
     def daemonize(klass=nil,requirements=[])
       name = @type == :component ? "OpenGov#{@name}Component" : @name
-      Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
-        if @type == :manager
-           Derailed::Manager::Interface.new.daemonize
-        else
+      if @type == :manager
+        Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
+          Derailed::Manager::Interface.new.daemonize
+        end
+      else
+        component = proc do
+          #          Daemonize.daemonize
           klass ||= Derailed::Component::Base
           klass.new(@name, requirements).daemonize
         end
+        Daemonize.call_as_daemon component
       end
     end
 
