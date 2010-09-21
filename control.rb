@@ -31,12 +31,10 @@ require 'derailed/daemon'
 if component == :manager
   Derailed::Daemon.manager.daemonize
 elsif component
-  config = YAML::load(File.open(Derailed::Config::ComponentDir +
-                                "/#{component}/config.yml"))
+  require 'derailed/manager/components'
+  config = Derailed::Manager::Components.read_component_config(component)
   daemon = Derailed::Daemon.component(config['name'])
-  config['class'] ||= 'Base'
   config['class'] = Derailed::Component.const_get(config['class'])
-  config['requirements'] ||= []
   daemon.daemonize(config['class'],config['requirements'])
 else
   puts "You must specify -m or -c, see #{$0} -h"

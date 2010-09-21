@@ -18,6 +18,14 @@ module Derailed
           nil
         end
       end
+
+      def self.read_component_config(name)
+        config = YAML::load(File.open(Derailed::Config::ComponentDir +
+                                      "/#{name}/config.yml"))
+        config['class'] ||= 'Base'
+        config['requirements'] ||= []
+        config
+      end
     end
   end
 end
