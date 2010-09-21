@@ -22,8 +22,15 @@ module Derailed
     end
 
     # self.component creates a new component type instance
-    def self.component(name)
-      new(name)
+    def self.component(config)
+      component = new(config['name'])
+      component.configure(config)
+      component
+    end
+
+    def configure(config)
+      @component_class = Component.const_get(config['class'])
+      @requirements = config['requirements']
     end
 
     # self.manager creates a new manager type instance
@@ -33,7 +40,7 @@ module Derailed
 
     # daemonize runs the given block as a daemon, or if no block is given,
     # instantiates a new instance of klass and calls daemonize on that instance
-    def daemonize(klass=nil,requirements=[])
+    def daemonize
       name = @type == :component ? "OpenGov#{@name}Component" : @name
       if @type == :manager
         Daemons.run_proc(name, {:dir_mode => :normal, :dir => Config::RootDir}) do
@@ -42,8 +49,8 @@ module Derailed
       else
         component = proc do
           #          Daemonize.daemonize
-          klass ||= Derailed::Component::Base
-          klass.new(@name, requirements).daemonize
+          @component_class ||= Derailed::Component::Base
+          @component_class.new(@name, @requirements).daemonize
         end
         Daemonize.call_as_daemon component, nil, name
       end

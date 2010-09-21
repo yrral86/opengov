@@ -33,9 +33,7 @@ if component == :manager
 elsif component
   require 'derailed/manager/components'
   config = Derailed::Manager::Components.read_component_config(component)
-  daemon = Derailed::Daemon.component(config['name'])
-  config['class'] = Derailed::Component.const_get(config['class'])
-  daemon.daemonize(config['class'],config['requirements'])
+  Derailed::Daemon.component(config).daemonize
 else
   puts "You must specify -m or -c, see #{$0} -h"
 end
