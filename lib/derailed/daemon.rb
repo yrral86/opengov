@@ -1,6 +1,7 @@
 require 'daemons'
 
 require 'derailed/config'
+require 'derailed/manager/components'
 
 module Derailed
   # = Derailed::Daemon
@@ -22,7 +23,8 @@ module Derailed
     end
 
     # self.component creates a new component type instance
-    def self.component(config)
+    def self.component(name)
+      config = Manager::Components.read_component_config(name)
       component = new(config['name'])
       component.configure(config)
       component
