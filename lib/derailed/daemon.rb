@@ -68,15 +68,25 @@ module Derailed
 
     def stop
       Process.kill 'TERM', @pid
+      @pid = nil
     end
 
     def restart
-      stop(@pid)
+      stop
       start
     end
 
+    def status
+      "Component #{@name} " +
+        (running? ? "running [pid #{@pid}]" : "not running")
+    end
+
     def running?
-      Pid.running?(@pid)
+      begin
+        Process.getpgid(@pid)
+      rescue
+        false
+      end
     end
 
     private
