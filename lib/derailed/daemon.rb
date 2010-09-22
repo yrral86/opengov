@@ -48,6 +48,10 @@ module Derailed
       @pid = Daemonize.call_as_daemon component, nil, "OpenGov#{@name}Component"
     end
 
+    def run
+      component_proc.call
+    end
+
     def pid=(pid)
       @pid = pid
     end

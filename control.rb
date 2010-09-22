@@ -33,14 +33,15 @@ elsif component
   require 'derailed/componentclient'
   command = ARGV.first
   begin
+    manager = Derailed::ComponentClient.new.cm
     unless command == 'run'
-      Derailed::ComponentClient.new.cm.component_command(component, command)
+      puts manager.component_command(component, command)
     else
       require 'derailed/daemon'
-      Derailed::ComponentClient.new.cm.component_pid(component, Process.pid)
-      Derailed::Daemon.component(component).component_proc.call
+      manager.component_pid(component, Process.pid)
+      Derailed::Daemon.component(component).run
     end
-  rescue
+  rescue DRb::DRbConnError
     puts 'Manager is not running'
   end
 else
