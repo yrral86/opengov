@@ -50,7 +50,7 @@ module Derailed
 
         component_list.each do |c|
           init_component c
-          component_command c, 'start'
+          component_command c, 'start', true
         end
 
         at_exit {

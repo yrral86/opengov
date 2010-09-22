@@ -19,8 +19,12 @@ module Derailed
         end
       end
 
-      def component_command(component, command)
-        @daemons[component].send command
+      def component_command(component, command, async = false)
+        if command == 'start'
+          @daemons[component].send command, async
+        else
+          @daemons[component].send command
+        end
       end
 
       def init_component(component)

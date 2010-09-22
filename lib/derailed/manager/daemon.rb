@@ -5,7 +5,7 @@ module Derailed
         @name = name
       end
 
-      def start
+      def start(async = false)
         # write name to class variable @@to_start, shared with spawner thread
         @@to_start_mutex.synchronize do
           @@to_start = @name
@@ -17,7 +17,9 @@ module Derailed
           @@started = nil
         end
         # wait until component has registered
-        sleep 0.05 until @@manager.is_registered?(@name)
+        unless async
+          sleep 0.05 until @@manager.is_registered?(@name)
+        end
         "Component #{@name} started [pid #{@pid}]"
       end
 
