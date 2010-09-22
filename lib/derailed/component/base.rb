@@ -7,6 +7,7 @@ require 'daemons'
 [
  'authentication',
  'controller',
+ 'daemon',
  'environment',
  'loader',
  'model',

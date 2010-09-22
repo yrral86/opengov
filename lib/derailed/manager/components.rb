@@ -24,7 +24,7 @@ module Derailed
       end
 
       def init_component(component)
-        @daemons[component] = Derailed::Daemon.component(component)
+        @daemons[component] = Daemon.new(component)
       end
 
       def component_pid(component, pid)

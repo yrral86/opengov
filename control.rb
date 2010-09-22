@@ -27,8 +27,12 @@ OptionParser.new do |opts|
 end.parse!
 
 if component == :manager
-  require 'derailed/daemon'
-  Derailed::Daemon.manager.daemonize
+  require 'daemons'
+  require 'derailed/manager/interface'
+  Daemons.run_proc('OpenGovManager', {:dir_mode => :normal,
+                         :dir => Derailed::Config::RootDir}) do
+    Derailed::Manager::Interface.new.daemonize
+  end
 elsif component
   require 'derailed/componentclient'
   command = ARGV.first
@@ -37,7 +41,7 @@ elsif component
     unless command == 'run'
       puts manager.component_command(component, command)
     else
-      require 'derailed/daemon'
+      require 'derailed/component/daemon'
       manager.component_pid(component, Process.pid)
       Derailed::Daemon.component(component).run
     end
