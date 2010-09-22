@@ -45,7 +45,10 @@ module Derailed
 
     def start
       component = component_proc
-      @pid = Daemonize.call_as_daemon component, nil, "OpenGov#{@name}Component"
+      @pid = fork do
+        $0 = "OpenGov#{@name}Component"
+        component_proc.call
+      end
     end
 
     def run
@@ -57,8 +60,11 @@ module Derailed
     end
 
     def stop
-      Process.kill 'TERM', @pid
-      @pid = nil
+      if @pid
+        Process.kill 'TERM', @pid
+        Process.waitpid(@pid)
+        @pid = nil
+      end
     end
 
     def restart
