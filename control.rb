@@ -32,12 +32,16 @@ if component == :manager
 elsif component
   require 'derailed/componentclient'
   command = ARGV.first
-  unless command == 'run'
-    Derailed::ComponentClient.new.cm.component_command(component, command)
-  else
-    require 'derailed/daemon'
-    Derailed::ComponentClient.new.cm.component_pid(component, Process.pid)
-    Derailed::Daemon.component(component).component_proc.call
+  begin
+    unless command == 'run'
+      Derailed::ComponentClient.new.cm.component_command(component, command)
+    else
+      require 'derailed/daemon'
+      Derailed::ComponentClient.new.cm.component_pid(component, Process.pid)
+      Derailed::Daemon.component(component).component_proc.call
+    end
+  rescue
+    puts 'Manager is not running'
   end
 else
   puts "You must specify -m or -c, see #{$0} -h"
