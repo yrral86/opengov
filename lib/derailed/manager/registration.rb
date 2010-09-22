@@ -21,6 +21,14 @@ module Derailed
           @components.delete(name)
         end
       end
+
+      # is_registered? checks if the name is registered as a component
+      def is_registered?(name)
+        @components.each_key do |k|
+          return true if k == name || k.downcase == name
+        end
+        return false
+      end
     end
   end
 end

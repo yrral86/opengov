@@ -16,6 +16,8 @@ module Derailed
           @pid = @@started
           @@started = nil
         end
+        # wait until component has registered
+        sleep 0.05 until @@manager.is_registered?(@name)
         "Component #{@name} started [pid #{@pid}]"
       end
 
@@ -44,7 +46,8 @@ module Derailed
           (running? ? "running [pid #{@pid}]" : "not running")
       end
 
-      def self.create_spawner
+      def self.create_spawner(manager)
+        @@manager = manager
         @@to_start = nil
         @@started = nil
         @@to_start_mutex = Mutex.new

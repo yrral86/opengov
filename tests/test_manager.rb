@@ -27,15 +27,26 @@ class OpenGovManagerTest < Derailed::TestCase
     @cc.cm.register_component(Derailed::Manager::Socket.uri('PersonLocator'))
   end
 
-#  def test_component_stop
-#    orig_components = @cc.cm.available_components
-#    @cc.cm.component_command('static','stop')
-#    new_components = @cc.cm.available_components
-#
-#    assert_equal ['Static'], orig_components - new_components
-#    puts 'success!'
-#    @cc.cm.component_command('static','start')
-#  end
+  def test_component_stop_start
+    orig_components = sort_and_downcase_components
+    orig_components.each do |component|
+      @cc.cm.component_command(component.downcase,'stop')
+      new_components = sort_and_downcase_components
+      assert_equal [component], orig_components - new_components
+
+      @cc.cm.component_command(component.downcase,'start')
+      new_components = sort_and_downcase_components
+      assert_equal orig_components, new_components
+    end
+  end
+
+  def sort_and_downcase_components
+    components = @cc.cm.available_components.sort
+    components.each_index do |i|
+      components[i] = components[i].downcase
+    end
+    components
+  end
 
   def test_component_available_types
     assert_equal ['PersonLocator::Person'], @cc.cm.available_types

@@ -30,7 +30,7 @@ module Derailed
       # initialize creates empty hashes for the components and routes, and a
       # mutex for each hash
       def initialize
-        Daemon.create_spawner
+        Daemon.create_spawner(self)
         @components = {}
         @daemons = {}
         @c_mutex = Mutex.new
