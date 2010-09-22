@@ -2,7 +2,6 @@ require 'drb'
 require 'drb/timeridconv'
 require 'rubygems'
 require 'authlogic'
-require 'daemons'
 
 [
  'authentication',
