@@ -8,7 +8,7 @@ module Derailed
   class ComponentClient
     # initialize creates a proxy for the Manager
     def initialize
-      @cm = Service.get 'Manager'
+      @manager = Service.get 'Manager'
     end
 
     # get_current_session invokes current_session on the Authenticator component
@@ -23,7 +23,7 @@ module Derailed
     # If the call fails, an empty hash is returned
     def get_routes
       begin
-        @cm.available_routes
+        @manager.available_routes
       rescue DRb::DRbConnError
         {}
       end
@@ -49,7 +49,7 @@ module Derailed
     # all dependencies are satisfied.
     def dependencies_not_satisfied(deps)
       available = {}
-      @cm.available_components.each do |c|
+      @manager.available_components.each do |c|
         available[c] = true
       end
       not_available = []
@@ -64,7 +64,7 @@ module Derailed
 
     # cm is an accessor for the Manager
     def cm
-      @cm
+      @manager
     end
   end
 end
