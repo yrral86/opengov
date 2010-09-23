@@ -17,44 +17,44 @@ class OpenGovManagerTest < Derailed::TestCase
   end
 
   def test_component_unregister
-    @cc.manager.unregister_component('PersonLocator')
+    @client.manager.unregister_component('PersonLocator')
     assert_equal(['Authenticator::User',
                   'Authenticator::UserSession',
                   'Map::Location',
                   'Map::Map',
                   'Map::MapLocation'],
                  sort_models)
-    @cc.manager.register_component('PersonLocator')
+    @client.manager.register_component('PersonLocator')
   end
 
   def test_component_stop_start
     orig_components = sort_components
     orig_components.each do |component|
-      @cc.manager.component_command(component.downcase,'stop')
+      @client.manager.component_command(component.downcase,'stop')
       new_components = sort_components
       assert_equal [component], orig_components - new_components
 
-      @cc.manager.component_command(component.downcase,'start')
+      @client.manager.component_command(component.downcase,'start')
       new_components = sort_components
       assert_equal orig_components, new_components
     end
   end
 
   def sort_components
-    @cc.manager.available_components.sort
+    @client.manager.available_components.sort
   end
 
   def sort_models
-    @cc.manager.available_models.sort
+    @client.manager.available_models.sort
   end
 
   def test_component_available_types
-    assert_equal ['PersonLocator::Person'], @cc.manager.available_types
+    assert_equal ['PersonLocator::Person'], @client.manager.available_types
   end
 
   def test_component_get_model
     begin
-      person = @cc.get_model("PersonLocator::Person")
+      person = @client.get_model("PersonLocator::Person")
     rescue DRb::DRbServerNotFound
       fail 'Could not connect to PersonLocator component'
     end
@@ -69,7 +69,7 @@ class OpenGovManagerTest < Derailed::TestCase
 
   def test_abstract_data_type
     begin
-      person = @cc.get_model("PersonLocator::Person")
+      person = @client.get_model("PersonLocator::Person")
     rescue DRb::DRbServerNotFound
       fail 'Could not connect to PersonLocator component'
     end

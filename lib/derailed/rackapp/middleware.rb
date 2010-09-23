@@ -12,7 +12,7 @@ module Derailed
       # initialize sets the app and creates a Client
       def initialize(app)
         @app = app
-        @cc = Client.new
+        @client = Client.new
       end
 
       # call adds the controller, calls the app, and commits the changes
@@ -32,7 +32,7 @@ module Derailed
       # If there is no logged in user, any other url is stored for redirecting
       # after login, and the user is redirected to the login form.
       def authenticate(env)
-        if @cc.get_current_session(env) or
+        if @client.get_current_session(env) or
             env[:controller].request.path == '/login'
           yield env
         else

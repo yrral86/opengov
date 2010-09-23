@@ -9,7 +9,7 @@ module Derailed
       # and starts the DRb service that allows the components to access the
       # session and cookie hashes in the Derailed::Controller::Controller
       def initialize
-        @cc = Client.new
+        @client = Client.new
         @routes = {}
         Service.start
         self
@@ -24,7 +24,7 @@ module Derailed
       # new list of routes are fetched on the next request... obviously at least
       # one of the routes we had was invalid). We then return a 404.
       def call(env)
-        @routes = @cc.get_routes if @routes.empty?
+        @routes = @client.get_routes if @routes.empty?
 
         component = env[:controller].next
         if @routes[component] == nil
