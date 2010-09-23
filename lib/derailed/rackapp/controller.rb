@@ -1,12 +1,12 @@
-require "derailed/controller/cookiefix"
+require "derailed/rackapp/cookiefix"
 
 module Derailed
-  module Controller
-    # = Derailed::Controller::Controller
+  module RackApp
+    # = Derailed::RackApp::Controller
     # This module provides a controller object that is used both in the
     # components (functions provided by Derailed::Component::Environment),
     # and also by Authlogic (set in
-    # Derailed::Component::Authentication.setup_env)
+    # Derailed::Component::Authenticator.setup_env)
     class Controller
       # session is a hash that is saved and restored via the session
       # provided by Rack::Session::Cookie. This is included via the Rack

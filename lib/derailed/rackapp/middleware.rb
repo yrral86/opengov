@@ -1,10 +1,10 @@
 require 'rack'
 
-require "derailed/controller/controller"
+require "derailed/rackapp/controller"
 
 module Derailed
-  module Controller
-    # = Deraild::Controller::Middleware
+  module RackApp
+    # = Derailed::RackApp::Middleware
     # This class provides a Rack middleware that adds a
     # Derailed::Controller::Controller to the env variable and ensures
     # a user is logged in for any url other than /login

@@ -1,6 +1,6 @@
 module Derailed
-  module Controller
-    # = Derailed::Controller::CookieFix
+  module RackApp
+    # = Derailed::RackApp::CookieFix
     # This module overrides the delete method because Authlogic expect cookie's
     # delete method to take two arguments
     module CookieFix
