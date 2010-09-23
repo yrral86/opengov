@@ -7,32 +7,42 @@ module Derailed
       # get_model returns a DRbObject representing the given model
       def get_model(name)
         component, model = name.split '::'
-        @components[component].model(model)
+        @daemons[component].proxy.model(model)
       end
 
       # get_component_socket returns the socket URI for the named Component
       def get_component_socket(name)
-        if @components[name]
-          @components[name].__drburi
+        if @daemons[name].registered?
+          @daemons[name].proxy.__drburi
         else
           nil
         end
       end
 
       def component_command(component, command, async = false)
+        component = component_by_lowercase_name(component)
         if command == 'start'
-          @daemons[component].send command, async
+          component.send command, async
         else
-          @daemons[component].send command
+          component.send command
         end
       end
 
-      def init_component(component)
-        @daemons[component] = Daemon.new(component)
+      def component_pid(component, pid)
+        component_by_lowercase_name(component).pid = pid
       end
 
-      def component_pid(component, pid)
-        @daemons[component].pid = pid
+      private
+      def init_component(component)
+        daemon = Daemon.new(component)
+        @daemons[daemon.name] = daemon
+      end
+
+      def component_by_lowercase_name(name)
+        @daemons.each_key do |k|
+          return @daemons[k] if k.downcase == name
+        end
+        nil
       end
     end
   end

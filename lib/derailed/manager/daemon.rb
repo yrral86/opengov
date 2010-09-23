@@ -19,8 +19,25 @@ module Derailed
     #  static.status
     #  > Component static not running
     class Daemon
+      attr_reader :name, :proxy
+
       def initialize(name)
-        @name = name
+        config = Config.component_config(name)
+        @name = config['name']
+      end
+
+      # proxy= sets the DRbObject for the component
+      def proxy=(uri)
+        if uri
+          @proxy = DRbObject.new nil, uri
+        else
+          @proxy = nil
+        end
+      end
+
+      # registered? tests whether the component is registered
+      def registered?
+        @proxy ? true : false
       end
 
       # start sets @@to_start to the name of the component to start and
@@ -28,7 +45,7 @@ module Derailed
       def start(async = false)
         # write name to class variable @@to_start, shared with spawner thread
         @@to_start_mutex.synchronize do
-          @@to_start = @name
+          @@to_start = @name.downcase
         end
         # wakeup spawneer, and pass until it sets @@to_start back to nil,
         # indicating it is done
@@ -41,7 +58,7 @@ module Derailed
         end
         # wait until component has registered
         unless async
-          sleep 0.05 until @@manager.is_registered?(@name)
+          sleep 0.05 until self.registered?
         end
         "Component #{@name} started [pid #{@pid}]"
       end

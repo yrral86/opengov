@@ -55,7 +55,7 @@ module Derailed
         socket = Manager::Socket.uri @name
         DRb.install_id_conv DRb::TimerIdConv.new(10)
         DRb.start_service socket, self
-        @client.cm.register_component(socket)
+        @client.cm.register_component(@name)
         @registered = true
         at_exit {
           if @registered

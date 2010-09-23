@@ -7,15 +7,15 @@ module Derailed
       # collecting the routes from each component.
       def available_routes
         routes = {}
-        @components.each_value do |c|
-          c.routes.each do |r|
+        @daemons.each_value do |c|
+          c.proxy.routes.each do |r|
             if routes[r] == nil
-              routes[r] = c
+              routes[r] = c.proxy
             else
               raise "Route '#{r}' already handled by component " +
                 routes[r].name
             end
-          end
+          end if c.registered?
         end
         routes
       end
@@ -43,15 +43,19 @@ module Derailed
       # type specified
       def components_with_type(type)
         array = []
-        @components.each_value do |c|
-          array << c.name if c.has_type?(type)
+        @daemons.each_value do |c|
+          array << c.proxy.name if c.proxy.has_type?(type)
         end
         array
       end
 
       # available_components returns a list of all registered components
       def available_components
-        @components.keys
+        components = []
+        @daemons.each_key do |k|
+          components << k if @daemons[k].registered?
+        end
+        components
       end
     end
   end

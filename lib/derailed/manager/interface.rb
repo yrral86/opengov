@@ -31,9 +31,7 @@ module Derailed
       # mutex for each hash
       def initialize
         Daemon.create_spawner(self)
-        @components = {}
         @daemons = {}
-        @c_mutex = Mutex.new
         @self
       end
 

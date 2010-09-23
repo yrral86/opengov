@@ -8,7 +8,8 @@ module Derailed
       # initialize processes the configuration file and initializes
       # ActiveRecord
       def initialize(name)
-        @config = read_component_config(name)
+        @config = Config.component_config(name)
+        @config['class_object'] = Component.const_get(@config['class'])
         init_ar
         self
       end
@@ -24,17 +25,6 @@ module Derailed
       def init_ar
         conf = YAML::load(File.open(Config::RootDir + '/db/config.yml'))[db]
         ActiveRecord::Base.establish_connection(conf[Config::Environment])
-      end
-
-      # read_component_config reads the config file and sets some defaults
-      def read_component_config(component)
-        config = YAML::load(File.open(Config::ComponentDir +
-                                      "/#{component}/config.yml"))
-        config['requirements'] ||= []
-        config['db'] ||= 'default'
-        config['class'] ||= 'Base'
-        config['class_object'] = Component.const_get(config['class'])
-        config
       end
 
       # method_missing provides a convient way to access @config

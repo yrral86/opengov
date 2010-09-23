@@ -12,7 +12,7 @@ class OpenGovManagerTest < Derailed::TestCase
                   'Map::MapLocation',
                   'PersonLocator::Address',
                   'PersonLocator::Person'],
-                 @cc.cm.available_models.sort
+                 sort_models
                  )
   end
 
@@ -23,29 +23,29 @@ class OpenGovManagerTest < Derailed::TestCase
                   'Map::Location',
                   'Map::Map',
                   'Map::MapLocation'],
-                 @cc.cm.available_models.sort)
-    @cc.cm.register_component(Derailed::Manager::Socket.uri('PersonLocator'))
+                 sort_models)
+    @cc.cm.register_component('PersonLocator')
   end
 
   def test_component_stop_start
-    orig_components = sort_and_downcase_components
+    orig_components = sort_components
     orig_components.each do |component|
       @cc.cm.component_command(component.downcase,'stop')
-      new_components = sort_and_downcase_components
+      new_components = sort_components
       assert_equal [component], orig_components - new_components
 
       @cc.cm.component_command(component.downcase,'start')
-      new_components = sort_and_downcase_components
+      new_components = sort_components
       assert_equal orig_components, new_components
     end
   end
 
-  def sort_and_downcase_components
-    components = @cc.cm.available_components.sort
-    components.each_index do |i|
-      components[i] = components[i].downcase
-    end
-    components
+  def sort_components
+    @cc.cm.available_components.sort
+  end
+
+  def sort_models
+    @cc.cm.available_models.sort
   end
 
   def test_component_available_types
