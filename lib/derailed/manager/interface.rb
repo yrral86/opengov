@@ -1,5 +1,4 @@
 require 'derailed/config'
-require 'derailed/socket'
 require 'derailed/service'
 
 [

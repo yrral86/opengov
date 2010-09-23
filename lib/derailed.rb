@@ -3,7 +3,6 @@
  'componentclient',
  'datatype',
  'service',
- 'socket',
  'type/person.rb',
  'component/base',
 ].each do |library|

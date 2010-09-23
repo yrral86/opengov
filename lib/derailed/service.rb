@@ -1,6 +1,8 @@
 require 'drb'
 require 'drb/timeridconv'
 
+require 'derailed/socket'
+
 module Derailed
   module Service
     def self.start(name = nil, object = nil)
