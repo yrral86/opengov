@@ -49,7 +49,7 @@ module Derailed
           puts 'Dependencies not met: ' + need.join(",")
         end
 
-        Service.start Socket.uri(@name), self
+        Service.start @name, self
         @client.cm.register_component(@name)
         @registered = true
         at_exit {

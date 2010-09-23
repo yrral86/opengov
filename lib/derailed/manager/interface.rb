@@ -36,7 +36,7 @@ module Derailed
       # daemonize starts the DRb service, reads the components to start from the
       # config file, and starts the components.
       def daemonize
-        Service.start Socket.uri('Manager'), self
+        Service.start 'Manager', self
 
         old_dir = Dir.pwd
         Dir.chdir Config::ComponentDir
