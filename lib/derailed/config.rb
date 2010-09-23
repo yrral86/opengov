@@ -24,7 +24,7 @@ module Derailed
       config_file = "#{RootDir}/config/environments.yml"
       config = YAML::load(File.open(config_file))[Environment]
       dir = config['socket_dir']
-      dir = "#{RootDir}/#{@@dir}" if @@dir.match('^\.')
+      dir = "#{RootDir}/#{dir}" if dir.match('^\.')
       dir
     end
   end
