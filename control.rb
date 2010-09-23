@@ -42,7 +42,7 @@ elsif component
     else
       require 'derailed/component/daemon'
       manager.component_pid(component, Process.pid)
-      Derailed::Daemon.component(component).run
+      Derailed::Component::Daemon.new(component).run
     end
   rescue DRb::DRbConnError
     puts 'Manager is not running'
