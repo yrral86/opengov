@@ -70,12 +70,6 @@ module Derailed
         @name
       end
 
-      # stop stops the daemon
-      def stop
-        p "component #{self..name} shutting down"
-        exit
-      end
-
       # daemonize joins the DRb server thread to the main thread
       def daemonize
         DRb.thread.join
