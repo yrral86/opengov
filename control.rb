@@ -40,7 +40,7 @@ elsif component
     unless command == 'run'
       puts manager.component_command(component, command)
     else
-      require 'derailed/component/daemon'
+      require 'derailed'
       manager.component_pid(component, Process.pid)
       Derailed::Component::Daemon.new(component).run
     end
