@@ -9,10 +9,10 @@ module Derailed
     # Derailed::Controller::Controller to the env variable and ensures
     # a user is logged in for any url other than /login
     class Middleware
-      # initialize sets the app and creates a ComponentClient
+      # initialize sets the app and creates a Client
       def initialize(app)
         @app = app
-        @cc = ComponentClient.new
+        @cc = Client.new
       end
 
       # call adds the controller, calls the app, and commits the changes

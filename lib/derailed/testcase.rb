@@ -63,13 +63,13 @@ module Derailed
       end
     end
 
-    # setup waits for the components to start, creates a ComponentClient,
+    # setup waits for the components to start, creates a Client,
     # calls seed_db, and authenticates the user unless false is passed in
     def setup(authenticate=true)
       # make sure the sockets are ready
       TestCase.socket_wait
 
-      @cc = ComponentClient.new
+      @cc = Client.new
       seed_db
       do_auth if authenticate
     end

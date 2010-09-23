@@ -14,7 +14,7 @@ module Derailed
       end
 
       # current_session fetches the current session via
-      # Derailed::ComponentClient.get_current_session
+      # Derailed::Client.get_current_session
       def current_session
         @client.get_current_session(Thread.current[:env])
       end

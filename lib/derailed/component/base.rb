@@ -39,7 +39,7 @@ module Derailed
         @models = {}
         add_models(models)
 
-        @client = ComponentClient.new
+        @client = Client.new
 
         # must be after add_models as controller creates a whitelist
         # of what can be called and that list needs to include the models

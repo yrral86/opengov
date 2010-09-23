@@ -2,10 +2,10 @@ require 'derailed/config'
 require 'derailed/service'
 
 module Derailed
-  # = Derailed::ComponentClient
+  # = Derailed::Client
   # This class provides an interface to the components as well as the
-  # Manager (possibly these two functionalities should be spilt)
-  class ComponentClient
+  # Manager
+  class Client
     attr_reader :manager
 
     # initialize creates a proxy for the Manager

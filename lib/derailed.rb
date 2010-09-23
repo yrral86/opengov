@@ -1,6 +1,6 @@
 [
  'config',
- 'componentclient',
+ 'client',
  'datatype',
  'service',
  'type/person.rb',
