@@ -96,10 +96,10 @@ end
 
 namespace :db do
   task :ar_init do
+    require 'derailed/config'
     # Load the database config
-    database_yml = YAML::load(File.open(APP_BASE + "/db/config.yml"))['default']
-    current_env = ENV['ENV'] || "development"
-    ActiveRecord::Base.establish_connection(database_yml[current_env])
+    config = Config.db_config('default')
+    ActiveRecord::Base.establish_connection(config)
     # set a logger for STDOUT
     ActiveRecord::Base.logger = Logger.new(STDOUT)
   end

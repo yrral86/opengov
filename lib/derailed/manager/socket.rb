@@ -8,10 +8,7 @@ module Derailed
       # self.read_config reads the configuration file to determine the socket
       # directory
       def self.read_config
-        config_file = "#{Config::RootDir}/config/environments.yml"
-        config = YAML::load(File.open(config_file))[Config::Environment]
-        @@dir = config['socket_dir']
-        @@dir = "#{Config::RootDir}/#{@@dir}" if @@dir.match('^\.')
+        @@dir = Config.socket_dir
       end
 
       # self.uri returns the socket uri for a given name

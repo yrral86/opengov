@@ -23,8 +23,8 @@ module Derailed
       private
       # init_ar initialize the ActiveRecord connection
       def init_ar
-        conf = YAML::load(File.open(Config::RootDir + '/db/config.yml'))[db]
-        ActiveRecord::Base.establish_connection(conf[Config::Environment])
+        config = Config.db_config(db)
+        ActiveRecord::Base.establish_connection(config)
       end
 
       # method_missing provides a convient way to access @config

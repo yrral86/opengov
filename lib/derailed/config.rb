@@ -14,5 +14,18 @@ module Derailed
       config['class'] ||= 'Base'
       config
     end
+
+    def self.db_config(db)
+      config = YAML::load(File.open("#{RootDir}/db/config.yml"))[db]
+      config[Environment]
+    end
+
+    def self.socket_dir
+      config_file = "#{RootDir}/config/environments.yml"
+      config = YAML::load(File.open(config_file))[Environment]
+      dir = config['socket_dir']
+      dir = "#{RootDir}/#{@@dir}" if @@dir.match('^\.')
+      dir
+    end
   end
 end
