@@ -1,5 +1,3 @@
-require 'derailed/config'
-
 module Derailed
   module Component
     # = Derailed::Component::Daemon
