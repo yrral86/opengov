@@ -45,7 +45,7 @@ module Derailed
     # clear_db calls clear_models on all available components
     def clear_db
       @cc.manager.available_components.each do |c|
-        @cc.get_component(c).clear_models
+        Service.get(c).clear_models
       end
     end
 

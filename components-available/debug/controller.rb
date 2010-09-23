@@ -19,7 +19,7 @@ class DebugController < Derailed::Component::Controller
     type = 'Person'
     objects = []
     @client.manager.components_with_type(type).each do |component|
-      if model = @client.get_component(component).model_by_type(type)
+      if model = Derailed::Service.get(component).model_by_type(type)
         objects.concat(model.find(:all))
       else
         throw ThisShouldNotBePossible

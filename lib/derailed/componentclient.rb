@@ -18,7 +18,7 @@ module Derailed
     # returns the current authenticated session if the user is logged in and
     # nil otherwise
     def get_current_session(env)
-      get_component('Authenticator').current_session(env)
+      Service.get('Authenticator').current_session(env)
     end
 
     # get_routes invokes the available_routes method on the Manager.
@@ -37,12 +37,7 @@ module Derailed
     # the model.
     def get_model(name)
       component, model = name.split '::'
-      get_component(component).model(model)
-    end
-
-    # get_component returns a proxy for the component specified by name
-    def get_component(name)
-      Service.get (name)
+      Service.get(component).model(model)
     end
 
     # dependencies_not_satisfied returns a list of unsatisfied dependencies
