@@ -16,7 +16,7 @@ module Derailed
         new_modules = new - original
         new_models = new_modules.select do |m|
           subclass?(m, Derailed::Component::Model) ||
-          subclass?(m, Authlogic::Session::Base)
+          (defined?(Authlogic) && subclass?(m, Authlogic::Session::Base))
         end
 
         controller_array = new_modules.select do |m|

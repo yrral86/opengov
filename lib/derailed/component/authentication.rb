@@ -11,7 +11,6 @@ module Derailed
       # Derailed::Component::Controller)
       def setup_env(env)
         Thread.current[:env] = env
-        Authlogic::Session::Base.controller = controller
       end
 
       # current_session fetches the current session via

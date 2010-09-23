@@ -1,6 +1,3 @@
-require 'authlogic'
-require 'authlogic_pam'
-
 # for some reason on the server authlogic_pam wasn't updating the persistence token
 # and this fixes it... probably a better way when we have time to research
 module FixAuthlogicPamSaveRecord
