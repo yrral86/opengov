@@ -10,15 +10,6 @@ module Derailed
         @daemons[component].proxy.model(model)
       end
 
-      # get_component_socket returns the socket URI for the named Component
-      def get_component_socket(name)
-        if @daemons[name].registered?
-          @daemons[name].proxy.__drburi
-        else
-          nil
-        end
-      end
-
       def component_command(component, command, async = false)
         component = component_by_lowercase_name(component)
         if command == 'start'
