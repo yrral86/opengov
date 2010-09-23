@@ -2,7 +2,7 @@ module Derailed
   module Component
     # = Derailed::Component::Environment
     # This module provides convenience functions to interact with the
-    # Derailed::RequestRouter side controller (Derailed::Controller::Controller)
+    # Derailed::RequestRouter side controller (Derailed::RackApp::Controller)
     module Environment
       private
 

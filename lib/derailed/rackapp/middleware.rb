@@ -6,7 +6,7 @@ module Derailed
   module RackApp
     # = Derailed::RackApp::Middleware
     # This class provides a Rack middleware that adds a
-    # Derailed::Controller::Controller to the env variable and ensures
+    # Derailed::RackApp::Controller to the env variable and ensures
     # a user is logged in for any url other than /login
     class Middleware
       # initialize sets the app and creates a Client
@@ -43,7 +43,7 @@ module Derailed
         end
       end
 
-      # load_controller creates a Controller::Controller for the request
+      # load_controller creates a RackApp::Controller for the request
       def load_controller(env)
         env[:controller] = Controller.new(env)
       end

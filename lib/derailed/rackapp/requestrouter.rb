@@ -7,7 +7,7 @@ module Derailed
       # initialize creates a Client to access the components and the
       # Manager, initializes an empty hash for routing paths to components,
       # and starts the DRb service that allows the components to access the
-      # session and cookie hashes in the Derailed::Controller::Controller
+      # session and cookie hashes in the Derailed::RackApp::Controller
       def initialize
         @client = Client.new
         @routes = {}
