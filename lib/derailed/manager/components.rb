@@ -1,7 +1,7 @@
 module Derailed
   module Manager
     # = Derailed::Manager::Components
-    # This module provides functions for controlling the components
+    # This module provides functions for controlling the components.
     module Components
       def component_command(component, command, async = false)
         component = component_by_lowercase_name(component)
