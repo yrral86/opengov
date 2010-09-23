@@ -1,6 +1,6 @@
 require 'authlogic_pam'
 
-require 'derailed/component/authenticatorcontroller'
+require 'derailed/component/authenticator/controller'
 
 module Derailed
   module Component
