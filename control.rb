@@ -36,7 +36,7 @@ elsif component
   require 'derailed/componentclient'
   command = ARGV.first
   begin
-    manager = Derailed::ComponentClient.new.cm
+    manager = Derailed::ComponentClient.new.manager
     unless command == 'run'
       puts manager.component_command(component, command)
     else

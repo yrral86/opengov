@@ -17,39 +17,39 @@ class OpenGovManagerTest < Derailed::TestCase
   end
 
   def test_component_unregister
-    @cc.cm.unregister_component('PersonLocator')
+    @cc.manager.unregister_component('PersonLocator')
     assert_equal(['Authenticator::User',
                   'Authenticator::UserSession',
                   'Map::Location',
                   'Map::Map',
                   'Map::MapLocation'],
                  sort_models)
-    @cc.cm.register_component('PersonLocator')
+    @cc.manager.register_component('PersonLocator')
   end
 
   def test_component_stop_start
     orig_components = sort_components
     orig_components.each do |component|
-      @cc.cm.component_command(component.downcase,'stop')
+      @cc.manager.component_command(component.downcase,'stop')
       new_components = sort_components
       assert_equal [component], orig_components - new_components
 
-      @cc.cm.component_command(component.downcase,'start')
+      @cc.manager.component_command(component.downcase,'start')
       new_components = sort_components
       assert_equal orig_components, new_components
     end
   end
 
   def sort_components
-    @cc.cm.available_components.sort
+    @cc.manager.available_components.sort
   end
 
   def sort_models
-    @cc.cm.available_models.sort
+    @cc.manager.available_models.sort
   end
 
   def test_component_available_types
-    assert_equal ['PersonLocator::Person'], @cc.cm.available_types
+    assert_equal ['PersonLocator::Person'], @cc.manager.available_types
   end
 
   def test_component_get_model

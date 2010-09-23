@@ -6,6 +6,8 @@ module Derailed
   # This class provides an interface to the components as well as the
   # Manager (possibly these two functionalities should be spilt)
   class ComponentClient
+    attr_reader :manager
+
     # initialize creates a proxy for the Manager
     def initialize
       @manager = Service.get 'Manager'
@@ -60,11 +62,6 @@ module Derailed
         end
       end
       not_available
-    end
-
-    # cm is an accessor for the Manager
-    def cm
-      @manager
     end
   end
 end

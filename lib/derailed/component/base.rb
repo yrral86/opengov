@@ -52,11 +52,11 @@ module Derailed
         end
 
         Service.start @name, self
-        @client.cm.register_component(@name)
+        @client.manager.register_component(@name)
         @registered = true
         at_exit {
           if @registered
-            @client.cm.unregister_component(@name)
+            @client.manager.unregister_component(@name)
           end
           DRb.stop_service
           ActiveRecord::Base.remove_connection
