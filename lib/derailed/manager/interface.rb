@@ -32,8 +32,8 @@ module Derailed
         @self
       end
 
-      # daemonize starts the DRb service, reads the components to start from the
-      # config file, and starts the components.
+      # daemonize starts the service, reads the components-enaled directory,
+      # and starts the components.
       def daemonize
         Service.start 'Manager', self
 
@@ -53,10 +53,10 @@ module Derailed
               component_command c, 'stop'
             end
           end
-          DRb.stop_service
+          Service.stop
         }
 
-        DRb.thread.join
+        Service.join
       end
     end
   end

@@ -58,7 +58,7 @@ module Derailed
           if @registered
             @client.manager.unregister_component(@name)
           end
-          DRb.stop_service
+          Service.stop
           ActiveRecord::Base.remove_connection
         }
 
@@ -72,7 +72,7 @@ module Derailed
 
       # daemonize joins the DRb server thread to the main thread
       def daemonize
-        DRb.thread.join
+        Service.join
       end
 
       # routes returns the list of routes this component will handle.

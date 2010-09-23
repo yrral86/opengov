@@ -11,6 +11,14 @@ module Derailed
       DRb.start_service uri, object
     end
 
+    def self.join
+      DRb.thread.join
+    end
+
+    def self.stop
+      DRb.stop_service
+    end
+
     def self.get(name)
       DRbObject.new nil, Socket.uri(name)
     end
