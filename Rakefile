@@ -98,7 +98,7 @@ namespace :db do
   task :ar_init do
     require 'derailed/config'
     # Load the database config
-    config = Config.db_config('default')
+    config = Derailed::Config.db_config('default')
     ActiveRecord::Base.establish_connection(config)
     # set a logger for STDOUT
     ActiveRecord::Base.logger = Logger.new(STDOUT)
