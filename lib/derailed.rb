@@ -3,8 +3,8 @@
  'componentclient',
  'datatype',
  'service',
+ 'socket',
  'type/person.rb',
- 'manager/socket',
  'component/base',
 ].each do |library|
   require "derailed/#{library}"

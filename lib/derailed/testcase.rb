@@ -85,7 +85,7 @@ module Derailed
 
       waiting = true
       while waiting do
-        sockets = Dir.entries(Manager::Socket.dir).find_all {|e|
+        sockets = Dir.entries(Socket.dir).find_all {|e|
           e.match /sock$/
         }
         if sockets.length == qty

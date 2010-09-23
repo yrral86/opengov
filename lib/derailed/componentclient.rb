@@ -1,7 +1,7 @@
 require 'drb'
 
 require 'derailed/config'
-require 'derailed/manager/socket'
+require 'derailed/socket'
 
 module Derailed
   # = Derailed::ComponentClient
@@ -11,7 +11,7 @@ module Derailed
     # initialize creates a DRbObject for the Manager
     def initialize
       @cm = DRbObject.new nil,
-      Manager::Socket.uri('Manager')
+      Socket.uri('Manager')
     end
 
     # get_current_session invokes current_session on the Authenticator component

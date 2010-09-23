@@ -1,4 +1,5 @@
 require 'derailed/config'
+require 'derailed/socket'
 require 'derailed/service'
 
 [
@@ -6,8 +7,7 @@ require 'derailed/service'
  'daemon',
  'information',
  'mux',
- 'registration',
- 'socket'
+ 'registration'
 ].each do |library|
   require "derailed/manager/#{library}"
 end
