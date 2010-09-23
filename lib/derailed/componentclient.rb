@@ -1,17 +1,15 @@
-require 'drb'
-
 require 'derailed/config'
 require 'derailed/socket'
+require 'derailed/service'
 
 module Derailed
   # = Derailed::ComponentClient
   # This class provides an interface to the components as well as the
   # Manager (possibly these two functionalities should be spilt)
   class ComponentClient
-    # initialize creates a DRbObject for the Manager
+    # initialize creates a proxy for the Manager
     def initialize
-      @cm = DRbObject.new nil,
-      Socket.uri('Manager')
+      @cm = Service.get 'Manager'
     end
 
     # get_current_session invokes current_session on the Authenticator component
@@ -41,11 +39,9 @@ module Derailed
       get_component(component).model(model)
     end
 
-    # get_component returns a DRbObject representing the component.
-    # The socket uri is fetched from the Manager by a CamelCase
-    # component name
+    # get_component returns a proxy for the component specified by name
     def get_component(name)
-      DRbObject.new nil, @cm.get_component_socket(name)
+      Service.get (name)
     end
 
     # dependencies_not_satisfied returns a list of unsatisfied dependencies

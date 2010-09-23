@@ -26,10 +26,10 @@ module Derailed
         @name = config['name']
       end
 
-      # proxy= sets the DRbObject for the component
-      def proxy=(uri)
-        if uri
-          @proxy = DRbObject.new nil, uri
+      # proxy= sets up the proxy for the component
+      def proxy=(name)
+        if name
+          @proxy = Service.get name
         else
           @proxy = nil
         end
