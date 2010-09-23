@@ -4,12 +4,6 @@ module Derailed
     # This module provides functions for accessing the components and their
     # models.
     module Components
-      # get_model returns a DRbObject representing the given model
-      def get_model(name)
-        component, model = name.split '::'
-        @daemons[component].proxy.model(model)
-      end
-
       def component_command(component, command, async = false)
         component = component_by_lowercase_name(component)
         if command == 'start'
