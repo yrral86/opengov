@@ -1,5 +1,4 @@
 require 'rack'
-require 'drb'
 
 require "derailed/controller/controller"
 

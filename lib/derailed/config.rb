@@ -1,3 +1,5 @@
+require 'yaml'
+
 module Derailed
   # = Derailed::Config
   # This module provides global configuration information
@@ -5,6 +7,7 @@ module Derailed
     RootDir = File.expand_path(File.dirname(__FILE__) + '/../..')
     ComponentDir = RootDir + '/components-enabled'
     Environment = ENV['ENV'] || 'development'
+    DRbTimeout = 10
 
     # component_config reads the config file and sets some defaults
     def self.component_config(component)

@@ -1,7 +1,5 @@
-require 'drb'
-require 'drb/timeridconv'
-
 require 'derailed/config'
+require 'derailed/service'
 
 [
  'components',
@@ -38,8 +36,7 @@ module Derailed
       # daemonize starts the DRb service, reads the components to start from the
       # config file, and starts the components.
       def daemonize
-        DRb.install_id_conv DRb::TimerIdConv.new(10)
-        DRb.start_service Socket.uri('Manager'), self
+        Service.start Socket.uri('Manager'), self
 
         old_dir = Dir.pwd
         Dir.chdir Config::ComponentDir

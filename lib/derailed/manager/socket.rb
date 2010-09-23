@@ -1,5 +1,3 @@
-require 'yaml'
-
 module Derailed
   module Manager
     # = Derailed::Manager::Socket

@@ -1,5 +1,3 @@
-require 'drb'
-require 'drb/timeridconv'
 require 'rubygems'
 require 'authlogic'
 
@@ -52,9 +50,7 @@ module Derailed
           puts 'Dependencies not met: ' + need.join(",")
         end
 
-        socket = Manager::Socket.uri @name
-        DRb.install_id_conv DRb::TimerIdConv.new(10)
-        DRb.start_service socket, self
+        Service.start Manager::Socket.uri(@name), self
         @client.cm.register_component(@name)
         @registered = true
         at_exit {

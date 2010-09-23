@@ -1,6 +1,5 @@
 require 'rubygems'
 require 'active_record'
-require 'drb'
 
 module Derailed
   module Component

@@ -1,7 +1,6 @@
 require 'rake/testtask'
 require 'cucumber/rake/task'
 require 'rubygems'
-require 'yaml'
 require 'active_record'
 require 'rack/logger'
 

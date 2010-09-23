@@ -1,6 +1,5 @@
 #!/usr/bin/env ruby
 
-require 'yaml'
 require 'optparse'
 
 dir = File.expand_path(File.dirname(__FILE__))

@@ -10,8 +10,7 @@ module Derailed
     def initialize
       @cc = ComponentClient.new
       @routes = {}
-      DRb.install_id_conv DRb::TimerIdConv.new(10)
-      DRb.start_service
+      Service.start
       self
     end
 
