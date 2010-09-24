@@ -66,9 +66,13 @@ module Derailed
       private
 
       def self.register_api(api, no_gen = false)
-        self.send :include, api
-        @@extended_names = gen_whitelist unless no_gen
-        @@apis << api.name
+        unless caller[0].match /drb\.rb/
+          self.send :include, api
+          @@extended_names = gen_whitelist unless no_gen
+          @@apis << api.name
+        else
+          throw InvalidAPI
+        end
       end
 
       ##
