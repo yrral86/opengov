@@ -66,6 +66,7 @@ When /^a random method sent to '(.*)' gives an InvalidAPI error$/ do |c|
       have_error = catch(:success) do
         begin
           component.send id
+        rescue ArgumentError
         rescue Derailed::Component::InvalidAPI
           throw :success, true
         end
