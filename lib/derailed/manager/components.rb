@@ -2,13 +2,13 @@ module Derailed
   module Manager
     ##
     # Feature: Allow Manager to control the component lifecycle
-    #  As an administrator
-    #  I want to issue a command to a running component
-    #  And start components that are not running
-    #  And register a component that is started by another process
-    #  Later I want to be able to stop (sig STOP) a component
-    #  And resume stopped components
-    #  And takeover parentship of process started by another process
+    #   As an administrator
+    #   I want to issue a command to a running component
+    #   And start components that are not running
+    #   And register a component that is started by another process
+    #   Later I want to be able to stop (sig STOP) a component
+    #   And resume stopped components
+    #   And takeover parentship of process started by another process
     ##
     module Components
       ##
