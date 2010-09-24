@@ -12,16 +12,32 @@ module Derailed
     ##
     module Components
       ##
-      # Scenario: issue a command to a running compnent
+      # Scenario Outline: issue a command to a running compnent
       #   Given <component> is running
       #   And <component> is registered
-      #   When I run './control.rb -c <component> <command>'
+      #   When I send the manager '<command>' for '<component>'
       #   Then <component> should react to the <command>
       #
-      # Scenario: start components that are not running
+      #   Scenarios: Component Commands
+      #     | component     | command  |
+      #     | Static        | status   |
+      #     | Debug         | running? |
+      #     | PersonLocator | restart  |
+      #     | Authenticator | stop     |
+      #     | Ajax          | apis     |
+      #
+      # Scenario Outline: start components that are not running
       #   Given <component> is not running
       #   When I run './control.rb -c <component> start'
       #   Then <component> is running
+      #
+      #   Scenarios: Components
+      #     | component     |
+      #     | Static        |
+      #     | Debug         |
+      #     | PersonLocator |
+      #     | Authenticator |
+      #     | Ajax          |
       ##
       def component_command(component, command, async = false)
         component = component_by_lowercase_name(component)
@@ -33,10 +49,18 @@ module Derailed
       end
 
       ##
-      # Scenario: register a component that is started by another process
+      # Scenario Outline: register a component that is started externally
       #   Given <component> is not running
       #   When I run './control -c <component> run' asynchronously
       #   Then <component> is running
+      #
+      #   Scenarios: Components
+      #     | component     |
+      #     | Static        |
+      #     | Debug         |
+      #     | PersonLocator |
+      #     | Authenticator |
+      #     | Ajax          |
       ##
       def component_pid(component, pid)
         component_by_lowercase_name(component).pid = pid
@@ -58,13 +82,6 @@ module Derailed
         end
         nil
       end
-
-      #\#
-      #   Examples:
-      #     | component | command |
-      #     | ajax      | status  |
-      #     | static    | stop    |
-      #\#
     end
   end
 end
