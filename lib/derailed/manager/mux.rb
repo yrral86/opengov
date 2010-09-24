@@ -8,7 +8,7 @@ module Derailed
       def gather
         array = []
         @daemons.each_value do |c|
-          array.concat(yield(c.proxy).collect do |n|
+          array.concat(yield(c.proxy).map do |n|
                          "#{c.proxy.name}::#{n}"
                        end) if c.registered?
         end

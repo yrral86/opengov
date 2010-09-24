@@ -25,7 +25,7 @@ module Derailed
       # (CamelCase::CamelCase)
       def available_models
         gather do |c|
-          c.model_names
+          c.allowed?(:model_names) ? c.model_names : []
         end
       end
 
@@ -35,7 +35,7 @@ module Derailed
       # (CamelCase::CamelCase)
       def available_types
         gather do |c|
-          c.model_types
+          c.allowed?(:model_types) ? c.model_types : []
         end
       end
 
@@ -44,7 +44,8 @@ module Derailed
       def components_with_type(type)
         array = []
         @daemons.each_value do |c|
-          array << c.proxy.name if c.proxy.has_type?(type)
+          array << c.proxy.name if c.proxy.allowed?(:has_type?) &&
+            c.proxy.has_type?(type)
         end
         array
       end

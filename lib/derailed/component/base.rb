@@ -30,12 +30,13 @@ module Derailed
       # initialize sets up the database from the config file, initializes the
       # list of models, checks for dependencies, and then registers the
       # component with the Manager
-      def initialize(name, dependencies = [])
+      def initialize(name, apis, dependencies)
         @registered = false;
         @name = name
         @dependencies = dependencies
+        apis << API::Base
 
-        @api = API.new(self, [API::Base, API::Models, API::Rack])
+        @api = API.new(self, apis)
         @api.register_api(API::Testing) if Config::Environment == 'test'
 
         models, controller_class = require_libraries

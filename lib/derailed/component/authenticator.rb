@@ -11,6 +11,8 @@ module Derailed
       def initialize(*args)
         super(*args)
         @api.register_api(API::Authenticator)
+        @api.register_api(API::Models)
+        @api.register_api(API::Rack)
       end
 
       # routes (as in any component) provides the routes this component services

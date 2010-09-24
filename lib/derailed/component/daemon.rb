@@ -8,6 +8,7 @@ module Derailed
       def initialize(name)
         @config = Config.component_config(name)
         @config['class_object'] = Component.const_get(@config['class'])
+        @config['api_modules'] = apis.map {|api| API.const_get(api)}
         init_ar
         self
       end
@@ -15,7 +16,7 @@ module Derailed
       # run sets the process name and runs the component
       def run
         $0 = "OpenGov#{name}Component"
-        class_object.new(name, requirements).daemonize
+        class_object.new(name, api_modules, requirements).daemonize
       end
 
       private

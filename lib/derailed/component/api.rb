@@ -27,6 +27,7 @@ module Derailed
     module API
       def self.new(component, extensions=[])
         @@component = component
+        @@apis = []
         extensions.each do |e|
           register_api(e,true)
         end
@@ -55,25 +56,29 @@ module Derailed
       #   Then the return value should contain '<APIs>'
       ##
       def apis
-        constants
+        @@apis
       end
       module_function :apis
       public :apis
 
-      def self.name
+      def name
         @@component.name
       end
-      module_function :apis
-      public :apis
+      module_function :name
+      public :name
+
+      def allowed?(name)
+        @@extended_names.include? name
+      end
+      module_function :allowed?
+      public :allowed?
+
+      private
 
       def self.register_api(api, no_gen = false)
         self.send :include, api
         @@extended_names = gen_whitelist unless no_gen
-      end
-
-      private
-      def self.allowed?(name)
-        @@extended_names.include? name
+        @@apis << api.name
       end
 
       ##
