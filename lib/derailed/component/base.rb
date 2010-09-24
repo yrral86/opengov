@@ -35,11 +35,8 @@ module Derailed
         @name = name
         @dependencies = dependencies
 
-        @api = API.new(self,
-                       [
-                        API::Rack
-                       ]
-                       )
+        @api = API.new(self, [API::Base, API::Models, API::Rack])
+        @api.register_api(API::Testing) if Config::Environment == 'test'
 
         models, controller_class = require_libraries
 

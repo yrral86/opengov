@@ -1,5 +1,8 @@
 [
  'authenticator',
+ 'base',
+ 'models',
+ 'testing',
  'rack'
 ].each do |library|
   require "derailed/component/api/#{library}"
@@ -24,8 +27,6 @@ module Derailed
     module API
       def self.new(component, extensions=[])
         @@component = component
-        @@apis = []
-        @@extended_names = []
         extensions.each do |e|
           register_api(e,true)
         end
@@ -54,18 +55,20 @@ module Derailed
       #   Then the return value should contain '<APIs>'
       ##
       def apis
-        @@apis.to_a
+        constants
       end
       module_function :apis
       public :apis
 
+      def self.name
+        @@component.name
+      end
+      module_function :apis
+      public :apis
 
       def self.register_api(api, no_gen = false)
-        @@apis << api
         self.send :include, api
         @@extended_names = gen_whitelist unless no_gen
-        puts "self.register_api(#{api.inspect},#{no_gen})"
-        puts @@extended_names.inspect
       end
 
       private
