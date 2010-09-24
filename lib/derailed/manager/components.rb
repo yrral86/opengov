@@ -1,8 +1,27 @@
 module Derailed
   module Manager
-    # = Derailed::Manager::Components
-    # This module provides functions for controlling the components.
+    ##
+    # Feature: Allow Manager to control the component lifecycle
+    #  As an administrator
+    #  I want to issue a command to a running component
+    #  And start components that are not running
+    #  And register a component that is started by another process
+    #  Later I want to be able to stop (sig STOP) a component
+    #  And resume stopped components
+    #  And takeover parentship of process started by another process
+    ##
     module Components
+      ##
+      # Scenario: issue a command to a running compnent
+      #   Given <component> is running and registered
+      #   When I run './control.rb -c <component> <command>'
+      #   Then <component> should react to the <command>
+      #
+      # Scenario: start components that are not running
+      #   Given <component> is not running
+      #   When I run './control.rb -c <componet> start'
+      #   Then <component> is running
+      ##
       def component_command(component, command, async = false)
         component = component_by_lowercase_name(component)
         if command == 'start'
@@ -12,7 +31,12 @@ module Derailed
         end
       end
 
-      # component_pid sets the pid for the component
+      ##
+      # Scenario: register a component that is started by another process
+      #   Given <component> is not running
+      #   When I run './control -c <component> run' asynchronously
+      #   Then <component> is running
+      ##
       def component_pid(component, pid)
         component_by_lowercase_name(component).pid = pid
       end
