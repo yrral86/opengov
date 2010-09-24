@@ -39,8 +39,8 @@ module Derailed
       end
 
       private
-      # allowed determines if the given name is on the whitelist
-      def allowed(name)
+      # allowed? determines if the given name is on the whitelist
+      def allowed?(name)
         @safe_names.include?(name)
       end
 
@@ -48,7 +48,7 @@ module Derailed
       # (and it's not defined, as we're in method_missing), it is a model, so
       # we call crud.  Otherwise, it returns a 404.
       def method_missing(id, *args)
-        if allowed(id.to_s)
+        if allowed?(id.to_s)
           crud(Thread.current[:env])
         else
           not_found "Method #{id.to_s} not found in component " +
