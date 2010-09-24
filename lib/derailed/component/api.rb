@@ -30,7 +30,7 @@ module Derailed
       #   Given '<component>' is running
       #   And '<component>' has '<APIs>'
       #   When I call 'allowed_methods' on the DRbObject for '<component>'
-      #   Then the return value should contain all of the methods in '<APIs>'
+      #   Then the return value should contain each of '<APIs>' methods
       ##
       def allowed_methods
         @@extended_names
@@ -43,7 +43,7 @@ module Derailed
       #   Given '<component>' is running
       #   And '<component>' has '<APIs>'
       #   When I call 'apis' on the DRbObject for '<component>'
-      #   Then the return value should contain '<APIs>'
+      #   Then the return value should contain each of '<APIs>'
       ##
       def apis
         @@apis
@@ -81,7 +81,7 @@ module Derailed
       #   And '<component>' has '<APIs>'
       #   When I call 'allowed_methods' on the DRbObject for '<component>'
       #   And I call each returned value on the DRbObject for '<component>'
-      #   Then calling anything not returned should throw an error
+      #   And a random method sent to '<component>' gives an InvalidAPI error
       ##
       def self.method_missing(id, *args)
         if allowed?(id)
