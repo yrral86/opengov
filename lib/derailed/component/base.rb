@@ -1,6 +1,7 @@
 require 'authlogic'
 
 [
+ 'api',
  'authentication',
  'controller',
  'daemon',
@@ -33,6 +34,12 @@ module Derailed
         @registered = false;
         @name = name
         @dependencies = dependencies
+
+        @api = API.new(self,
+                       [
+                        API::Rack
+                       ]
+                       )
 
         models, controller_class = require_libraries
 
