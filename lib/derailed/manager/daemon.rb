@@ -128,7 +128,6 @@ module Derailed
         Thread.pass while !@@spawner.stop?
       end
 
-      private
       # running? returns true if the component is running, and false otherwise
       def running?
         begin

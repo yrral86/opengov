@@ -13,13 +13,14 @@ module Derailed
     module Components
       ##
       # Scenario: issue a command to a running compnent
-      #   Given <component> is running and registered
+      #   Given <component> is running
+      #   And <component> is registered
       #   When I run './control.rb -c <component> <command>'
       #   Then <component> should react to the <command>
       #
       # Scenario: start components that are not running
       #   Given <component> is not running
-      #   When I run './control.rb -c <componet> start'
+      #   When I run './control.rb -c <component> start'
       #   Then <component> is running
       ##
       def component_command(component, command, async = false)
@@ -57,6 +58,13 @@ module Derailed
         end
         nil
       end
+
+      #\#
+      #   Examples:
+      #     | component | command |
+      #     | ajax      | status  |
+      #     | static    | stop    |
+      #\#
     end
   end
 end

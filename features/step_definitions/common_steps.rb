@@ -24,3 +24,14 @@ Then /^there should be one more row than '(.*)' records$/ do |model|
   assert_equal nodes, records + 1,
   "There are #{nodes} nodes and #{records} records"
 end
+
+When /^I run '(.*)'(.*)$/ do |command, sync|
+  if sync == ' asynchronously'
+    fork do
+      Process.detatch
+      exec command
+    end
+  else
+    `#{command}`
+  end
+end
