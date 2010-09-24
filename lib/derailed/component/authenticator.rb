@@ -8,6 +8,11 @@ module Derailed
     # This class is the base for an Authenticator component using Authlogic.
     # It provides /login, /logout, /home (for now), /newuser, and /edituser
     class Authenticator < Base
+      def initialize(*args)
+        super(*args)
+        @api.register_api(API::Authenticator)
+      end
+
       # routes (as in any component) provides the routes this component services
       def routes
         # /home is temporary

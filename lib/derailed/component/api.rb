@@ -1,4 +1,5 @@
 [
+ 'authenticator',
  'rack'
 ].each do |library|
   require "derailed/component/api/#{library}"
@@ -23,8 +24,13 @@ module Derailed
     module API
       def self.new(component, extensions=[])
         @@component = component
-        @@apis = extensions
-        @@safe_names = whitelist
+        @@apis = []
+        @@extended_names = []
+        extensions.each do |e|
+          register_api(e,true)
+        end
+        @@extended_names = gen_whitelist
+        self
       end
 
       ##
@@ -34,9 +40,11 @@ module Derailed
       #   When I call 'allowed_methods' on the DRbObject for '<component>'
       #   Then the return value should contain all of the methods in '<APIs>'
       ##
-      def self.allowed_methods
-        @@safe_names
+      def allowed_methods
+        @@extended_names
       end
+      module_function :allowed_methods
+      public :allowed_methods
 
       ##
       # Scenario: list APIs the component implements
@@ -45,26 +53,46 @@ module Derailed
       #   When I call 'apis' on the DRbObject for '<component>'
       #   Then the return value should contain '<APIs>'
       ##
-      def self.apis
-        @@apis
+      def apis
+        @@apis.to_a
+      end
+      module_function :apis
+      public :apis
+
+
+      def self.register_api(api, no_gen = false)
+        @@apis << api
+        self.send :include, api
+        @@extended_names = gen_whitelist unless no_gen
+        puts "self.register_api(#{api.inspect},#{no_gen})"
+        puts @@extended_names.inspect
       end
 
       private
       def self.allowed?(name)
-        @@safe_names.include?(name)
+        @@extended_names.include? name
       end
 
+      ##
+      # Scenario: limit the API that can be called over the wire
+      #   Given '<component>' is running
+      #   And '<component>' has '<APIs>'
+      #   When I call 'allowed_methods' on the DRbObject for '<component>'
+      #   And I call each returned value on the DRbObject for '<component>'
+      #   Then calling anything not returned should throw an error
+      ##
       def self.method_missing(id, *args)
-        if allowed?(id.to_s)
-          @@component.send id, args
+        if allowed?(id)
+            @@component.send id, args
         else
           throw InvalidAPI
         end
       end
 
-      def self.whitelist
-        array = self.public_methods - Object.new.public_methods
+      def self.gen_whitelist
+        array = self.public_instance_methods
         array.map {|m| m.to_s}
+        array
       end
     end
   end

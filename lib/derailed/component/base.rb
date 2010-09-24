@@ -58,7 +58,7 @@ module Derailed
           puts 'Dependencies not met: ' + need.join(",")
         end
 
-        Service.start @name, self
+        Service.start @name, @api
         @client.manager.register_component(@name)
         @registered = true
         at_exit {
