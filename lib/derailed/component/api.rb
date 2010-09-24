@@ -83,7 +83,7 @@ module Derailed
       ##
       def self.method_missing(id, *args)
         if allowed?(id)
-            @@component.send id, args
+            @@component.send id, *args
         else
           throw InvalidAPI
         end

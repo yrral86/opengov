@@ -12,6 +12,11 @@ module Derailed
         # Scenario: allow access to the call method of a component
         ##
         def call; end
+
+        ##
+        # Scenario: allow the Manager to query the routes
+        ##
+        def routes; end
       end
     end
   end
