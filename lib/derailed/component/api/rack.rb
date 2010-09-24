@@ -6,6 +6,7 @@ module Derailed
       #   As a component developer
       #   In order to allow the component to act as a Rack application
       #   I want to allow access to the call method of the component
+      #   And allow querying the routes
       ##
       module Rack
         ##
@@ -14,7 +15,7 @@ module Derailed
         def call; end
 
         ##
-        # Scenario: allow the Manager to query the routes
+        # Scenario: allow querying the routes
         ##
         def routes; end
       end

@@ -1,7 +1,7 @@
 module Derailed
   module Component
     class InvalidAPI < ::StandardError
-      def initialize(session)
+      def initialize()
         super("The api you used is invalid")
       end
     end
@@ -26,11 +26,19 @@ module Derailed
       end
 
       ##
-      # Scenario: list methods the component allows
+      # Scenario Outline: list methods the component allows
       #   Given '<component>' is running
       #   And '<component>' has '<APIs>'
       #   When I call 'allowed_methods' on the DRbObject for '<component>'
       #   Then the return value should contain each of '<APIs>' methods
+      #
+      #   Scenarios: Component APIs
+      #     | component     | APIs                           |
+      #     | Static        | Base,Rack                      |
+      #     | Debug         | Base,Rack                      |
+      #     | PersonLocator | Base,Models,Rack               |
+      #     | Authenticator | Base,Models,Rack,Authenticator |
+      #     | Ajax          | Base,Rack                      |
       ##
       def allowed_methods
         @@extended_names
@@ -39,11 +47,19 @@ module Derailed
       public :allowed_methods
 
       ##
-      # Scenario: list APIs the component implements
+      # Scenario Outline: list APIs the component implements
       #   Given '<component>' is running
       #   And '<component>' has '<APIs>'
       #   When I call 'apis' on the DRbObject for '<component>'
       #   Then the return value should contain each of '<APIs>'
+      #
+      #   Scenarios: Component APIs
+      #     | component     | APIs                           |
+      #     | Static        | Base,Rack                      |
+      #     | Debug         | Base,Rack                      |
+      #     | PersonLocator | Base,Models,Rack               |
+      #     | Authenticator | Base,Models,Rack,Authenticator |
+      #     | Ajax          | Base,Rack                      |
       ##
       def apis
         @@apis
@@ -71,23 +87,31 @@ module Derailed
           @@extended_names = gen_whitelist unless no_gen
           @@apis << api.name
         else
-          throw InvalidAPI
+          raise InvalidAPI
         end
       end
 
       ##
-      # Scenario: limit the API that can be called over the wire
+      # Scenario Outline: limit the API that can be called over the wire
       #   Given '<component>' is running
       #   And '<component>' has '<APIs>'
       #   When I call 'allowed_methods' on the DRbObject for '<component>'
       #   And I call each returned value on the DRbObject for '<component>'
       #   And a random method sent to '<component>' gives an InvalidAPI error
+      #
+      #   Scenarios: Component APIs
+      #     | component     | APIs                           |
+      #     | Static        | Base,Rack                      |
+      #     | Debug         | Base,Rack                      |
+      #     | PersonLocator | Base,Models,Rack               |
+      #     | Authenticator | Base,Models,Rack,Authenticator |
+      #     | Ajax          | Base,Rack                      |
       ##
       def self.method_missing(id, *args)
         if allowed?(id)
             @@component.send id, *args
         else
-          throw InvalidAPI
+          raise InvalidAPI
         end
       end
 

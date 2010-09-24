@@ -1,6 +1,5 @@
-Given /^(.*) is (.*)running$/ do |component, negate|
-  pending
-  running = @client.manager.component_command(component, 'running?')
+Given /^'(.*)' is (.*)running$/ do |component, negate|
+  running = @client.manager.component_command(component.downcase, 'running?')
   assert (negate == 'not ' ? !running : running)
 end
 

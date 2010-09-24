@@ -1,5 +1,12 @@
-Given /^'(.*)' has '(.*)'$/ do |component, apis|
-  pending
+Given /^'(.*)' has '(.*)'$/ do |component, test_apis|
+  hash = {}
+  Derailed::Service.get(component).apis.each do |api|
+    hash[api.split('::')[3]] = true
+  end
+
+  test_apis.split(',').each do |test_api|
+    assert hash[test_api]
+  end
 end
 
 When /^I call '(.*)' on the DRbObject for '(.*)'$/ do |method, component|
@@ -13,18 +20,21 @@ end
 
 Then /^the return value should contain each of '(.*)' methods$/ do |apis|
   assert @return_value, "no return value"
-  apis.split(',').each do api
-    last = api.split('::').last
-    Derailed::Component::API.const_get(last).public_instance_methods.each do |m|
-      assert @return_value.contains?(m)
+  hash = {}
+  @return_value.each { |value| hash[value] = true }
+  apis.split(',').each do |api|
+    Derailed::Component::API.const_get(api).public_instance_methods.each do |m|
+      assert hash[m]
     end
   end
 end
 
 Then /^the return value should contain each of '(.*)'$/ do |apis|
   assert @return_value, "no return value"
-  apis.split(',').each do api
-    assert @return_value.contains?(api)
+  hash = {}
+  @return_value.each { |v| hash[v.split('::')[3]] = true }
+  apis.split(',').each do |api|
+    assert hash[api]
   end
 end
 
@@ -32,16 +42,27 @@ When /^I call each returned value on the DRbObject for '(.*)'$/ do |component|
   assert @return_value, "no return value"
   object = Derailed::Service.get(component)
   @return_value.each do |method|
-    object.send method
+    no_error = catch(:fail) do
+      begin
+        object.send method
+      rescue ArgumentError
+      rescue Derailed::Component::InvalidAPI
+        throw :faile, false
+      end
+      true
+    end
+    assert no_error
   end
 end
 
-Then /^a random method sent to '<component>' gives an InvalidAPI error$/ do |c|
+When /^a random method sent to '(.*)' gives an InvalidAPI error$/ do |c|
   assert @return_value, "no return value"
   component = Derailed::Service.get(c)
+  hash = {}
+  @return_value.each { |v| hash[v] = true }
   rand(20).times do
     id = (3...rand(20)).map{ ('a'..'z').to_a[rand(26)] }.join.to_sym
-    unless @return_value.contains?(id)
+    unless hash[id]
       have_error = catch(:success) do
         begin
           component.send id
