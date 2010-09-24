@@ -1,13 +1,3 @@
-[
- 'authenticator',
- 'base',
- 'models',
- 'testing',
- 'rack'
-].each do |library|
-  require "derailed/component/api/#{library}"
-end
-
 module Derailed
   module Component
     class InvalidAPI < ::StandardError
@@ -101,6 +91,16 @@ module Derailed
         array = self.public_instance_methods
         array.map {|m| m.to_s}
         array
+      end
+
+      [
+       'Authenticator',
+       'Base',
+       'Models',
+       'Testing',
+       'Rack'
+      ].each do |library|
+        autoload library.to_sym, "derailed/component/api/#{library.downcase}"
       end
     end
   end
