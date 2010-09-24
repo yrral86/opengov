@@ -24,6 +24,7 @@ module Derailed
       # current_session provides the current authenticated session if the user
       # is logged in, and nil otherwise
       def current_session(env=Thread.current[:env])
+        return nil unless env
         Authlogic::Session::Base.controller = env[:controller]
         UserSession.find
       end
