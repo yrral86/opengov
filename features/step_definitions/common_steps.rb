@@ -27,10 +27,8 @@ end
 
 When /^I run '(.*)'(.*)$/ do |command, sync|
   if sync == ' asynchronously'
-    fork do
-      Process.detatch
-      exec command
-    end
+    Process.detach(fork {exec command})
+    sleep 1
   else
     `#{command}`
   end

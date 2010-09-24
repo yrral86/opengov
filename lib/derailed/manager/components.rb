@@ -13,10 +13,10 @@ module Derailed
     module Components
       ##
       # Scenario Outline: issue a command to a running compnent
-      #   Given <component> is running
-      #   And <component> is registered
+      #   Given '<component>' is running
+      #   And '<component>' is registered
       #   When I send the manager '<command>' for '<component>'
-      #   Then <component> should react to the <command>
+      #   Then '<component>' should react to the '<command>'
       #
       #   Scenarios: Component Commands
       #     | component     | command  |
@@ -27,9 +27,9 @@ module Derailed
       #     | Ajax          | apis     |
       #
       # Scenario Outline: start components that are not running
-      #   Given <component> is not running
+      #   Given '<component>' is not running
       #   When I run './control.rb -c <component> start'
-      #   Then <component> is running
+      #   Then '<component>' is running
       #
       #   Scenarios: Components
       #     | component     |
@@ -50,9 +50,9 @@ module Derailed
 
       ##
       # Scenario Outline: register a component that is started externally
-      #   Given <component> is not running
-      #   When I run './control -c <component> run' asynchronously
-      #   Then <component> is running
+      #   Given '<component>' is not running
+      #   When I run './control.rb -c <component> run' asynchronously
+      #   Then '<component>' is running
       #
       #   Scenarios: Components
       #     | component     |
