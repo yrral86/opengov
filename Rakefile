@@ -11,8 +11,40 @@ namespace :test do
     t.test_files = FileList['tests/test*.rb']
   end
 
-  Cucumber::Rake::Task.new(:features) do |t|
+  Cucumber::Rake::Task.new(:features => :generate_features) do |t|
     t.cucumber_opts = "-f progress"
+  end
+
+  task :generate_features do |t|
+    feature_path = "features/gen_"
+
+    puts "cleaning up old generated features"
+    Dir.glob(feature_path + "*") do |path|
+      File.delete path
+    end
+
+    puts "processing source"
+    Dir.glob 'lib/**/*.rb' do |path|
+      features = IO.read(path).scan(/##\n(.*?)##\n/m)
+      features.each do |f|
+        f[0].gsub!(/\n[ ]*$/,'')
+      end
+      feature = features.join "\n\n"
+
+      unless feature.empty?
+        feature.gsub!('#', '')
+        m = feature.match /^([ ])*/
+
+        trim = m[0].length
+        feature.gsub!(/^[ ]{#{trim}}/, '')
+
+        output_path = feature_path + path.gsub(/\//,'_').gsub(/rb$/,'feature')
+        File.open(output_path,'w') do |file|
+          file.write(feature)
+        end
+        puts "wrote #{output_path}"
+      end
+    end
   end
 
   task :setup do

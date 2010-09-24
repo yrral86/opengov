@@ -2,3 +2,4 @@
 doc
 webrat.log
 .password
+features/gen_*.feature
