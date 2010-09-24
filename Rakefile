@@ -6,42 +6,41 @@ require 'rack/logger'
 APP_BASE = File.dirname(File.expand_path(__FILE__))
 $:.unshift APP_BASE + '/lib'
 
-Rake::TestTask.new(:do_test) do |t|
-  t.test_files = FileList['tests/test*.rb']
-end
-
-Cucumber::Rake::Task.new(:features) do |t|
-  t.cucumber_opts = "-f progress"
-end
-
-task :setup_test do
-  module MiniTest
-    class Unit
-      def self.disable_autorun
-          @@installed_at_exit = true
-      end
-    end
+namespace :test do
+  Rake::TestTask.new(:unit_test) do |t|
+    t.test_files = FileList['tests/test*.rb']
   end
 
-  MiniTest::Unit.disable_autorun
+  Cucumber::Rake::Task.new(:features) do |t|
+    t.cucumber_opts = "-f progress"
+  end
 
-  require 'derailed/testcase'
-  `mkdir -p sockets/test`
-  puts "Starting OpenGov..."
-  `./control.rb -tm start`
-  Derailed::TestCase.socket_wait
-  puts "OpenGov started."
+  task :setup do
+    module MiniTest
+      class Unit
+        def self.disable_autorun
+          @@installed_at_exit = true
+        end
+      end
+    end
+
+    MiniTest::Unit.disable_autorun
+
+    require 'derailed/testcase'
+    `mkdir -p sockets/test`
+    puts "Starting OpenGov..."
+    `./control.rb -tm start`
+    Derailed::TestCase.socket_wait
+    puts "OpenGov started."
+  end
+
+  task :teardown do
+    puts "Stopping OpenGov"
+    `./control.rb -tm stop`
+  end
+
 end
-
-task :teardown_test do
-  puts "Stopping OpenGov"
-  `./control.rb -tm stop`
-end
-
-task :test => [:setup_test, :features, :do_test, :teardown_test] do
-
-end
-
+task :test => ['test:setup', 'test:features', 'test:unit_test', 'test:teardown']
 
 task :doc do
   `rm -rf doc/`
