@@ -71,7 +71,7 @@ When /^a random method sent to '(.*)' gives an InvalidAPI error$/ do |c|
         end
         false
       end
-      assert have_error
+      assert have_error, "Failed with id = #{id}"
     end
   end
 end
