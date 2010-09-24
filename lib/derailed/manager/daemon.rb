@@ -140,6 +140,18 @@ module Derailed
           false
         end
       end
+
+      def method_missing(id, *args)
+        begin
+          if @proxy
+            @proxy.send(id, *args)
+          else
+            "component not registered"
+          end
+        rescue Derailed::Component::InvalidAPI
+          "invalid command"
+        end
+      end
     end
   end
 end
