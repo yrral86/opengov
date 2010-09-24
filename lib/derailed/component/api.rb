@@ -1,5 +1,10 @@
 module Derailed
   module Component
+    class InvalidAPI < ::StandardError
+      def initialize(session)
+        super("The api you used is invalid")
+      end
+
     ##
     # Feature: Provide a locked down interface to the component
     #   As a component developer
@@ -20,7 +25,7 @@ module Derailed
         if allowed?(id.to_s)
           @component.send id, args
         else
-          super
+          throw InvalidAPI
         end
       end
 
