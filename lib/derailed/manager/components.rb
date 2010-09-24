@@ -25,6 +25,7 @@ module Derailed
       #     | PersonLocator | restart  |
       #     | Authenticator | stop     |
       #     | Ajax          | apis     |
+      #     | Map           | status   |
       #
       # Scenario Outline: start components that are not running
       #   Given '<component>' is not running
@@ -38,6 +39,7 @@ module Derailed
       #     | PersonLocator |
       #     | Authenticator |
       #     | Ajax          |
+      #     | Map           |
       ##
       def component_command(component, command, async = false)
         component = component_by_lowercase_name(component)
@@ -61,6 +63,7 @@ module Derailed
       #     | PersonLocator |
       #     | Authenticator |
       #     | Ajax          |
+      #     | Map           |
       ##
       def component_pid(component, pid)
         component_by_lowercase_name(component).pid = pid
