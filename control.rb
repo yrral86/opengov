@@ -21,7 +21,7 @@ OptionParser.new do |opts|
   end
   opts.on('-c', '--component COMPONENT',
           'start/stop the specified component') do |c|
-    component = c
+    component = c.downcase
   end
 end.parse!
 
