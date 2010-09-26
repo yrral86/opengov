@@ -75,6 +75,9 @@ module Derailed
           begin
             Process.kill 'TERM', @pid
             Process.waitpid(@pid)
+          rescue Errno::ECHILD
+            puts "figure out how to take ownership of processes started " +
+              "externally"
           end
           @pid = nil
           "Component #{@name} stopped"
