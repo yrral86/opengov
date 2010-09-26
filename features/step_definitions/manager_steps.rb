@@ -8,9 +8,43 @@ Given /^'(.*)' is (.*)running$/ do |component, negate|
 end
 
 Given /^'(.*)' is (.*)registered$/ do |component, negate|
-  pending
+  result = send_component_command(component, 'registered?')
+  assert (negate == 'not ' ? !result : result)
 end
 
 Then /^'(.*)' should react to the '(.*)'$/ do |component, command|
-  pending
+  puts "#{component}->#{command}: #{@result}"
+  case command
+  when 'apis'
+    pending
+  when 'registered?'
+    pending
+  when 'restart'
+    result = @result
+    send_component_command(component, 'pid')
+    assert "Component #{component} stopped\n" +
+      "Component #{component} started [pid #{@result}]", result
+  when 'running?'
+    result = @result
+    send_component_command(component, 'pid')
+    assert_equal @result, result
+  when 'status'
+    result = @result
+    send_component_command(component, 'pid')
+    assert_equal "Component #{component} running [pid #{@result}]", result
+  when 'stop'
+    assert_equal "Component #{component} stopped", @result
+    send_component_command(component, 'status')
+    assert_equal "Component #{component} not running", @result
+    send_component_command(component, 'start')
+  end
+end
+
+When /^I send the manager '(.*)' for '(.*)'$/ do |command, component|
+  send_component_command(component, command)
+end
+
+def send_component_command(component, command)
+  manager = Derailed::Service.get('Manager')
+  @result = manager.component_command(component.downcase,command)
 end

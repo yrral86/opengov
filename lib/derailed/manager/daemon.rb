@@ -1,3 +1,5 @@
+require 'derailed/component/api'
+
 module Derailed
   module Manager
     # = Deraild::Manager::Daemon
@@ -19,7 +21,7 @@ module Derailed
     #  static.status
     #  > Component static not running
     class Daemon
-      attr_reader :name, :proxy
+      attr_reader :name, :proxy, :pid
 
       def initialize(name)
         config = Config.component_config(name)
@@ -133,15 +135,7 @@ module Derailed
 
       # running? returns true if the component is running, and false otherwise
       def running?
-        begin
-          if @pid
-            Process.getpgid(@pid)
-          else
-            false
-          end
-        rescue
-          false
-        end
+        @pid || false
       end
 
       def method_missing(id, *args)
@@ -151,7 +145,7 @@ module Derailed
           else
             "component not registered"
           end
-        rescue Derailed::Component::InvalidAPI
+        rescue Component::InvalidAPI
           "invalid command"
         end
       end

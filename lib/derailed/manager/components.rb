@@ -21,13 +21,13 @@ module Derailed
       #   Then '<component>' should react to the '<command>'
       #
       #   Scenarios: Component Commands
-      #     | component     | command  |
-      #     | Static        | status   |
-      #     | Debug         | running? |
-      #     | PersonLocator | restart  |
-      #     | Authenticator | stop     |
-      #     | Ajax          | apis     |
-      #     | Map           | status   |
+      #     | component     | command     |
+      #     | Static        | status      |
+      #     | Debug         | running?    |
+      #     | PersonLocator | restart     |
+      #     | Authenticator | stop        |
+      #     | Ajax          | apis        |
+      #     | Map           | registered? |
       #
       # Scenario Outline: start components that are not running
       #   Given '<component>' is not running
