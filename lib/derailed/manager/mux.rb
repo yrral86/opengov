@@ -4,6 +4,7 @@ module Derailed
     # This module provides functions for gathering data from the components and
     # scattering data to the components
     module Mux
+      private
       # gather gathers data from each component into an array
       def gather
         array = []
