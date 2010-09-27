@@ -26,6 +26,7 @@ Then /^there should be one more row than '(.*)' records$/ do |model|
 end
 
 When /^I run '(.*)'(.*)$/ do |command, sync|
+#  debug "I run '#{command}'#{sync}"
   if sync == ' asynchronously'
     Process.detach(fork {exec "#{command} 2>/dev/null"})
     sleep 1

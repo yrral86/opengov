@@ -44,6 +44,10 @@ module Derailed
       #     | Map           |
       ##
       def component_command(component, command, async = false)
+        if Config::Environment != 'production' && component == 'debug_message'
+          puts command
+          return true
+        end
         component = component_by_lowercase_name(component)
         if command == 'start'
           component.send command, async

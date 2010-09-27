@@ -116,6 +116,9 @@ module Derailed
               @@to_start_mutex.synchronize do
                 name = @@to_start
                 pid = fork do
+                  # necessary so component exit doesn't shut down all the other
+                  # components (see Manager::Interface.daemonize)
+                  at_exit { exit! }
                   require 'derailed'
                   component = Component::Daemon.new(name)
                   component.run
@@ -127,7 +130,8 @@ module Derailed
               end
             end
           end
-          Thread.exit
+          # exit! so we don't call at_exit
+          Thread.exit!
         end
         # wait for spawner to initilize
         Thread.pass while !@@spawner.stop?
