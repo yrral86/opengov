@@ -46,14 +46,3 @@ When /^I send the manager '(.*)' for '(.*)'$/ do |command, component|
 #  debug "I send the manager '#{command}' for '#{component}'"
   send_component_command(component, command)
 end
-
-def send_component_command(component, command)
-  manager = Derailed::Service.get('Manager')
-  @result = manager.component_command(component.downcase,command)
-end
-
-def debug(message)
-  result = @result
-  send_component_command('debug_message', message)
-  @result = result
-end
