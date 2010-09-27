@@ -18,9 +18,9 @@ Then /^'(.*)' should react to the '(.*)'$/ do |component, command|
 #  debug "'#{component}' should react to the '#{command}'"
   case command
   when 'apis'
-    pending
+    assert_equal Derailed::Service.get(component).apis, @result
   when 'registered?'
-    pending
+    assert @result
   when 'restart'
     result = @result
     send_component_command(component, 'pid')
