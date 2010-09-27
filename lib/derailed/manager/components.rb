@@ -6,11 +6,6 @@ module Derailed
     #   I want to issue a command to a running component
     #   And start components that are not running
     #   And register a component that is started by another process
-    #   Later I want to be able to pause (sig STOP) a component
-    #   And resume (sig CONT) stopped components
-    #    (need to close db connections?)
-    #    (does the answer change with connection pools?)
-    #   And takeover parentship of process started by another process?
     ##
     module Components
       ##
