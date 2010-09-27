@@ -2,14 +2,14 @@ require 'derailed/component/api'
 
 module Derailed
   module Manager
-    # = Deraild::Manager::Daemon
+    # = Deraild::Manager::Component
     # This class handles controlling component processes.  As early as possible
     # in the Manager (to minimize copying unnecessary state), call
-    # Daemon.create_spawner.  This will initialize the thread that spawns
+    # Component.create_spawner.  This will initialize the thread that spawns
     # components.  Then, for each component create an instance.  Then, you can
     # control the component with that instance.
     # === Example:
-    #  static = Manager::Daemon.new('static')
+    #  static = Manager::Component.new('static')
     #  static.status
     #  > Component static not running
     #  static.start
@@ -20,7 +20,7 @@ module Derailed
     #  > Component static stopped
     #  static.status
     #  > Component static not running
-    class Daemon
+    class Component
       attr_reader :name, :proxy, :pid
 
       def initialize(name)
@@ -120,7 +120,7 @@ module Derailed
                   # components (see Manager::Interface.daemonize)
                   at_exit { exit! }
                   require 'derailed'
-                  component = Component::Daemon.new(name)
+                  component = Derailed::Component::Daemon.new(name)
                   component.run
                 end
                 @@started_mutex.synchronize do

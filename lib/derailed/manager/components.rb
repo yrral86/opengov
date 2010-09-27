@@ -76,18 +76,18 @@ module Derailed
       end
 
       private
-      # init_component creates a new Manager::Daemon for the component
-      # and adds it to the @daemons array
-      def init_component(component)
-        daemon = Daemon.new(component)
-        @daemons[daemon.name] = daemon
+      # init_component creates a new Manager::Component for the component
+      # and adds it to the @components hash
+      def init_component(name)
+        component = Component.new(name)
+        @components[component.name] = component
       end
 
       # component_by_lowercase_name returns the component who's downcased name
       # matches the name passed in
       def component_by_lowercase_name(name)
-        @daemons.each_key do |k|
-          return @daemons[k] if k.downcase == name
+        @components.each_key do |k|
+          return @components[k] if k.downcase == name
         end
         nil
       end

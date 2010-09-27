@@ -8,13 +8,13 @@ module Derailed
       # socket.  The component sends the manager its name and the Manager passes
       # the socket URI to the Daemon controller class
       def register_component(name)
-        @daemons[name].proxy = name
+        @components[name].proxy = name
       end
 
       # unregister_component is called by the component on shutdown.  It simply
       # deletes the component from the component hash.
       def unregister_component(name)
-        @daemons[name].proxy = nil
+        @components[name].proxy = nil
       end
     end
   end

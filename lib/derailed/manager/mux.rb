@@ -8,7 +8,7 @@ module Derailed
       # gather gathers data from each component into an array
       def gather
         array = []
-        @daemons.each_value do |c|
+        @components.each_value do |c|
           array.concat(yield(c.proxy).map do |n|
                          "#{c.proxy.name}::#{n}"
                        end) if c.registered?

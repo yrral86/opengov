@@ -2,8 +2,8 @@ require 'derailed/config'
 require 'derailed/service'
 
 [
+ 'component',
  'components',
- 'daemon',
  'information',
  'mux',
  'registration'
@@ -27,8 +27,8 @@ module Derailed
       # initialize creates empty hashes for the components and routes, and a
       # mutex for each hash
       def initialize
-        Daemon.create_spawner(self)
-        @daemons = {}
+        Component.create_spawner(self)
+        @components = {}
         @self
       end
 
