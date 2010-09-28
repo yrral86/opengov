@@ -89,7 +89,16 @@ module Derailed
       end
 
       def debug(msg)
-#        puts msg
+        puts msg
+      end
+
+      def key=(key)
+        Thread.current[:request_key] = key
+      end
+
+      def authorized?
+        manager = Service.get('Manager')
+        manager.check_key(Thread.current[:request_key]) == :private
       end
 
       # call handles the request.  It sets up the environment, and

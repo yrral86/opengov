@@ -30,7 +30,7 @@ module Derailed
     end
 
     def method_call(key, id, *args)
-      @object.debug "#{@object.name}: method_call: id = #{id}"
+#      @object.debug "#{@object.name}: method_call: id = #{id}"
       safely_handle(key, id) do
         if base_method?(id)
           self.__send__ id, *args
@@ -109,18 +109,18 @@ module Derailed
 
     def safely_handle(key, id)
       # TODO: Proxy.get
-      @scope = Service.get('Manager').check_key(key)
+      @object.key = key
       if allowed?(id)
-        @scope = nil
+        @object.key = nil
         return yield
       else
-        @scope = nil
+        @object.key = nil
         ::Object.send(:raise, InvalidAPI)
       end
     end
 
     def allowed_hash
-      @scope == :private ? @manager_methods : @public_methods
+      @object.authorized? ? @manager_methods : @public_methods
     end
 
     def base_method?(id)
