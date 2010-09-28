@@ -30,6 +30,7 @@ module Derailed
     end
 
     def method_call(key, id, *args)
+      @object.debug "#{@object.name}: method_call: id = #{id}"
       safely_handle(key, id) do
         if base_method?(id)
           self.__send__ id, *args
@@ -68,12 +69,14 @@ module Derailed
       end
     end
 
-    def inspect
-      to_s
-    end
-
+    # for puts
     def to_s
       @object.to_s
+    end
+
+    # for puts
+    def to_ary
+      nil
     end
 
     ## rest of public methods are to make drb happy

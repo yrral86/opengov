@@ -24,7 +24,7 @@ module Derailed
       # new list of routes are fetched on the next request... obviously at least
       # one of the routes we had was invalid). We then return a 404.
       def call(env)
-        @routes = @client.get_routes if @routes.empty?
+        get_routes if @routes.empty?
 
         component = env[:controller].next
         if @routes[component] == nil
@@ -37,6 +37,16 @@ module Derailed
             Component::View.not_found "Component #{component} went away"
           end
         end
+      end
+
+      private
+      def get_routes
+        @routes = {}
+        routes = @client.get_routes
+        routes.each_key do |path|
+          @routes[path] = Service.get(routes[path])
+        end
+        @routes
       end
     end
   end

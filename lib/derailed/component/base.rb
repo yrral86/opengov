@@ -88,6 +88,10 @@ module Derailed
         [@name.downcase]
       end
 
+      def debug(msg)
+        puts msg
+      end
+
       # call handles the request.  It sets up the environment, and
       # calls the appropriate method on the controller.  The method it calls
       # defaults to next_path, but if a value is passed in for path_position
