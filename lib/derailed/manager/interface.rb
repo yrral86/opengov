@@ -1,4 +1,5 @@
 require 'derailed/config'
+require 'derailed/servedobject'
 require 'derailed/service'
 
 [
@@ -29,6 +30,11 @@ module Derailed
       def initialize
         Component.create_spawner(self)
         @components = {}
+        @key = rand(2**31)
+        apis = [
+                API::Manager
+               ]
+        @object = ServedObject.new(self, @key, apis)
         @self
       end
 
@@ -37,10 +43,18 @@ module Derailed
         :private
       end
 
+      def key=(key)
+        Thread.current[:request_key] = key
+      end
+
+      def authorized?
+        true
+      end
+
       # daemonize starts the service, reads the components-enaled directory,
       # and starts the components.
       def daemonize
-        Service.start 'Manager', self
+        Service.start 'Manager', @object
 
         old_dir = Dir.pwd
         Dir.chdir Config::ComponentDir

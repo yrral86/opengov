@@ -9,6 +9,7 @@ module Derailed
     [
      'Authenticator',
      'Base',
+     'Manager',
      'Models',
      'Testing',
      'Rack'
@@ -17,6 +18,7 @@ module Derailed
     end
   end
 
+  # requires object to define key= and authorized?
   class ServedObject < BasicObject
     def initialize(object, object_key, extensions=[])
       @object = object
