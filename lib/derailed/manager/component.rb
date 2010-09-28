@@ -1,4 +1,4 @@
-require 'derailed/component/api'
+require 'derailed/servedobject'
 
 module Derailed
   module Manager
@@ -149,7 +149,7 @@ module Derailed
           else
             "component not registered"
           end
-        rescue Component::InvalidAPI
+        rescue InvalidAPI
           "invalid command"
         end
       end

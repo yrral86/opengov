@@ -1,7 +1,6 @@
 require 'authlogic'
 
 [
- 'api',
  'authentication',
  'controller',
  'daemon',
@@ -35,9 +34,11 @@ module Derailed
         @name = name
         @dependencies = dependencies
         apis << API::Base
+        @key = rand(2**31)
 
-        @api = API.new(self, apis)
-        @api.register_api(API::Testing) if Config::Environment == 'test'
+        @object = ServedObject.new(self, @key, apis)
+        @object.register_api(@key,
+                             API::Testing) if Config::Environment == 'test'
 
         models, controller_class = require_libraries
 
@@ -56,7 +57,7 @@ module Derailed
           puts 'Dependencies not met: ' + need.join(",")
         end
 
-        Service.start @name, @api
+        Service.start @name, @object
         @client.manager.register_component(@name)
         @registered = true
         at_exit {

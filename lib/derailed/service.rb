@@ -1,6 +1,7 @@
 require 'drb'
 require 'drb/timeridconv'
 
+require 'derailed/proxy'
 require 'derailed/socket'
 
 module Derailed
@@ -29,7 +30,9 @@ module Derailed
 
     # self.get creates a proxy object for the service specified
     def self.get(name)
-      DRbObject.new nil, Socket.uri(name)
+      drb = DRbObject.new nil, Socket.uri(name)
+      puts drb unless name == 'Manager'
+      name == 'Manager' ? drb : Proxy.new(drb, name)
     end
   end
 end

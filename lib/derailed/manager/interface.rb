@@ -32,6 +32,11 @@ module Derailed
         @self
       end
 
+      def check_key(key)
+        #TODO
+        :private
+      end
+
       # daemonize starts the service, reads the components-enaled directory,
       # and starts the components.
       def daemonize

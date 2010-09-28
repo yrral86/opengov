@@ -10,9 +10,9 @@ module Derailed
     class Authenticator < Base
       def initialize(*args)
         super(*args)
-        @api.register_api(API::Authenticator)
-        @api.register_api(API::Models)
-        @api.register_api(API::Rack)
+        @object.register_api(@key, API::Authenticator)
+        @object.register_api(@key, API::Models)
+        @object.register_api(@key, API::Rack)
       end
 
       # routes (as in any component) provides the routes this component services

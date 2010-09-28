@@ -2,6 +2,7 @@
  'config',
  'client',
  'datatype',
+ 'servedobject',
  'service',
  'type/person.rb',
  'component/base',
