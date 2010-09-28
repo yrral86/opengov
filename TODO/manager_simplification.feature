@@ -1,27 +1,17 @@
 Feature: Simplified Manager, Manager API
   As a developer
   In order to simplify the code for Manager users/consumers
-  And define a Manager API for three consumer types
-   (Components get information about other components via Manager)
-   (RequestRouter gets routes from Manager)
-   (Admin (via ./control.rb) sends Manager commands for components)
-
-  Scenario Outline: define a Manager API for three consumer types
-    When '<consumer>' is accessing the Manager
-    Then the method '<API>' is available
-    And '<others>' can not call '<API>'
-
-    Scenarios: API
-      | API                  | consumer      | others                  |
-      | available_components | Component     | Admin,RequestRouter     |
-      | available_models     | Component     | Admin,RequestRouter     |
-      | available_types      | Component     | Admin,RequestRouter     |
-      | components_with_type | Component     | Admin,RequestRouter     |
-      | register_component   | Component     | Admin,RequestRouter     |
-      | unregister_component | Component     | Admin,RequestRouter     |
-      | available_routes     | RequestRouter | Admin,Component         |
-      | component_command    | Admin         | Component,RequestRouter |
-      | component_pid        | Admin         | Component,RequestRouter |
-      | daemonize            | Admin         | Component,RequestRouter |
-
-
+# we don't Authenticator can be component... Manager needs it's own auth
+# system that queries all available Authenticator componets
+# so Manager gets the Session, Components keep the User
+#  I want control API access via Authentication in the Manager
+  And support external authentication adapter components
+  And centralize authentication in Manager, which groups components
+   (Moundsville Manager, McMechen Manager, etc.)
+  And support verifying the credentials of a request across Managers
+   (with daily reports of who from other managers users is accessing what data)
+  And we want to keep the RackApp seperate from Manager
+   (request -> manager, manager authenticates, generates :request_key)
+   (manager forwards request and :request_key to component)
+   (manager returns public key to RackApp, RackApp calls retrieve(key))
+   (this allows us to have components with no socket to the RackApp)
