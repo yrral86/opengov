@@ -9,9 +9,5 @@ module Derailed
     def method_missing(id, *args)
       @proxy.method_call(@key, id, *args)
     end
-
-    def proxy
-      @proxy
-    end
   end
 end

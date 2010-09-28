@@ -51,6 +51,14 @@ module Derailed
       allowed_hash.keys
     end
 
+    def allowed?(id)
+      allowed_hash[id]
+    end
+
+    def name
+      @object.name
+    end
+
     def register_api(object_key, api, no_gen = false)
       if object_key == @object_key
         @apis << api
@@ -60,10 +68,13 @@ module Derailed
       end
     end
 
-    def allowed?(id)
-      allowed_hash[id]
+    def inspect
+      to_s
     end
 
+    def to_s
+      @object.to_s
+    end
 
     ## rest of public methods are to make drb happy
     def private_methods

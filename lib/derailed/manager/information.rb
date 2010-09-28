@@ -10,6 +10,7 @@ module Derailed
         @components.each_value do |c|
           c.proxy.routes.each do |r|
             if routes[r] == nil
+#              puts c.proxy.to_s
               routes[r] = c.proxy
             else
               raise "Route '#{r}' already handled by component " +
