@@ -145,7 +145,7 @@ module Derailed
       def method_missing(id, *args)
         begin
           if @proxy
-            @proxy.send(id, *args)
+            @proxy.__send__(id, *args)
           else
             "component not registered"
           end

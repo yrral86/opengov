@@ -89,7 +89,7 @@ module Derailed
       end
 
       def debug(msg)
-        puts msg
+#        puts msg
       end
 
       # call handles the request.  It sets up the environment, and
