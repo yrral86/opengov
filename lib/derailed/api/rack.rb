@@ -1,18 +1,12 @@
 module Derailed
   module API
     ##
-    # Feature: Rack API
+    # Feature: RackComponent API
     #   As a component developer
-    #   In order to allow the component to act as a Rack application
-    #   I want to allow access to the call method of the component
-    #   And allow querying the routes
+    #   In order to allow Manager to aggregate routes for the RackApp
+    #   I want to allow querying the routes
     ##
-    module Rack
-      ##
-      # Scenario: allow access to the call method of the component
-      ##
-      def call; end
-
+    module RackComponent
       private
       ##
       # Scenario: allow querying the routes

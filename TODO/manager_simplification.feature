@@ -10,6 +10,7 @@ Feature: Simplified Manager, Manager API
    (Moundsville Manager, McMechen Manager, etc.)
   And support verifying the credentials of a request across Managers
    (with daily reports of who from other managers users is accessing what data)
+  And allow users to file a request for access to data
   And we want to keep the RackApp seperate from Manager
    (request -> manager, manager authenticates, generates :request_key)
    (manager forwards request and :request_key to component)
