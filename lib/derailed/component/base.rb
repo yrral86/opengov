@@ -45,24 +45,25 @@ module Derailed
         @models = {}
         add_models(models)
 
-        @client = Client.new
+        @authenticator = Service.get 'Authenticator'
+        @manager = Service.get 'Manager'
 
         # must be after add_models as controller creates a whitelist
         # of what can be called and that list needs to include the models
         # for CRUD to work
-        @controller = controller_class.new(self, @client) if controller_class
+        @controller = controller_class.new(self, @manager) if controller_class
 
-        need = @client.dependencies_not_satisfied(@dependencies)
-        if need != []
-          puts 'Dependencies not met: ' + need.join(",")
-        end
+#        need = @client.dependencies_not_satisfied(@dependencies)
+#        if need != []
+#          puts 'Dependencies not met: ' + need.join(",")
+#        end
 
         Service.start @name, @object
-        @client.manager.register_component(@name)
+        @manager.register_component(@name)
         @registered = true
         at_exit {
           if @registered
-            @client.manager.unregister_component(@name)
+            @manager.unregister_component(@name)
           end
           Service.stop
           ActiveRecord::Base.remove_connection

@@ -1,3 +1,5 @@
+require 'drb'
+
 module Derailed
   # = Derailed::DataType
   # This class is the base class for data types.  A subclass has a class-level

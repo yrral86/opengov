@@ -38,7 +38,8 @@ class OpenGovAuthenticatorTest < Derailed::TestCase
     do_auth({'user_session' => user})
     follow_redirects
     assert last_response.ok?, "Login as new user failed"
-    @client.get_model("Authenticator::User").find_by_username('testuser').destroy
+    user_model = Derailed::Service.get_model('Authenticator::User')
+    user_model.find_by_username('testuser').destroy
   end
 
   def test_logout

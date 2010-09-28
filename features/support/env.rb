@@ -25,13 +25,12 @@ class OpenGovWorld < Derailed::TestCase
 
   def person_record_from_full_name(name)
     name = name.split
-    model = @client.get_model('PersonLocator::Person')
+    model = Derailed::Service.get_model('PersonLocator::Person')
     model.find_by_fname_and_lname(name[0], name[1])
   end
 
   def send_component_command(component, command)
-    manager = Derailed::Service.get('Manager')
-    @result = manager.component_command(component.downcase,command)
+    @result = @manager.component_command(component.downcase,command)
   end
 
   def debug(message)

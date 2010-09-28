@@ -9,7 +9,7 @@ module Derailed
       # and starts the DRb service that allows the components to access the
       # session and cookie hashes in the Derailed::RackApp::Controller
       def initialize
-        @client = Client.new
+        @manager = Service.get('Manager')
         @routes = {}
         Service.start
         self
@@ -42,7 +42,7 @@ module Derailed
       private
       def get_routes
         @routes = {}
-        routes = @client.get_routes
+        routes = @manager.available_routes
         routes.each_key do |path|
           @routes[path] = Service.get(routes[path])
         end

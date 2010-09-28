@@ -33,5 +33,10 @@ module Derailed
       drb = DRbObject.new nil, Socket.uri(name)
       name == 'Manager' ? drb : Proxy.new(drb)
     end
+
+    def self.get_model(name)
+      server, model = name.split '::'
+      Service.get(server).model(model)
+    end
   end
 end

@@ -33,10 +33,10 @@ if component == :manager
     Derailed::Manager::Interface.new.daemonize
   end
 elsif component
-  require 'derailed/client'
+  require 'derailed/service'
   command = ARGV.first
   begin
-    manager = Derailed::Client.new.manager
+    manager = Derailed::Service.get 'Manager'
     unless command == 'run'
       puts manager.component_command(component, command)
     else

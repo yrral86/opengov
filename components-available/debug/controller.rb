@@ -4,10 +4,10 @@ class DebugController < Derailed::Component::Controller
   end
 
   def info
-    available_models = @client.manager.available_models
-    available_components = @client.manager.available_components
-    available_types = @client.manager.available_types
-    routes = @client.manager.available_routes
+    available_models = @manager.available_models
+    available_components = @manager.available_components
+    available_types = @manager.available_types
+    routes = @manager.available_routes
     available_routes = []
     routes.each_pair do |k,v|
       available_routes << "/#{k} => #{v}"
@@ -18,7 +18,7 @@ class DebugController < Derailed::Component::Controller
   def people
     type = 'Person'
     objects = []
-    @client.manager.components_with_type(type).each do |component|
+    @manager.components_with_type(type).each do |component|
       if model = Derailed::Service.get(component).model_by_type(type)
         objects.concat(model.find(:all))
       else

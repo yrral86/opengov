@@ -1,6 +1,6 @@
 Given /^'(.*)' is (.*)running$/ do |component, negate|
 #  debug "'#{component}' is #{negate}running"
-  client = proc {|a| @client.manager.component_command(component.downcase,a)}
+  client = proc {|a| @manager.component_command(component.downcase,a)}
   client.call('stop') if negate == 'not '
 
   running = client.call('running?')

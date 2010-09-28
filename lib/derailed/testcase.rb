@@ -37,14 +37,14 @@ module Derailed
     # seed_users creates two users, a db user defined by login_credentials
     # and a pam user with login `whoami`
     def seed_users
-      u = @client.get_model('Authenticator::User')
+      u = Service.get('Authenticator').model('User')
       u.create(login_credentials['user_session'])
       u.new({:pam_login => `whoami`.chomp}).save(false)
     end
 
     # clear_db calls clear_models on all available components
     def clear_db
-      @client.manager.available_components.each do |c|
+      @manager.available_components.each do |c|
         Service.get(c).clear_models
       end
     end
@@ -69,7 +69,7 @@ module Derailed
       # make sure the sockets are ready
       TestCase.socket_wait
 
-      @client = Client.new
+      @manager = Service.get 'Manager'
       seed_db
       do_auth if authenticate
     end

@@ -1,6 +1,5 @@
 [
  'config',
- 'client',
  'datatype',
  'servedobject',
  'service',

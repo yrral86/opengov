@@ -27,9 +27,9 @@ module Derailed
 
       # initialize sets the component and component client and generates a
       # whitelist of method names that can be called as URLs
-      def initialize(component, client)
+      def initialize(component, manager)
         @component = component
-        @client = client
+        @manager = manager
         @safe_names = whitelist
       end
 

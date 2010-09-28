@@ -1,3 +1,5 @@
+require 'derailed/config'
+
 module Derailed
   # = Derailed::Socket
   # This class provides socket uri's based on the selected environment

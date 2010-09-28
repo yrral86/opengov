@@ -19,7 +19,7 @@ Then /^the HTML should contain '(.*)'$/ do |selector|
 end
 
 Then /^there should be one more row than '(.*)' records$/ do |model|
-  records = @client.get_model(model).find(:all).length
+  records = Derailed::Service.get_model(model).find(:all).length
   nodes = Nokogiri::HTML(last_response.body).css('tr').length
   assert_equal nodes, records + 1,
   "There are #{nodes} nodes and #{records} records"
