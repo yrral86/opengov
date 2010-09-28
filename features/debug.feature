@@ -13,3 +13,9 @@ Feature: Debug
     Then I should see 'TestFirstName'
     And I should see 'TestLastName'
     And the HTML should contain 'table tr td a[href*="/personlocator/person"]'
+
+  Scenario: Display info
+    When I go to '/debug/info'
+    And I should see 'Authenticator'
+    And I should see 'Static'
+    And I should see 'PersonLocator'

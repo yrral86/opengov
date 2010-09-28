@@ -10,7 +10,7 @@ class DebugController < Derailed::Component::Controller
     routes = @client.manager.available_routes
     available_routes = []
     routes.each_pair do |k,v|
-      available_routes << "/#{k} => #{v.name}"
+      available_routes << "/#{k} => #{v}"
     end
     render 'info', binding
   end
