@@ -9,7 +9,7 @@ module Derailed
     ##
     module Rack
       ##
-      # Scenario: allow access to the call method of a component
+      # Scenario: allow access to the call method of the component
       ##
       def call; end
 
