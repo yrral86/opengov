@@ -17,7 +17,7 @@ module Derailed
     end
   end
 
-  class ServedObject# < BasicObject
+  class ServedObject < BasicObject
     def initialize(object, object_key, extensions=[])
       @object = object
       @object_key = object_key
@@ -31,7 +31,11 @@ module Derailed
 
     def method_call(key, id, *args)
       safely_handle(key, id) do
-        @object.send id, *args
+        if base_method?(id)
+          self.__send__ id, *args
+        else
+          @object.send id, *args
+        end
       end
     end
 
@@ -47,20 +51,12 @@ module Derailed
       allowed_hash.keys
     end
 
-#    def private_methods
-#      []
-#    end
-
-#    def protected_methods
-#      []
-#    end
-
     def register_api(object_key, api, no_gen = false)
       if object_key == @object_key
         @apis << api
         @rules = generate_lists unless no_gen
       else
-        raise InvalidAPI
+        ::Object.send(:raise, InvalidAPI)
       end
     end
 
@@ -68,9 +64,19 @@ module Derailed
       allowed_hash[id]
     end
 
- #   def to_s
- #     @object.name
- #   end
+
+    ## rest of public methods are to make drb happy
+    def private_methods
+      []
+    end
+
+    def protected_methods
+      []
+    end
+
+    def __id__
+      @object.__id__
+    end
 
     private
     def generate_lists
@@ -90,13 +96,28 @@ module Derailed
     def safely_handle(key, id)
       # TODO: Proxy.get
       @scope = Service.get('Manager').check_key(key)
-      result = yield if allowed?(id)
-      @scope = nil
-      result
+      if allowed?(id)
+        @scope = nil
+        return yield
+      else
+        @scope = nil
+        ::Object.send(:raise, InvalidAPI)
+      end
     end
 
     def allowed_hash
       @scope == :private ? @manager_methods : @public_methods
+    end
+
+    def base_method?(id)
+      methods = {}
+      API::Base.public_instance_methods.each do |m|
+        methods[m] = true
+      end
+      API::Base.private_instance_methods.each do |m|
+        methods[m] = true if allowed_hash[m]
+      end
+      methods[id]
     end
   end
 end

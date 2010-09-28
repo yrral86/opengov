@@ -31,8 +31,7 @@ module Derailed
     # self.get creates a proxy object for the service specified
     def self.get(name)
       drb = DRbObject.new nil, Socket.uri(name)
-      puts drb unless name == 'Manager'
-      name == 'Manager' ? drb : Proxy.new(drb, name)
+      name == 'Manager' ? drb : Proxy.new(drb)
     end
   end
 end

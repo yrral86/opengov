@@ -1,9 +1,9 @@
 module Derailed
   class Proxy < BasicObject
-    def intialize(object, name, key = nil)
+    def initialize(object, key = nil)
       @proxy = object
-      @name = name
       @key = key
+      self
     end
 
     def method_missing(id, *args)
