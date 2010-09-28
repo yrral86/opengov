@@ -33,10 +33,16 @@ module Derailed
 #      @object.debug "#{@object.name}: method_call: id = #{id}"
       safely_handle(key, id) do
         if base_method?(id)
-          self.__send__ id, *args
+          result = self.__send__ id, *args
         else
-          @object.send id, *args
+          result = @object.send id, *args
         end
+        # TODO: if result is DRb::DRbUndumped (or some other marker I switch to)
+        # then make it a new ServedObject before returning
+        # (what about DRbUndumped's that are not the object, but part of it
+        #  such as a hash, where each value is Undumped or an array of
+        #  Undumped objects)
+        result
       end
     end
 
@@ -58,6 +64,10 @@ module Derailed
 
     def name
       @object.name
+    end
+
+    def inspect
+      to_s
     end
 
     def register_api(object_key, api, no_gen = false)
