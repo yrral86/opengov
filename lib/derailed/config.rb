@@ -6,6 +6,7 @@ module Derailed
   module Config
     RootDir = File.expand_path(File.dirname(__FILE__) + '/../..')
     ComponentDir = RootDir + '/components-enabled'
+    LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
     DRbTimeout = 10
 

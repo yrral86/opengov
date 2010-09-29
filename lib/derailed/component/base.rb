@@ -34,7 +34,9 @@ module Derailed
         @name = name
         @dependencies = dependencies
         apis << API::Base
-        @key = rand(2**31)
+        @keys = Keys.new
+        @key = @keys.gen
+        @responses = {}
 
         @object = ServedObject.new(self, @key, apis)
         @object.register_api(@key,
@@ -87,6 +89,42 @@ module Derailed
       # component
       def routes
         [@name.downcase]
+      end
+
+      def request_response(env)
+        key = @keys.gen
+        Thread.new do
+          response = call(env)
+          queue_response(key, response)
+        end
+      # clean up response after 10 seconds
+        Thread.new do
+          sleep 10
+          reap_response(key)
+        end
+        key
+      end
+
+      def queue_response(key, response)
+        @responses[key] = response
+      end
+      private :queue_response
+
+      def reap_response(key)
+        @responses.delete(key)
+      end
+      private :reap_response
+
+      def fetch_response(key)
+        t = Thread.new do
+          if @keys.exists?(key)
+            @responses[key]
+          else
+            View.not_found "RackApp requested an invalid key"
+          end
+        end
+        # store t somewhere so we can wake it in queue response
+        t.value
       end
 
       def debug(msg)

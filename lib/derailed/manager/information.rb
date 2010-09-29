@@ -3,23 +3,6 @@ module Derailed
     # = Derailed::Manager::Information
     # This module provides functions to request information from the Manager
     module Information
-      # available_routes returns the routes hash built by scanning
-      # collecting the routes from each component.
-      def available_routes
-        routes = {}
-        @components.each_value do |c|
-          c.proxy.routes.each do |r|
-            if routes[r] == nil
-              routes[r] = c.name
-            else
-              raise "Route '#{r}' already handled by component " +
-                routes[r].name
-            end
-          end if c.registered?
-        end
-        routes
-      end
-
       # available_models returns a list of all models provided by registered
       # components.  Model names are ComponentName::ModelName
       # (CamelCase::CamelCase)
@@ -57,6 +40,26 @@ module Derailed
           components << k if @components[k].registered?
         end
         components
+      end
+
+      private
+      # available_routes returns the routes hash built by scanning
+      # collecting the routes from each component.
+      def available_routes
+        routes = {}
+        @components.each_value do |c|
+          c.proxy.routes.each do |r|
+            if routes[r] == nil
+              routes[r] = proc do |env|
+                c.proxy.request_response(env)
+              end
+            else
+              raise "Route '#{r}' already handled by component " +
+                routes[r].name
+            end
+          end if c.registered?
+        end
+        routes
       end
     end
   end

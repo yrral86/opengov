@@ -10,7 +10,7 @@ module Derailed
       # classes are the models and the controller class.
       def require_libraries
         original = class_list
-        require_dir Config::ComponentDir + "/#{@name.downcase}"
+        Util.load_dir Config::ComponentDir + "/#{@name.downcase}"
         new = class_list
 
         new_modules = new - original
@@ -42,16 +42,6 @@ module Derailed
         array = []
         ObjectSpace.each_object(Class) {|m| array << m }
         array
-      end
-
-      # require_dir requires all ruby files in the specified directory
-      def require_dir(dir)
-        old_dir = Dir.pwd
-        Dir.chdir dir
-        Dir.glob '**/*.rb' do |f|
-          require "#{dir}/#{f}" unless f == 'init.rb'
-        end
-        Dir.chdir old_dir
       end
     end
   end

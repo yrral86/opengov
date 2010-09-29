@@ -1,3 +1,3 @@
 name: PersonLocator
 requirements: [Static]
-apis: [Models, Rack]
+apis: [Models, RackRequestHandler, RackRequestResponder]

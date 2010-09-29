@@ -31,7 +31,8 @@ module Derailed
           Component::View.not_found 'Not Found'
         else
           begin
-            @routes[component].call(env)
+            uri, key = @manager.request_response(nil, env)
+            Proxy.new(uri).fetch_response(key)
           rescue DRb::DRbConnError
             @routes = {}
             Component::View.not_found "Component #{component} went away"

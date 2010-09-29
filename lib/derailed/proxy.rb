@@ -1,8 +1,12 @@
+require 'drb'
+
 module Derailed
   class Proxy < BasicObject
-    def initialize(object, key = nil)
-      @proxy = object
+    def initialize(uri, key = nil)
+      @proxy = ::DRbObject.new_with_uri uri
       @key = key
+      # TODO we can also check parameters locally if we need to reduce socket
+      # traffic for InvalidAPI calls, although there shouldn't be many
       self
     end
 

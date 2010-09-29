@@ -6,16 +6,7 @@ module Derailed
   end
 
   module API
-    [
-     'Authenticator',
-     'Base',
-     'Manager',
-     'Models',
-     'Testing',
-     'Rack'
-    ].each do |library|
-      autoload library.to_sym, "derailed/api/#{library.downcase}"
-    end
+    Util.load_dir('derailed/api')
   end
 
   # requires object to define key= and authorized?

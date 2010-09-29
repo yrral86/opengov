@@ -9,10 +9,10 @@ module Derailed
     #   And pass the key and request to the component
     ##
     module RackRequestHandler
-      # intiate_request(RackRequest) -> RequestKey
-      # RequestKey is passed by RackApp to request_response, which returns
-      # the response in standard Rack array format
-      def initiate_request; end
+      private
+      # request_response(env) -> key
+      # key is then passed to fetch_response
+      def request_response; end
     end
   end
 end

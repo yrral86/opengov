@@ -3,6 +3,7 @@ require 'drb/timeridconv'
 
 require 'derailed/proxy'
 require 'derailed/socket'
+require 'derailed/util'
 
 module Derailed
   # This module provides methods to start and stop a DRb server, as well
@@ -30,7 +31,7 @@ module Derailed
 
     # self.get creates a proxy object for the service specified
     def self.get(name)
-      Proxy.new(DRbObject.new_with_uri Socket.uri name)
+      Proxy.new(Socket.uri name)
     end
 
     def self.get_model(name)

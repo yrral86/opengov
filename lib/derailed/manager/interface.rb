@@ -1,4 +1,6 @@
 require 'derailed/config'
+require 'derailed/keys'
+require 'derailed/util'
 require 'derailed/servedobject'
 require 'derailed/service'
 
@@ -30,7 +32,8 @@ module Derailed
       def initialize
         Component.create_spawner(self)
         @components = {}
-        @key = rand(2**31)
+        @keys = Keys.new
+        @key = @keys.gen
         apis = [
                 API::Manager
                ]
@@ -47,9 +50,31 @@ module Derailed
         Thread.current[:request_key] = key
       end
 
+      # TODO: Doh
       def authorized?
         true
       end
+
+      def request_response(env)
+        authenticate do
+          @routes ||= available_routes
+          component = env[:controller].next
+          if @routes[component] == nil
+            nil, "Component #{component} not found"
+          else
+            key = @routes[component].call(env)
+            Socket.uri(component.name), key
+          end
+        end
+      end
+
+      # TODO: doh
+      def authenticate
+        yield if true
+        # return :not_authenticated if authentication fails
+        :not_authenticated
+      end
+      private :authenticate
 
       # daemonize starts the service, reads the components-enaled directory,
       # and starts the components.

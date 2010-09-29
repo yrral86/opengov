@@ -1,2 +1,2 @@
 name: Static
-apis: [Rack]
+apis: [RackRequestHandler, RackRequestResponder]
