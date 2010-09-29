@@ -7,7 +7,7 @@ module Derailed
     #   I have to encapsulate env in an API
     ##
     module RackRequest
-      # env -> standard Rack env variable
+      # env -> standard Rack env hash
       # RackApp wraps env in this type to pass to Manager
       def env; end
     end
