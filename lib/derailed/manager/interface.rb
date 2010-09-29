@@ -73,7 +73,6 @@ module Derailed
         end
       end
 
-      # TODO: doh
       def authenticate(env)
         if @authenticator.current_session(env) or
             env[:controller].request.path == '/login'

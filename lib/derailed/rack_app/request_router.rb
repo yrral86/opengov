@@ -32,7 +32,7 @@ module Derailed
  #       else
  #         begin
             uri, key = @manager.request_response(env)
-        puts "uri = #{uri}, key = #{key}"
+#        puts "uri = #{uri}, key = #{key}"
         Proxy.new(uri).fetch_response(key)
  #         rescue DRb::DRbConnError
  #           @routes = {}
