@@ -39,8 +39,8 @@ module Derailed
         @responses = {}
 
         @object = ServedObject.new(self, @key, apis)
-        @object.register_api(@key,
-                             API::Testing) if Config::Environment == 'test'
+
+        Util.environment_apis(@object, @key)
 
         models, controller_class = require_libraries
 
@@ -60,7 +60,7 @@ module Derailed
 #          puts 'Dependencies not met: ' + need.join(",")
 #        end
 
-        Service.start @name, @object
+        @uri = Service.start @name, @object
         @manager.register_component(@name)
         @registered = true
         at_exit {
@@ -93,37 +93,57 @@ module Derailed
 
       def request_response(env)
         key = @keys.gen
-        Thread.new do
+        t = Thread.new do
           response = call(env)
           queue_response(key, response)
         end
-      # clean up response after 10 seconds
-        Thread.new do
-          sleep 10
-          reap_response(key)
+        begin
+          return [@uri, key]
+        ensure
+          free_response(key, t)
         end
-        key
       end
 
       def queue_response(key, response)
+        # save response to @responses
         @responses[key] = response
+        # and wake up fetch_response thread
+        @keys[key].wakeup
       end
       private :queue_response
 
-      def reap_response(key)
-        @responses.delete(key)
+      def free_response(key, t)
+      # clean up response after 10 seconds
+        Thread.new do
+          sleep Config::DRbTimeout
+          # delete the response
+          @responses.delete(key)
+          # free the key and kill the response fetching thread
+          @keys.free(key)
+          # kill the response handling thread
+          t.kill
+        end
+        key
       end
-      private :reap_response
+      private :free_response
 
       def fetch_response(key)
+        debug "fetch_response(#{key})"
         t = Thread.new do
           if @keys.exists?(key)
-            @responses[key]
+            Thread.stop
+            response = @responses[key]
+            if response
+              @responses[key] = nil
+              response
+            else
+              View.internal_error "Key was valid, but no response found"
+            end
           else
             View.not_found "RackApp requested an invalid key"
           end
         end
-        # store t somewhere so we can wake it in queue response
+        @keys[key] = t
         t.value
       end
 
@@ -137,7 +157,9 @@ module Derailed
 
       def authorized?
         manager = Service.get('Manager')
-        manager.check_key(Thread.current[:request_key]) == :private
+        key = manager.check_key(Thread.current[:request_key])
+        puts "in authorized? key = #{key.inspect}"
+        key == :private
       end
 
       # call handles the request.  It sets up the environment, and

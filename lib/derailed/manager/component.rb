@@ -1,4 +1,4 @@
-require 'derailed/servedobject'
+require 'derailed/served_object'
 
 module Derailed
   module Manager

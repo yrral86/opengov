@@ -68,6 +68,10 @@ module Derailed
       end
       module_function :method_not_allowed
 
+      def internal_error(msg)
+        render_response msg, 500
+      end
+
       # Renders an erb template given as a string using the given binding
       def render_erb(string,b)
         render_response execute_template(string,b)

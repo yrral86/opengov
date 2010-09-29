@@ -7,6 +7,8 @@ module Derailed
     #   I want to allow querying the routes
     ##
     module RackComponent
+      include RackRequestHandler
+      include RackRequestResponder
       private
       ##
       # Scenario: allow querying the routes

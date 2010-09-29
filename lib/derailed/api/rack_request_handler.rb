@@ -9,8 +9,7 @@ module Derailed
     #   And pass the key and request to the component
     ##
     module RackRequestHandler
-      private
-      # request_response(env) -> key
+      # request_response(env) -> uri, key
       # key is then passed to fetch_response
       def request_response; end
     end

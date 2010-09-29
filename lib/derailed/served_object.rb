@@ -6,7 +6,7 @@ module Derailed
   end
 
   module API
-    Util.load_dir('derailed/api')
+    Util.autoload_dir(self, 'derailed/api')
   end
 
   # requires object to define key= and authorized?
@@ -23,7 +23,7 @@ module Derailed
     end
 
     def method_call(key, id, *args)
-#      @object.debug "#{@object.name}: method_call: id = #{id}"
+      @object.debug "#{@object.name}: method_call: id = #{id}"
       safely_handle(key, id) do
         if base_method?(id)
           result = self.__send__ id, *args
@@ -82,6 +82,10 @@ module Derailed
       nil
     end
 
+    def debug(msg)
+      @object.debug msg
+    end if Config::Environment == 'development'
+
     ## rest of public methods are to make drb happy
     def private_methods
       []
@@ -118,6 +122,7 @@ module Derailed
         return yield
       else
         @object.key = nil
+        @object.debug "InvalidAPI: #{@object.name}: method_call: id = #{id}"
         ::Object.send(:raise, InvalidAPI)
       end
     end
@@ -128,11 +133,15 @@ module Derailed
 
     def base_method?(id)
       methods = {}
-      API::Base.public_instance_methods.each do |m|
-        methods[m] = true
-      end
-      API::Base.private_instance_methods.each do |m|
-        methods[m] = true if allowed_hash[m]
+      modules = [API::Base]
+      modules << API::Development if Config::Environment == 'development'
+      modules.each do |mod|
+        mod.public_instance_methods.each do |method|
+          methods[method] = true
+        end
+        mod.private_instance_methods.each do |method|
+          methods[method] = true if allowed_hash[method]
+        end
       end
       methods[id]
     end

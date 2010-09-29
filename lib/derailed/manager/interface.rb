@@ -1,8 +1,9 @@
 require 'derailed/config'
 require 'derailed/keys'
 require 'derailed/util'
-require 'derailed/servedobject'
+require 'derailed/served_object'
 require 'derailed/service'
+require 'derailed/component/view'
 
 [
  'component',
@@ -35,9 +36,12 @@ module Derailed
         @keys = Keys.new
         @key = @keys.gen
         apis = [
-                API::Manager
+                API::Manager,
+                API::RackRequestHandler
                ]
         @object = ServedObject.new(self, @key, apis)
+        Util.environment_apis(@object, @key)
+        @authenticator = Service.get 'Authenticator'
         @self
       end
 
@@ -55,26 +59,41 @@ module Derailed
         true
       end
 
+      # env -> uri, key
       def request_response(env)
-        authenticate do
-          @routes ||= available_routes
+        @routes ||= available_routes
+        authenticate(env) do
           component = env[:controller].next
           if @routes[component] == nil
-            nil, "Component #{component} not found"
+            # special case, uri = 404
+            [404, "Component #{component} not found"]
           else
-            key = @routes[component].call(env)
-            Socket.uri(component.name), key
+            @routes[component].call(env)
           end
         end
       end
 
       # TODO: doh
-      def authenticate
-        yield if true
-        # return :not_authenticated if authentication fails
-        :not_authenticated
+      def authenticate(env)
+        if @authenticator.current_session(env) or
+            env[:controller].request.path == '/login'
+          yield
+        else
+          path = env[:controller].request.path
+          env[:controller].session[:onlogin] =
+            path unless path == '/favicon.ico'
+          @routes['login'].call(env)
+        end
       end
       private :authenticate
+
+      def name
+        'Manager'
+      end
+
+      def debug(msg)
+        puts msg
+      end
 
       # daemonize starts the service, reads the components-enaled directory,
       # and starts the components.

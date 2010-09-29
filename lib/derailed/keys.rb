@@ -3,6 +3,7 @@ module Derailed
     def initialize
       @mutex = Mutex.new
       @hash = {:exists => true}
+      @threads = []
     end
 
     # TODO this will need a better algorithm to scale
@@ -17,6 +18,14 @@ module Derailed
       key
     end
 
+    def []=(key, value)
+      @threads[key] = value
+    end
+
+    def [](key)
+      @threads[key]
+    end
+
     def exists?(key)
       @hash[key]
     end
@@ -25,6 +34,11 @@ module Derailed
       Thread.new do
         @mutex.synchronize do
           @hash.delete(key)
+        end
+        thread = @threads[key]
+        if thread
+          @threads.delete(key)
+          thread.kill
         end
       end
     end

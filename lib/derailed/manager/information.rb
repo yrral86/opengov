@@ -51,7 +51,7 @@ module Derailed
           c.proxy.routes.each do |r|
             if routes[r] == nil
               routes[r] = proc do |env|
-                c.proxy.request_response(env)
+                uri, key = c.proxy.request_response(env)
               end
             else
               raise "Route '#{r}' already handled by component " +

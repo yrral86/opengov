@@ -1,6 +1,6 @@
 dir = File.expand_path(File.dirname(__FILE__))
 $:.unshift "#{dir}/lib"
-require 'derailed/rackapp'
+require 'derailed/rack_app'
 
 use Rack::Session::Cookie
 use Derailed::RackApp::Middleware

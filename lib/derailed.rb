@@ -1,8 +1,9 @@
 [
  'util',
  'config',
- 'datatype',
- 'servedobject',
+ 'data_type',
+ 'keys',
+ 'served_object',
  'service',
  'type/person.rb',
  'component/base',

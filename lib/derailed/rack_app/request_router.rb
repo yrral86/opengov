@@ -24,20 +24,21 @@ module Derailed
       # new list of routes are fetched on the next request... obviously at least
       # one of the routes we had was invalid). We then return a 404.
       def call(env)
-        get_routes if @routes.empty?
+#        get_routes if @routes.empty?
 
-        component = env[:controller].next
-        if @routes[component] == nil
-          Component::View.not_found 'Not Found'
-        else
-          begin
-            uri, key = @manager.request_response(nil, env)
-            Proxy.new(uri).fetch_response(key)
-          rescue DRb::DRbConnError
-            @routes = {}
-            Component::View.not_found "Component #{component} went away"
-          end
-        end
+ #       component = env[:controller].next
+ #       if @routes[component] == nil
+ #         Component::View.not_found 'Not Found'
+ #       else
+ #         begin
+            uri, key = @manager.request_response(env)
+        puts "uri = #{uri}, key = #{key}"
+        Proxy.new(uri).fetch_response(key)
+ #         rescue DRb::DRbConnError
+ #           @routes = {}
+ #           Component::View.not_found "Component #{component} went away"
+ #         end
+ #       end
       end
 
       private

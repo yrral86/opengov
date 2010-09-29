@@ -1,6 +1,6 @@
 require 'rack'
 
-require "derailed/rackapp/controller"
+require "derailed/rack_app/controller"
 
 module Derailed
   module RackApp
@@ -19,9 +19,10 @@ module Derailed
       # response
       def call(env)
         load_controller(env)
-        status, headers, body = authenticate(env) do |env|
-          @app.call(env)
-        end
+#        status, headers, body = authenticate(env) do |env|
+#          @app.call(env)
+#        end
+        status, headers, body = @app.call(env)
         commit_controller(env, status, headers, body)
       end
 

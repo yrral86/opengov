@@ -1,2 +1,2 @@
 name: Ajax
-apis: [RackRequestHandler, RackRequestResponder]
+apis: [RackComponent]

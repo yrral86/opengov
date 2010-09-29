@@ -1,4 +1,4 @@
-require "derailed/rackapp/cookiefix"
+require "derailed/rack_app/cookie_fix"
 
 module Derailed
   module RackApp
