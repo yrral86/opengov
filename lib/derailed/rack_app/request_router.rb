@@ -44,7 +44,7 @@ module Derailed
         @routes = {}
         routes = @manager.available_routes
         routes.each_key do |path|
-          @routes[path] = Proxy.new(routes[path])
+          @routes[path] = Proxy.fetch(routes[path])
         end
         @routes
       end

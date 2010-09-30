@@ -32,7 +32,7 @@ module Derailed
 
     # self.get creates a proxy object for the service specified
     def self.get(name)
-      Proxy.new(Socket.uri name)
+      Proxy.fetch(Socket.uri name)
     end
 
     def self.get_model(name)

@@ -5,9 +5,17 @@ module Derailed
     def initialize(uri, key = nil)
       @proxy = ::DRbObject.new_with_uri uri
       @key = key
-      # TODO we can also check parameters locally if we need to reduce socket
-      # traffic for InvalidAPI calls, although there shouldn't be many
-      self
+      # TODO support caching certain methods (apis, allowed_methods, etc)
+      @@proxies[uri] = self
+    end
+
+    def self.fetch(uri, key = nil)
+      @@proxies ||= {}
+      if @@proxies[uri]
+        return @@proxies[uri]
+      else
+        return self.new(uri,key)
+      end
     end
 
     def method_missing(id, *args)
