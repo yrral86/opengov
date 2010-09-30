@@ -19,10 +19,9 @@ module Derailed
       # response
       def call(env)
         load_controller(env)
-#        status, headers, body = authenticate(env) do |env|
-#          @app.call(env)
-#        end
-        status, headers, body = @app.call(env)
+        status, headers, body = authenticate(env) do |env|
+          @app.call(env)
+        end
         commit_controller(env, status, headers, body)
       end
 

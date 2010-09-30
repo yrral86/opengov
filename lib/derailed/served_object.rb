@@ -9,21 +9,27 @@ module Derailed
     Util.autoload_dir(self, 'derailed/api')
   end
 
-  # requires object to define key= and authorized?
+  ##
+  # Feature: ServedObject
+  #   As a component developer
+  #   In order to securely provide functionality over DRb
+  #   I want to lockdown the api
+  ##
+  # requires object to define allowed(key,id), authorized_methods, and debug
   class ServedObject < BasicObject
-    def initialize(object, object_key, extensions=[])
+    def initialize(object, server_key, extensions=[])
       @object = object
-      @object_key = object_key
+      @server_key = server_key
       @apis = []
       extensions.each do |e|
-        register_api(object_key,e,true)
+        register_api(server_key,e,true)
       end
       generate_lists
       self
     end
 
     def method_call(key, id, *args)
-      @object.debug "#{@object.name}: method_call: id = #{id}"
+#      @object.debug "#{@object.name}: method_call: id = #{id}"
       safely_handle(key, id) do
         if base_method?(id)
           result = self.__send__ id, *args
@@ -51,8 +57,12 @@ module Derailed
       allowed_hash.keys
     end
 
-    def allowed?(id)
-      allowed_hash[id]
+    def respond_to?(id)
+      allowed_hash[id] && @object.allowed?(::Thread.current[:key], id)
+    end
+
+    def uri
+      ::DRb.uri
     end
 
     def name
@@ -64,7 +74,7 @@ module Derailed
     end
 
     def register_api(object_key, api, no_gen = false)
-      if object_key == @object_key
+      if object_key == @server_key
         @apis << api
         @rules = generate_lists unless no_gen
       else
@@ -84,7 +94,7 @@ module Derailed
 
     def debug(msg)
       @object.debug msg
-    end if Config::Environment == 'development'
+    end if Config::Environment == 'development' || Config::Environment == 'test'
 
     ## rest of public methods are to make drb happy
     def private_methods
@@ -115,20 +125,18 @@ module Derailed
     end
 
     def safely_handle(key, id)
-      # TODO: Proxy.get
-      @object.key = key
-      if allowed?(id)
-        @object.key = nil
+      ::Thread.current[:key] = key
+      if respond_to?(id)
         return yield
       else
-        @object.key = nil
         @object.debug "InvalidAPI: #{@object.name}: method_call: id = #{id}"
         ::Object.send(:raise, InvalidAPI)
       end
     end
 
     def allowed_hash
-      @object.authorized? ? @manager_methods : @public_methods
+      @object.authorized_methods(::Thread.current[:key],
+                                 @public_methods, @manager_methods)
     end
 
     def base_method?(id)
@@ -147,4 +155,3 @@ module Derailed
     end
   end
 end
-

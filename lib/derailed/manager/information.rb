@@ -8,7 +8,7 @@ module Derailed
       # (CamelCase::CamelCase)
       def available_models
         gather do |c|
-          c.allowed?(:model_names) ? c.model_names : []
+          c.respond_to?(:model_names) ? c.model_names : []
         end
       end
 
@@ -18,7 +18,7 @@ module Derailed
       # (CamelCase::CamelCase)
       def available_types
         gather do |c|
-          c.allowed?(:model_types) ? c.model_types : []
+          c.respond_to?(:model_types) ? c.model_types : []
         end
       end
 
@@ -27,7 +27,7 @@ module Derailed
       def components_with_type(type)
         array = []
         @components.each_value do |c|
-          array << c.proxy.name if c.proxy.allowed?(:has_type?) &&
+          array << c.proxy.name if c.proxy.respond_to?(:has_type?) &&
             c.proxy.has_type?(type)
         end
         array
@@ -42,7 +42,6 @@ module Derailed
         components
       end
 
-      private
       # available_routes returns the routes hash built by scanning
       # collecting the routes from each component.
       def available_routes
@@ -50,9 +49,7 @@ module Derailed
         @components.each_value do |c|
           c.proxy.routes.each do |r|
             if routes[r] == nil
-              routes[r] = proc do |env|
-                uri, key = c.proxy.request_response(env)
-              end
+              routes[r] = c.proxy.uri
             else
               raise "Route '#{r}' already handled by component " +
                 routes[r].name

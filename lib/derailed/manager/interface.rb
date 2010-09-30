@@ -3,7 +3,6 @@ require 'derailed/keys'
 require 'derailed/util'
 require 'derailed/served_object'
 require 'derailed/service'
-require 'derailed/component/view'
 
 [
  'component',
@@ -33,12 +32,12 @@ module Derailed
       def initialize
         Component.create_spawner(self)
         @components = {}
+        @responses = {}
         @keys = Keys.new
         @key = @keys.gen
         apis = [
-                API::Manager,
-                API::RackRequestHandler
-               ]
+               API::Manager
+              ]
         @object = ServedObject.new(self, @key, apis)
         Util.environment_apis(@object, @key)
         @authenticator = Service.get 'Authenticator'
@@ -59,39 +58,21 @@ module Derailed
         true
       end
 
-      # env -> uri, key
-      def request_response(env)
-        @routes ||= available_routes
-        authenticate(env) do
-          component = env[:controller].next
-          if @routes[component] == nil
-            # special case, uri = 404
-            [404, "Component #{component} not found"]
-          else
-            @routes[component].call(env)
-          end
-        end
-      end
-
-      def authenticate(env)
-        if @authenticator.current_session(env) or
-            env[:controller].request.path == '/login'
-          yield
-        else
-          path = env[:controller].request.path
-          env[:controller].session[:onlogin] =
-            path unless path == '/favicon.ico'
-          @routes['login'].call(env)
-        end
-      end
-      private :authenticate
-
       def name
         'Manager'
       end
 
       def debug(msg)
         puts msg
+      end
+
+      def allowed?(key, id)
+        # TODO: check if key for served_object request is allowed
+        true
+      end
+
+      def authorized_methods(key, public_methods, manager_methods)
+        manager_methods
       end
 
       # daemonize starts the service, reads the components-enaled directory,

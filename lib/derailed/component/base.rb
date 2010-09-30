@@ -91,75 +91,19 @@ module Derailed
         [@name.downcase]
       end
 
-      def request_response(env)
-        key = @keys.gen
-        t = Thread.new do
-          response = call(env)
-          queue_response(key, response)
-        end
-        begin
-          return [@uri, key]
-        ensure
-          free_response(key, t)
-        end
-      end
-
-      def queue_response(key, response)
-        # save response to @responses
-        @responses[key] = response
-        # and wake up fetch_response thread
-        @keys[key].wakeup
-      end
-      private :queue_response
-
-      def free_response(key, t)
-      # clean up response after 10 seconds
-        Thread.new do
-          sleep Config::DRbTimeout
-          # delete the response
-          @responses.delete(key)
-          # free the key and kill the response fetching thread
-          @keys.free(key)
-          # kill the response handling thread
-          t.kill
-        end
-        key
-      end
-      private :free_response
-
-      def fetch_response(key)
-        debug "fetch_response(#{key})"
-        t = Thread.new do
-          if @keys.exists?(key)
-            Thread.stop
-            response = @responses[key]
-            if response
-              @responses[key] = nil
-              response
-            else
-              View.internal_error "Key was valid, but no response found"
-            end
-          else
-            View.not_found "RackApp requested an invalid key"
-          end
-        end
-        @keys[key] = t
-        t.value
-      end
-
       def debug(msg)
         puts msg
       end
 
-      def key=(key)
-        Thread.current[:request_key] = key
+      # TODO here and interface
+      def allowed?(key, id)
+        key = @manager.check_key(key)
+        key == :private
       end
 
-      def authorized?
-        manager = Service.get('Manager')
-        key = manager.check_key(Thread.current[:request_key])
-        puts "in authorized? key = #{key.inspect}"
-        key == :private
+      # TODO
+      def authorized_methods(key, public_methods, manager_methods)
+        manager_methods
       end
 
       # call handles the request.  It sets up the environment, and

@@ -1,7 +1,9 @@
 module Derailed
   module API
     module Authenticator
-      def current_session; end
+      include API::Models
+      include API::RackComponent
+      include API::Session
     end
   end
 end

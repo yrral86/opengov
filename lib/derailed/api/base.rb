@@ -8,6 +8,7 @@ module Derailed
     #   And ask if the object allows a particular method
     #   And ask the allowed apis of the object
     #   And ask the name of the object
+    #   And ask the uri of the server
     #
     #   Background:
     #     Given I am testing API::Base
@@ -17,20 +18,20 @@ module Derailed
       # Scenario Outline: ask if the object allows a particular method
       #   Given the object implements <API>
       #   And <requester> is trying to acces it
-      #   When I call object.allowed?(<allowed_method>)
+      #   When I call object.respond_to?(<allowed_method>)
       #   Then the object should not throw InvalidAPI
-      #   When I call object.allowed?(<restricted_method>)
+      #   When I call object.respond_to?(<restricted_method>)
       #   Then the object should throw InvalidAPI
       #
       #   Scenarios:
       #     | API     | requester     | allowed_method     | restricted_method |
-      #     | Base    | RackApp       | allowed?(:allowed?)| denied?           |
-      #     | Base    | Manager       | allowed?(:denied?) | eval('evil hax')  |
+      #     | Base    | RackApp       | respond_to?(:apis) | denied?           |
+      #     | Base    | Manager       | respond_to?(:no_m) | eval('evil hax')  |
       #     | Manager | Static        | available_types    | crazy_method      |
-      #     | Manager | Authenticator |                    |                   |
+      #     | Manager | Authenticator | current_session    | previous_session  |
       #     | Base    | Map           | allowed?(:denied?) | eval('evil hax')  |
       ##
-      def allowed?; end
+      def respond_to?; end
 
       ##
       # Scenario Outline: ask the allowed methods of the object
@@ -64,6 +65,11 @@ module Derailed
       #
       ##
       def name; end
+
+      ##
+      # Scenario Outline: ask the uri of the server
+      ##
+      def uri; end
     end
   end
 end

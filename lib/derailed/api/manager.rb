@@ -1,6 +1,7 @@
 module Derailed
   module API
     module Manager
+      include Base
       # information.rb
       def available_components; end
       def available_models; end
