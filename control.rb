@@ -29,7 +29,7 @@ if component == :manager
   require 'daemons'
   require 'derailed/manager/interface'
   Daemons.run_proc('OpenGovManager', {:dir_mode => :normal,
-                         :dir => Derailed::Config::RootDir}) do
+                         :dir => Derailed::Config.pid_dir}) do
     Derailed::Manager::Interface.new.daemonize
   end
 elsif component

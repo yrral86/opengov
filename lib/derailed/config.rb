@@ -27,10 +27,14 @@ module Derailed
 
     def self.socket_dir
       config_file = "#{RootDir}/config/environments.yml"
-      config = YAML::load(File.open(config_file))[Environment]
-      dir = config['socket_dir']
+      @@env_config ||= YAML::load(File.open(config_file))[Environment]
+      dir = @@env_config['socket_dir']
       dir = "#{RootDir}/#{dir}" if dir.match('^\.')
       dir
+    end
+
+    def self.pid_dir
+      socket_dir
     end
   end
 end
