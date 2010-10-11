@@ -11,13 +11,13 @@ module Derailed
     #   And ask the uri of the server
     #
     #   Background:
-    #     Given I am testing API::Base
+    #     Given I am testing 'API::Base'
     ##
     module Base
       ##
       # Scenario Outline: ask if the object allows a particular method
-      #   Given the object implements <API>
-      #   And <requester> is trying to acces it
+      #   Given the object implements '<API>'
+      #   And '<requester>' is trying to access it
       #   When I call object.respond_to?(<allowed_method>)
       #   Then the object should not throw InvalidAPI
       #   When I call object.respond_to?(<restricted_method>)
@@ -35,9 +35,9 @@ module Derailed
 
       ##
       # Scenario Outline: ask the allowed methods of the object
-      #   Given the object implements <API>
+      #   Given the object implements '<API>'
       #   When I call object.allowed_methods
-      #   Then the result should include [<methods>]
+      #   Then the results should include [<methods>]
       #
       #   Scenarios:
       #     | API      | methods                                              |
@@ -51,10 +51,10 @@ module Derailed
 
       ##
       # Scenario Outline: ask the allowed apis of the object
-      #   Given the object implements <API>
+      #   Given the object implements '<API>'
       #   And I figure out a way to make sure this actually exercises the api
       #   When I call object.apis
-      #   Then the result should include [<API>]
+      #   Then the results should include [<API>]
       ##
       def apis; end
 

@@ -8,7 +8,7 @@ module Derailed
     #   And verify that the Sesson has access to the resouce
     #
     #   Background:
-    #     Given I am testing API::Session
+    #     Given I am testing 'API::Session'
     ##
     module Session
       ##
