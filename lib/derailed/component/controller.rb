@@ -25,10 +25,13 @@ module Derailed
       include Helpers
       include View
 
+      attr_reader :logger
+
       # initialize sets the component and component client and generates a
       # whitelist of method names that can be called as URLs
       def initialize(component, manager)
         @component = component
+        @logger = @component.logger
         @manager = manager
         @safe_names = whitelist
       end

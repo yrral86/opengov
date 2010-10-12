@@ -26,21 +26,26 @@ module Derailed
       include Models
       include View
 
+      attr_reader :name, :logger
+
       # initialize sets up the database from the config file, initializes the
       # list of models, checks for dependencies, and then registers the
       # component with the Manager
-      def initialize(name, apis, dependencies)
+      def initialize(config)#(name, apis, dependencies)
         @registered = false;
-        @name = name
-        @dependencies = dependencies
-        apis << API::Base
+        @logger = config['logger']
+        @name = config['name']
+        @dependencies = config['dependencies']
+        config['api_modules'] << API::Base
         @keys = Keys.new
-        @key = @keys.gen
+        @served_key = @keys.gen
         @responses = {}
 
-        @object = ServedObject.new(self, @key, apis)
+        @served_object = ServedObject.new(self,
+                                          @served_key, config['api_modules'])
 
-        Util.environment_apis(@object, @key)
+        # allow special methods in development and testing environments
+        Util.environment_apis(@served_object, @served_key)
 
         models, controller_class = require_libraries
 
@@ -60,7 +65,7 @@ module Derailed
 #          puts 'Dependencies not met: ' + need.join(",")
 #        end
 
-        @uri = Service.start @name, @object
+        @uri = Service.start @name, @served_object
         @manager.register_component(@name)
         @registered = true
         at_exit {
@@ -72,11 +77,6 @@ module Derailed
         }
 
         self
-      end
-
-      # name returns the name of the component as set in initialize
-      def name
-        @name
       end
 
       # daemonize joins the DRb server thread to the main thread

@@ -14,7 +14,8 @@ module Derailed
         # or, we change this
         nil
       when 'development'
-        super(log_file(name), Config::LoggerShiftAge, Config::LoggerShiftSize)
+        super(Logger.log_file(name),
+              Config::LoggerShiftAge, Config::LoggerShiftSize)
       end
     end
 

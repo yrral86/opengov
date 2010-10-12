@@ -1,5 +1,8 @@
 class DebugController < Derailed::Component::Controller
   def test
+    logger.debug "debug: Hello from DebugController"
+    logger.info "information: Hello from DebugController"
+    logger.warn "warning: Hello from DebugController"
     render_string "DebugController says hi!"
   end
 
