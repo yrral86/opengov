@@ -23,9 +23,41 @@ module Derailed
     class Component
       attr_reader :name, :proxy, :pid
 
-      def initialize(name)
+      def initialize(name, manager)
         config = Config.component_config(name)
         @name = config['name']
+        @manager = manager
+      end
+
+      def died(exiting)
+        # unregister component
+        @manager.unregister_component @name
+
+        # clean up socket
+        sock = Socket.path @name
+        File.unlink sock if File.exists? sock
+
+        # restart unless we are exiting manager
+        auto_restart unless exiting
+      end
+
+      def auto_restart
+        # TODO: notify admin
+        unless @restarts
+          @restarts = 1
+          @restart_time = Time.now
+          start
+        else
+          if @restarts < 5
+            sleep 1
+            @restarts += 1
+            start
+          elsif Time.now - @restart_time < 1.minute
+            puts "Restart failed 5 times, waiting 1 minute to try again"
+          else
+            @restarts = nil
+          end
+        end
       end
 
       # proxy= sets up the proxy for the component
@@ -76,7 +108,7 @@ module Derailed
         if @pid
           begin
             Process.kill 'TERM', @pid
-            Process.waitpid(@pid)
+            # we don't need to wait as we handle sig CHLD
           rescue Errno::ECHILD
             puts "figure out how to take ownership of processes started " +
               "externally"
@@ -139,7 +171,16 @@ module Derailed
 
       # running? returns true if the component is running, and false otherwise
       def running?
-        @pid || false
+        if @pid
+          begin
+            Process.getpgid @pid
+            @pid
+          rescue Errno::ESRCH
+            false
+          end
+        else
+          false
+        end
       end
 
       def method_missing(id, *args)

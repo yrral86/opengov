@@ -74,7 +74,7 @@ module Derailed
       # init_component creates a new Manager::Component for the component
       # and adds it to the @components hash
       def init_component(name)
-        component = Component.new(name)
+        component = Component.new(name, self)
         @components[component.name] = component
       end
 

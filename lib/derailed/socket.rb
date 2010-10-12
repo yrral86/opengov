@@ -12,8 +12,13 @@ module Derailed
 
     # self.uri returns the socket uri for a given name
     def self.uri(name)
-      "drbunix:#{@@dir}/#{name}.sock"
+      "drbunix:#{path(name)}"
     end
+
+    def self.path(name)
+      "#{@@dir}/#{name}.sock"
+    end
+
 
     # self.dir returns the socket directory
     def self.dir

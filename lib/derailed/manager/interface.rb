@@ -80,6 +80,8 @@ module Derailed
       def daemonize
         Service.start 'Manager', @object
 
+        register_signals
+
         old_dir = Dir.pwd
         Dir.chdir Config::ComponentDir
         component_list = Dir.glob '*'
@@ -90,16 +92,28 @@ module Derailed
           component_command c, 'start', true
         end
 
+        Service.join
+      end
+
+      def register_signals
+        @exiting = false
+
         at_exit {
-          component_list.each do |c|
-            unless c == ''
-              component_command c, 'stop'
-            end
+          @exiting = true
+          @components.each_value do |c|
+            c.stop
           end
           Service.stop
         }
 
-        Service.join
+        Signal.trap('CHLD') do
+          Process.wait
+          @components.each_value do |c|
+            if !c.running? && c.registered?
+              c.died @exiting
+            end
+          end
+        end
       end
     end
   end
