@@ -1,3 +1,5 @@
+require 'logger'
+
 module Derailed
   class Logger < ::Logger
     def initialize(name)
