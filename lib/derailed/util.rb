@@ -44,11 +44,5 @@ module Derailed
         object.register_api(key, api) if Config::Environment == env
       end
     end
-
-    # log_file returns the filename of the component or Manager's log
-    def self.log_file(name)
-      name = name.camelize
-      "#{Config.log_dir}/#{name}.log"
-    end
   end
 end

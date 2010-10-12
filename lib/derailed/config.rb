@@ -9,6 +9,8 @@ module Derailed
     LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
     DRbTimeout = 10
+    LoggerShiftAge = 0 # default
+    LoggerShiftSize = 1048576 # default
 
     # component_config reads the config file and sets some defaults
     def self.component_config(component)
