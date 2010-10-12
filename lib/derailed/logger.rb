@@ -19,6 +19,12 @@ module Derailed
       end
     end
 
+    def backtrace(stack)
+      stack.each do |call|
+        self.error(call)
+      end
+    end
+
     # log_file returns the filename of the component or Manager's log
     def self.log_file(name)
       name = name.camelize

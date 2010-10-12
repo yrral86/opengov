@@ -1,4 +1,5 @@
 require 'derailed/served_object'
+require 'active_support/core_ext'
 
 module Derailed
   module Manager
@@ -90,11 +91,18 @@ module Derailed
           @pid = @@started
           @@started = nil
         end
-        # wait until component has registered
+        # wait until component has registered or 2 seconds have passed
+        start_time = Time.now
         unless async
-          sleep 0.05 until self.registered?
+          # TODO... no sleeping! no polling! Dataflow.unify?
+          sleep 0.05 until self.registered? || Time.now - start_time > 2.seconds
         end
-        "Component #{@name} started [pid #{@pid}]"
+        if self.registered?
+          "Component #{@name} started [pid #{@pid}]"
+        else
+          "Component #{@name} failed to start, please check the log file " +
+            "for more information"
+        end
       end
 
       # pid= sets the pid... this is used when the component is run in the
@@ -151,9 +159,14 @@ module Derailed
                   # necessary so component exit doesn't shut down all the other
                   # components (see Manager::Interface.daemonize)
                   at_exit { exit! }
-                  require 'derailed'
-                  component = Derailed::Component::Daemon.new(name)
-                  component.run
+                  begin
+                    require 'derailed'
+                    component = Derailed::Component::Daemon.new(name)
+                    component.run
+                  rescue => e
+                    @@manager.logger.fatal "Component failed to start: #{e}"
+                    @@manager.logger.backtrace e.backtrace
+                  end
                 end
                 @@started_mutex.synchronize do
                   @@started = pid

@@ -32,6 +32,8 @@ module Derailed
       include Components
       include Registration
 
+      attr_reader :logger
+
       # initialize creates empty hashes for the components and routes, and a
       # mutex for each hash
       def initialize
