@@ -25,16 +25,24 @@ module Derailed
       config[Environment]
     end
 
-    def self.socket_dir
+    def self.tmp_dir
       config_file = "#{RootDir}/config/environments.yml"
       @@env_config ||= YAML::load(File.open(config_file))[Environment]
-      dir = @@env_config['socket_dir']
+      dir = @@env_config['tmp_dir']
       dir = "#{RootDir}/#{dir}" if dir.match('^\.')
       dir
     end
 
+    def self.socket_dir
+      tmp_dir
+    end
+
+    def self.log_dir
+      tmp_dir
+    end
+
     def self.pid_dir
-      socket_dir
+      tmp_dir
     end
   end
 end
