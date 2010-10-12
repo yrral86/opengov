@@ -1,5 +1,6 @@
 [
  'util',
+ 'logger',
  'config',
  'data_type',
  'keys',
