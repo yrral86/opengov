@@ -1,8 +1,13 @@
-require 'derailed/config'
-require 'derailed/keys'
-require 'derailed/util'
-require 'derailed/served_object'
-require 'derailed/service'
+[
+ 'config',
+ 'logger',
+ 'keys',
+ 'util',
+ 'served_object',
+ 'service'
+].each do |library|
+  require "derailed/#{library}"
+end
 
 [
  'component',
@@ -33,6 +38,7 @@ module Derailed
         Component.create_spawner(self)
         @components = {}
         @responses = {}
+        @logger = Logger.new 'Manager'
         @keys = Keys.new
         @key = @keys.gen
         apis = [
