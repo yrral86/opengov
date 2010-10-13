@@ -32,9 +32,9 @@ module Derailed
         else
           begin
             @routes[component].call(env)
-          rescue DRb::DRbConnError
+          rescue
             @routes = {}
-            Component::View.not_found "Component #{component} went away"
+            Component::View.internal_error("Error in component #{component}")
           end
         end
       end

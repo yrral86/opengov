@@ -6,6 +6,10 @@ class DebugController < Derailed::Component::Controller
     render_string "DebugController says hi!"
   end
 
+  def raise
+    raise
+  end
+
   def info
     available_models = @manager.available_models
     available_components = @manager.available_components

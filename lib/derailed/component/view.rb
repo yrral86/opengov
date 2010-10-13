@@ -71,6 +71,7 @@ module Derailed
       def internal_error(msg)
         render_response msg, 500
       end
+      module_function :internal_error
 
       # Renders an erb template given as a string using the given binding
       def render_erb(string,b)
