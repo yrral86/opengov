@@ -40,9 +40,14 @@ elsif component
     unless command == 'run'
       puts manager.component_command(component, command)
     else
-      require 'derailed'
-      manager.component_pid(component, Process.pid)
-      Derailed::Component::Daemon.new(component).run
+      puts manager.component_command(component,'start')
+      name = manager.component_command(component, 'name')
+      require 'derailed/logger'
+      IO.popen ("tail -f #{Derailed::Logger.log_file(name)}") do |f|
+        while line = f.gets
+          puts line
+        end
+      end
     end
   rescue DRb::DRbConnError
     puts 'Manager is not running'
