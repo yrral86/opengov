@@ -47,14 +47,11 @@ When /^I call object\.(.*)$/ do |id|
     id = id.to_sym
     args = []
   end
-  puts "calling #{id} on object with args #{args}"
   begin
     @proxy_object.__send__ id, *args
     @invalid_api = false
   rescue Derailed::InvalidAPI
     @invalid_api = true
-  rescue NoMethodError => e
-    puts e.backtrace
   end
 end
 
