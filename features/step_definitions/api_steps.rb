@@ -32,11 +32,14 @@ Given /^the object implements '(.*)'$/ do |api|
 end
 
 Given /^the results should include \[(.*)\]$/ do |list|
-  pending
-end
-
-Given /^the object proxies '(.*)'$/ do |name|
-  pending
+  hash = {}
+  @proxy_call_result.each do |r|
+    hash[r] = true
+  end
+  list.split(',').each do |item|
+    item = item.to_sym
+    assert hash[item], "#{item} not found in #{@proxy_call_result}"
+  end
 end
 
 When /^I call object\.(.*)$/ do |id|
@@ -48,7 +51,7 @@ When /^I call object\.(.*)$/ do |id|
     args = []
   end
   begin
-    @proxy_object.__send__ id, *args
+    @proxy_call_result = @proxy_object.__send__ id, *args
     @invalid_api = false
   rescue Derailed::InvalidAPI
     @invalid_api = true

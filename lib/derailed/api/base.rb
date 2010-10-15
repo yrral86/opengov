@@ -39,12 +39,12 @@ module Derailed
       #   Then the results should include [<methods>]
       #
       #   Scenarios:
-      #     | API      | methods                                              |
-      #     | Base     | apis,name,allowed_methods,allowed?                   |
-      #     | Manager  | available_components,available_models                |
-      #     | Manager  | available_routes,available_types,componenent_pid     |
-      #     | Manager  | components_with_type,component_command,check_key     |
-      #     | Manager  | register_component,unregister_component              |
+      #     | API      | methods                                            |
+      #     | Base     | apis,name,allowed_methods,respond_to?              |
+      #     | Manager  | available_components,available_models              |
+      #     | Manager  | available_routes,available_types,component_pid     |
+      #     | Manager  | components_with_type,component_command,check_key   |
+      #     | Manager  | register_component,unregister_component            |
       ##
       def allowed_methods; end
 
