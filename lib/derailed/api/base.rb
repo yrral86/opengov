@@ -17,19 +17,18 @@ module Derailed
       ##
       # Scenario Outline: ask if the object allows a particular method
       #   Given the object implements '<API>'
-      #   And '<requester>' is trying to access it
-      #   When I call object.respond_to?(<allowed_method>)
+      #   When I call object.<allowed_method>
       #   Then the object should not throw InvalidAPI
-      #   When I call object.respond_to?(<restricted_method>)
+      #   When I call object.<restricted_method>
       #   Then the object should throw InvalidAPI
       #
       #   Scenarios:
-      #     | API     | requester     | allowed_method     | restricted_method |
-      #     | Base    | RackApp       | respond_to?(:apis) | denied?           |
-      #     | Base    | Manager       | respond_to?(:no_m) | eval('evil hax')  |
-      #     | Manager | Static        | available_types    | crazy_method      |
-      #     | Manager | Authenticator | current_session    | previous_session  |
-      #     | Base    | Map           | allowed?(:denied?) | eval('evil hax')  |
+      #     | API     | allowed_method     | restricted_method |
+      #     | Base    | respond_to?(:apis) | denied?           |
+      #     | Base    | respond_to?(:no_m) | eval('evil hax')  |
+      #     | Manager | available_types    | crazy_method      |
+      #     | Manager | current_session    | previous_session  |
+      #     | Base    | allowed?(:denied?) | eval('evil hax')  |
       ##
       def respond_to?; end
 

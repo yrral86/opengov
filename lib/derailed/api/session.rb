@@ -13,7 +13,7 @@ module Derailed
     module Session
       ##
       # Scenario: the manager implements Session
-      #   Given the object proxies 'Manager'
+      #   Given the object implements 'Manager'
       #   When I call object.apis
       #   Then the results should include [verify_session]
       ##
@@ -21,8 +21,8 @@ module Derailed
 
       ##
       # Scenario Outline: verify that the Session has access to the resouce
-      #   Given the object implements Session
-      #   And object has access to <resouce>
+      #   Given the object implements 'Session'
+      #   And object has access to <resource>
       #   When I call object.verify_session
       #   Then the result is true
       ##
