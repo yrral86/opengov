@@ -124,10 +124,11 @@ module Derailed
 
       # javascript includes the main javascript file, which handles
       # including any other javascript we need
-      def javascript
+      def javascript(file='main')
         unless path(1) == 'login'
-          '<script type="text/javascript" src="/static/javascript/main.js">' +
-            '</script>'
+          src = "/static/javascript/#{file}.js" unless file.match /^http:\/\//
+          src = file unless src
+          '<script type="text/javascript" src="' + src + '"></script>'
         else
           ''
         end

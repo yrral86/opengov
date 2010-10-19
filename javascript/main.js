@@ -1,7 +1,14 @@
 function include(file) {
-    document.write('<script type="text/javascript" src="/static/javascript/' +
-		   file + '"></scr' + 'ipt>');
-	// close script tag has to be split do to IE7 bug
+    var external = new RegExp('^http://');
+    var src;
+    if (external.test(file)) {
+	src = file;
+    } else {
+	src = '/static/javascript/' + file;
+    }
+    document.write('<script type="text/javascript" src="' +
+		   src + '"></scr' + 'ipt>');
+    // close script tag has to be split do to IE7 bug
 };
 
 include('prototype.js');
