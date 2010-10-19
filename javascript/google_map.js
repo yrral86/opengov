@@ -13,7 +13,7 @@ var google_map = {
         this.map = new google.maps.Map($('map'),options);
         this.map_addresses();
     },
-    map_addresses: function () {
+    map_addresses: function() {
         if (this.current_address == 0) {
 	    this.clear_markers();
         }
@@ -22,7 +22,15 @@ var google_map = {
 	    this.geocode(request, this.map_address);
 	} else {
 	    this.current_address = 0;
+	    this.set_bounds();
 	}
+    },
+    set_bounds: function() {
+	var bounds = new google.maps.LatLngBounds();
+	for (var i = 0; i < this.address_count; i++) {
+	    bounds.extend(this.markers[i].getPosition());
+	}
+	this.map.fitBounds(bounds)
     },
     map_address: function(result, status) {
         var options = {
@@ -32,7 +40,6 @@ var google_map = {
 	google_map.new_marker(options);
     },
     new_marker: function(options) {
-	this.map.setCenter(options.position);
 	options.map = this.map;
         var marker = new google.maps.Marker(options);
 	this.markers[this.current_address - 1] = marker;
