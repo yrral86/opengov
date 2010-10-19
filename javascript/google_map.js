@@ -1,5 +1,5 @@
 var google_map = {
-    geocoder: new google.maps.Geocoder(),
+    geocode: new google.maps.Geocoder().geocode,
     addresses: ['424 Evans Street, Morgantown, WV 26505','RR 1 Box 102, Glen Easton, WV 26039'],
     markers: [],
     address_count: 2,
@@ -19,7 +19,7 @@ var google_map = {
         }
         if (this.current_address < this.address_count) {
 	    request = {address: this.addresses[this.current_address++]};
-	    this.geocoder.geocode(request, this.map_address);
+	    this.geocode(request, this.map_address);
 	} else {
 	    this.current_address = 0;
 	}
