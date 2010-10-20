@@ -18,4 +18,15 @@ eof
       a("javascript:#{code}", 'update') +
       run_js(code), binding
   end
+
+  def stream
+    render_block do |buffer|
+      i = 0
+      10.times do
+        buffer.write i
+        sleep 1
+        i += 1
+      end
+    end
+  end
 end

@@ -78,6 +78,13 @@ module Derailed
         render_response execute_template(string,b)
       end
 
+      def render_block
+        response = Rack::Response.new
+        response.finish do
+          yield response
+        end
+      end
+
       # render_response renders the response in Rack format
       def render_response(body, status=200, headers={})
         if status == 200 &&
