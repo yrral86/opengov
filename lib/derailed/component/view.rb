@@ -80,16 +80,14 @@ module Derailed
 
       # render_response renders the response in Rack format
       def render_response(body, status=200, headers={})
-        if body.class != Array
-          if status == 200 &&
-              params['_ajax'] != 'yes' &&
-              !headers.has_key?('Content-Type')
-            body = template_wrap(body)
-          end
-          body = [body]
+        if status == 200 &&
+            params['_ajax'] != 'yes' &&
+            !headers.has_key?('Content-Type')
+          body = template_wrap(body)
         end
 
-        [status, headers, body]
+        response = Rack::Response.new body, status, headers
+        response.finish
       end
       module_function :render_response
 
