@@ -11,6 +11,7 @@ module Derailed
       def initialize(*args)
         super(*args)
         @served_object.register_api(@served_key, API::Authenticator)
+        @sessions = {}
       end
 
       # routes (as in any component) provides the routes this component services
@@ -23,7 +24,23 @@ module Derailed
       # is logged in, and nil otherwise
       def current_session(env=Thread.current[:env])
         return nil unless env
-        Authlogic::Session::Base.controller = env[:controller]
+        setup_env(env)
+        key = nil
+        if @sessions[session['user_credentials']]
+          key = session['user_credentials']
+        else
+          s = find_session
+          key = session['user_credentials']
+          @sessions[key] = s
+          Thread.new do
+            sleep Config::SessionTimeout
+            @sessions.delete(key)
+          end
+        end
+        @sessions[key]
+      end
+
+      def find_session
         UserSession.find
       end
 

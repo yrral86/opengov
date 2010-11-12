@@ -8,7 +8,9 @@ module Derailed
     ComponentDir = RootDir + '/components-enabled'
     LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
-    DRbTimeout = 10
+    PollTimeout = 10
+    SessionTimeout = 2*PollTimeout
+    DRbTimeout = 2*SessionTimeout
     LoggerShiftAge = 0 # default
     LoggerShiftSize = 1048576 # default
 

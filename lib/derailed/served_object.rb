@@ -46,7 +46,7 @@ module Derailed
     end
 
     def method_mising(id, *args)
-      raise InvalidAPI
+      raise InvalidAPI, "method #{id} not valid for object of type #{name}"
     end
 
     def apis
