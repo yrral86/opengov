@@ -27,3 +27,15 @@ function update_div(id, url) {
 	    parameters: { _ajax: 'yes' }
     });
 }
+
+function poll_to_div(id, url) {
+    new Ajax.Request(url, {
+	    onSuccess: function(response) {
+		if (response.responseText != '') {
+		    $(id).replace('<div id="content">' + response.responseText +
+				  '</div>')
+		}
+		poll_to_div(id, url);
+	    }
+    });
+}

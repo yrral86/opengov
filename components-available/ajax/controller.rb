@@ -1,4 +1,11 @@
 class AjaxController < Derailed::Component::Controller
+  def initialize(component, manager)
+    super(component, manager)
+    @polling_threads = {}
+    @polling_data = {}
+    @polling_mutexes = {}
+  end
+
   def table
     render_string <<eof
 <table>
@@ -30,13 +37,67 @@ eof
     end
   end
 
-  def poll
-    # if there is data return it
-    # otherwise, spawn thread, sleep it
-    # set up timeout to kill thread
+  def poller
+    render_string <<eof
+<html>
+<head>#{javascript}
+<script type="text/javascript">
+poll_to_div('content','/ajax/poll');
+</script>
+</head>
+<body><div id="content">empty</div></body>
+</html>
+eof
+  end
+
+  def add_data
+    user_id = @component.current_user.id
+    @polling_data[user_id] = params['data']
     # on data receive, wake up thread
-    # need locking on kill/wake up
-    # so we don't timeout and kill the thread as we are returning the data
-    render_string 'hello'
+    @polling_threads[user_id].run if @polling_threads[user_id] &&
+      @polling_threads[user_id].alive?
+    render_string "data #{params['data']} added"
+  end
+
+  def poll
+    user_id = @component.current_user.id
+    if @polling_data[user_id]
+      # if there is data return it
+      data = @polling_data[user_id]
+      @polling_data.delete user_id
+      render_string data
+    else
+      # otherwise, spawn response thread, sleep it
+      @polling_mutexes[user_id] = Mutex.new
+      env = Thread.current[:env]
+      @polling_threads[user_id] = Thread.new do
+        Thread.current[:env] = env
+        Thread.stop
+        @polling_mutexes[user_id].synchronize do
+          data = @polling_data[user_id]
+          @polling_data.delete user_id
+          @logger.debug "rendering data: #{data}"
+          render_string data
+        end
+      end
+
+      # set up timeout to kill thread
+      Thread.new do
+        sleep Config::PollTimeout
+        # need locking on kill/wake up
+        # so we don't timeout and kill the thread as we are returning the data
+        @polling_mutexes[user_id].synchronize do
+          t = @polling_threads[user_id]
+          t.kill if t.alive?
+          @polling_threads.delete[user_id]
+        end
+        @polling_mutexes.delete(user_id)
+      end
+
+      response = @polling_threads[user_id].value
+      @logger.debug "value = #{response.inspect}"
+      # return response if we have it, or render an empty response
+      response ? response : render_string('')
+    end
   end
 end
