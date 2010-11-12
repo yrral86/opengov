@@ -29,4 +29,14 @@ eof
       end
     end
   end
+
+  def poll
+    # if there is data return it
+    # otherwise, spawn thread, sleep it
+    # set up timeout to kill thread
+    # on data receive, wake up thread
+    # need locking on kill/wake up
+    # so we don't timeout and kill the thread as we are returning the data
+    render_string 'hello'
+  end
 end
