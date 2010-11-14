@@ -39,14 +39,10 @@ eof
 
   def poller
     render_string <<eof
-<html>
-<head>#{javascript}
 <script type="text/javascript">
 poll_to_div('content','/ajax/poll');
 </script>
-</head>
-<body><div id="content">empty</div></body>
-</html>
+empty
 eof
   end
 
@@ -66,29 +62,46 @@ eof
       data = @polling_data[user_id]
       @polling_data.delete user_id
       render_string data
+    elsif params['_need_cookie_update']
+      # The poll was the first request after the session cache died,
+      # return an empty response so the cookie updates and we can authenticate
+      # any new requests
+      render_string ''
     else
       # otherwise, spawn response thread, sleep it
       @polling_mutexes[user_id] = Mutex.new
       env = Thread.current[:env]
+      thread_alive = true
       @polling_threads[user_id] = Thread.new do
         Thread.current[:env] = env
         Thread.stop
-        @polling_mutexes[user_id].synchronize do
-          data = @polling_data[user_id]
-          @polling_data.delete user_id
-          @logger.debug "rendering data: #{data}"
-          render_string data
+        if thread_alive
+          @logger.debug "thread_alive true"
+          @polling_mutexes[user_id].synchronize do
+            data = @polling_data[user_id]
+            @polling_data.delete user_id
+            @logger.debug "rendering data: #{data}"
+            render_string data
+          end
+        else
+          @logger.debug "thread_alive false"
+          render_timeout
         end
       end
 
       # set up timeout to kill thread
       Thread.new do
         sleep Config::PollTimeout
+        @logger.debug "timout over"
         # need locking on kill/wake up
         # so we don't timeout and kill the thread as we are returning the data
         @polling_mutexes[user_id].synchronize do
           t = @polling_threads[user_id]
-          t.kill if t.alive?
+          if t.alive?
+            thread_alive = false
+            @logger.debug "thread_alive = false, running thread"
+            t.run
+          end
           @polling_threads.delete[user_id]
         end
         @polling_mutexes.delete(user_id)
@@ -97,7 +110,7 @@ eof
       response = @polling_threads[user_id].value
       @logger.debug "value = #{response.inspect}"
       # return response if we have it, or render an empty response
-      response ? response : render_string('')
+      response
     end
   end
 end

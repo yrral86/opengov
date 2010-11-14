@@ -85,6 +85,10 @@ module Derailed
         end
       end
 
+      def render_timout
+        render_response "Request Timeout", 408, {}
+      end
+
       # render_response renders the response in Rack format
       def render_response(body, status=200, headers={})
         if status == 200 &&

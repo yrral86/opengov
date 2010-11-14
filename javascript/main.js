@@ -30,11 +30,16 @@ function update_div(id, url) {
 
 function poll_to_div(id, url) {
     new Ajax.Request(url, {
+	    method: "get",
+            parameters: {_ajax: 'yes'},
 	    onSuccess: function(response) {
 		if (response.responseText != '') {
-		    $(id).replace('<div id="content">' + response.responseText +
-				  '</div>')
+		    $(id).replace('<div id="' + id + '">' +
+				  response.responseText + '</div>');
 		}
+		poll_to_div(id, url);
+	    },
+	    on408: function(response) {
 		poll_to_div(id, url);
 	    }
     });

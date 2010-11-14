@@ -12,6 +12,7 @@ module Derailed
         super(*args)
         @served_object.register_api(@served_key, API::Authenticator)
         @sessions = {}
+        @refresh_sessions = {}
       end
 
       # routes (as in any component) provides the routes this component services
@@ -25,19 +26,27 @@ module Derailed
       def current_session(env=Thread.current[:env])
         return nil unless env
         setup_env(env)
-        key = nil
-        if @sessions[session['user_credentials']]
-          key = session['user_credentials']
+        key = session['user_credentials']
+        if @sessions[key]
+          @refresh_sessions[key] = true
         else
           s = find_session
           key = session['user_credentials']
           @sessions[key] = s
+          @refresh_sessions[key] = true
           Thread.new do
-            sleep Config::SessionTimeout
+            while @refresh_sessions[key] do
+              @refresh_sessions.delete(key)
+              sleep Config::SessionTimeout
+            end
             @sessions.delete(key)
           end
+          params['_need_cookie_update'] = true if full_path == '/ajax/poll'
         end
-        @sessions[key]
+        s = @sessions[key]
+        @logger.debug full_path
+        @logger.debug s.inspect
+        s
       end
 
       def find_session
