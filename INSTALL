@@ -8,7 +8,8 @@ bash < <( curl -L http://bit.ly/rvm-install-system-wide )
 
 Don't use root... it screws with rvm, just make sure you are in rvm group:
 rvm install 1.9.2
-gem install `cat requirements/rubypackages`
+gem install bundler
+bundle install
 passenger-install-apache2-module
 create symlink: /usr/local/rvm/gems/default -> ruby-1.9.2-p0
 (this should be added to rvm soon and kept up to date with the selected ruby)

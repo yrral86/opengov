@@ -3,3 +3,4 @@ webrat.log
 .password
 features/gen_*.feature
 sockets
+.bundle
