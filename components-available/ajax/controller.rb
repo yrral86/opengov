@@ -57,60 +57,39 @@ eof
 
   def poll
     user_id = @component.current_user.id
+
     if @polling_data[user_id]
       # if there is data return it
-      data = @polling_data[user_id]
-      @polling_data.delete user_id
-      render_string data
+      render_data user_id
     elsif params['_need_cookie_update']
       # The poll was the first request after the session cache died,
       # return an empty response so the cookie updates and we can authenticate
       # any new requests
       render_string ''
     else
-      # otherwise, spawn response thread, sleep it
-      @polling_mutexes[user_id] = Mutex.new
       env = Thread.current[:env]
-      thread_alive = true
+
+      # spawn response thread, sleep it
       @polling_threads[user_id] = Thread.new do
+        response = nil
         Thread.current[:env] = env
-        Thread.stop
-        if thread_alive
-          @logger.debug "thread_alive true"
-          @polling_mutexes[user_id].synchronize do
-            data = @polling_data[user_id]
-            @polling_data.delete user_id
-            @logger.debug "rendering data: #{data}"
-            render_string data
-          end
+        slept = sleep Derailed::Config::RequestTimeout
+        @polling_threads.delete(user_id)
+        if slept < Derailed::Config::RequestTimeout
+          render_data user_id
         else
-          @logger.debug "thread_alive false"
           render_timeout
         end
       end
 
-      # set up timeout to kill thread
-      Thread.new do
-        sleep Config::PollTimeout
-        @logger.debug "timout over"
-        # need locking on kill/wake up
-        # so we don't timeout and kill the thread as we are returning the data
-        @polling_mutexes[user_id].synchronize do
-          t = @polling_threads[user_id]
-          if t.alive?
-            thread_alive = false
-            @logger.debug "thread_alive = false, running thread"
-            t.run
-          end
-          @polling_threads.delete[user_id]
-        end
-        @polling_mutexes.delete(user_id)
-      end
-
-      response = @polling_threads[user_id].value
-      @logger.debug "value = #{response.inspect}"
-      # return response if we have it, or render an empty response
-      response
+      @polling_threads[user_id].value
     end
+  end
+
+  private
+  def render_data(user_id)
+    data = @polling_data[user_id]
+    @polling_data.delete user_id
+    render_string data
   end
 end

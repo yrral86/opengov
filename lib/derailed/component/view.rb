@@ -85,7 +85,7 @@ module Derailed
         end
       end
 
-      def render_timout
+      def render_timeout
         render_response "Request Timeout", 408, {}
       end
 

@@ -12,7 +12,10 @@ module Derailed
         super(*args)
         @served_object.register_api(@served_key, API::Authenticator)
         @sessions = {}
+        # @previous_sessions[old_session_key] = new_session_key
+        @previous_sessions = {}
         @refresh_sessions = {}
+        @session_mutex = Mutex.new
       end
 
       # routes (as in any component) provides the routes this component services
@@ -29,24 +32,33 @@ module Derailed
         key = session['user_credentials']
         if @sessions[key]
           @refresh_sessions[key] = true
-        else
-          s = find_session
-          key = session['user_credentials']
-          @sessions[key] = s
-          @refresh_sessions[key] = true
-          Thread.new do
-            while @refresh_sessions[key] do
-              @refresh_sessions.delete(key)
-              sleep Config::SessionTimeout
+         else
+          @session_mutex.synchronize do
+            unless @previous_sessions[key]
+              oldkey = key
+              s = find_session
+              key = session['user_credentials']
+              @previous_sessions[oldkey] = key
+              @sessions[key] = s
+              @refresh_sessions[key] = true
+              Thread.new do
+                sleep Config::PreviousSessionTimeout
+                 @previous_sessions.delete(oldkey)
+              end
+              Thread.new do
+                while @refresh_sessions[key] do
+                  @refresh_sessions.delete(key)
+                  sleep Config::SessionTimeout
+                end
+                @sessions.delete(key)
+              end
+              params['_need_cookie_update'] = true if full_path == '/ajax/poll'
+            else
+              key = @previous_sessions[key]
             end
-            @sessions.delete(key)
           end
-          params['_need_cookie_update'] = true if full_path == '/ajax/poll'
         end
-        s = @sessions[key]
-        @logger.debug full_path
-        @logger.debug s.inspect
-        s
+        @sessions[key]
       end
 
       def find_session

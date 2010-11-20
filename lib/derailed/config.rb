@@ -8,8 +8,18 @@ module Derailed
     ComponentDir = RootDir + '/components-enabled'
     LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
-    PollTimeout = 10
-    SessionTimeout = 2*PollTimeout
+    # RequestTimeout < SessionTimeout < DRbTimeout
+    RequestTimeout = 10
+    SessionTimeout = 2*RequestTimeout
+    # PreviousSessionTimeout has to be long enough that all request made
+    # simultaneously will be  handled.  This only matters when the session
+    # is not cached and multiple requests come in at the same time.  And even
+    # then it won't be hit very often, only when the instructions are woven
+    # just right (or wrong ;)... Increasing this value keeps old sessions valid
+    # for that much longer, decreasing it below the time it takes to service
+    # all simultaneous requests from the same user leaves you open to an
+    # authentication failure for one or more of those requests.
+    PreviousSessionTimeout = 5
     DRbTimeout = 2*SessionTimeout
     LoggerShiftAge = 0 # default
     LoggerShiftSize = 1048576 # default
