@@ -16,7 +16,11 @@ module Derailed
       # current_session fetches the current session via
       # Derailed::Client.get_current_session
       def current_session
-        @authenticator.current_session(Thread.current[:env])
+        begin
+          @authenticator.current_session(Thread.current[:env])
+        rescue => e
+          @logger.backtrace e.backtrace
+        end
       end
 
       # current_user extracts the user from the current session

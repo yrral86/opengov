@@ -1,6 +1,7 @@
 require 'authlogic_pam'
 
 require 'derailed/component/authenticator/controller'
+require 'derailed/component/authenticator/auth_controller'
 
 module Derailed
   module Component
@@ -73,7 +74,7 @@ module Derailed
 
       def setup_env(env)
         super(env)
-        Authlogic::Session::Base.controller = controller
+        Authlogic::Session::Base.controller = AuthController.new
       end
     end
   end

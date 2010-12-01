@@ -9,14 +9,18 @@ module Derailed
       # controller extracts the controller from the environment for the current
       # thread (set in Derailed::Component::Authentication.setup_env)
       def controller
-        Thread.current[:env][:controller]
+        env[:controller]
+      end
+
+      def env
+        Thread.current[:env]
       end
 
       # session extracts the session from the controller.
       # It will be a DRb object that is interacted with
       # over the socket
       def session
-        controller.session
+        env['rack.session']
       end
 
       # params extracts the params from the controller.

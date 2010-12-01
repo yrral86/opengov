@@ -35,7 +35,7 @@ module Derailed
             @proxies[path].call(env)
           rescue
             @proxies = {}
-            Component::View.internal_error("Error in component #{component}")
+            Component::View.internal_error("Error in component #{path}")
           end
         end
       end
