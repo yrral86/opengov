@@ -16,8 +16,13 @@ module Derailed
       when 'development'
         super(Logger.log_file(name),
               Config::LoggerShiftAge, Config::LoggerShiftSize)
+        $stderr = self
       end
     end
+
+    alias :puts :error
+    alias :write :error
+    def flush; self; end
 
     def backtrace(stack)
       stack.each do |call|

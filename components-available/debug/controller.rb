@@ -10,6 +10,11 @@ class DebugController < Derailed::Component::Controller
     raise
   end
 
+  def stderr
+    $stderr.puts "/debug/stderr fetched"
+    render_string "message printed to stderr, check log"
+  end
+
   def info
     available_models = @manager.available_models
     available_components = @manager.available_components

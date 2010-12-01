@@ -1,5 +1,4 @@
 Get selenium working
-use popen to run components so we can actually pass stderr and stdout on run
 make poller execute js
 - push location to map for a given logged in officer
 
