@@ -65,6 +65,7 @@ module Derailed
       def proxy=(name)
         if name
           @proxy = Service.get name
+          @@starter.wakeup if @@starter
         else
           @proxy = nil
         end
@@ -82,21 +83,22 @@ module Derailed
         @@to_start_mutex.synchronize do
           @@to_start = @name.downcase
         end
-        # wakeup spawneer, and pass until it sets @@to_start back to nil,
-        # indicating it is done
+        # wakeup spawner so it can run when we sleep
         @@spawner.wakeup
-        Thread.pass while @@to_start
+        # spawner will wake up this thread after it spawns the component
+        @@starter = Thread.current
+        Thread.stop
         # set @pid to @@started, and set @@started back to nil
         @@started_mutex.synchronize do
           @pid = @@started
           @@started = nil
         end
-        # wait until component has registered or 2 seconds have passed
-        start_time = Time.now
         unless async
-          # TODO... no sleeping! no polling! Dataflow.unify?
-          sleep 0.05 until self.registered? || Time.now - start_time > 2.seconds
+          # wait up to MaxComponentStart seconds for component to start,
+          # proxy= will wake us when the component registers itself
+          sleep Config::MaxComponentStart
         end
+        @@starter = nil
         if self.registered?
           "Component #{@name} started [pid #{@pid}]"
         else
@@ -172,6 +174,7 @@ module Derailed
                   @@started = pid
                 end
                 @@to_start = nil
+                @@starter.wakeup
               end
             end
           end

@@ -9,6 +9,7 @@ module Derailed
     LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
     # RequestTimeout < SessionTimeout < DRbTimeout
+    MaxComponentStart = 2
     RequestTimeout = 10
     SessionTimeout = 2*RequestTimeout
     # PreviousSessionTimeout has to be long enough that all request made
