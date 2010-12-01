@@ -10,7 +10,8 @@ module Derailed
       # session and cookie hashes in the Derailed::RackApp::Controller
       def initialize
         @manager = Service.get('Manager')
-        @routes = {}
+        @proxies = {}
+        @logger = Logger.new 'RequestRouter'
         Service.start
         self
       end
@@ -24,29 +25,42 @@ module Derailed
       # new list of routes are fetched on the next request... obviously at least
       # one of the routes we had was invalid). We then return a 404.
       def call(env)
-        get_routes if @routes.empty?
+        update_proxies if @proxies.empty?
 
-        component = env[:controller].next
-        if @routes[component] == nil
+        path = env[:controller].next
+        if @proxies[path] == nil
           Component::View.not_found 'Not Found'
         else
           begin
-            @routes[component].call(env)
+            @proxies[path].call(env)
           rescue
-            @routes = {}
+            @proxies = {}
             Component::View.internal_error("Error in component #{component}")
           end
         end
       end
 
       private
-      def get_routes
-        @routes = {}
-        routes = @manager.available_routes
-        routes.each_key do |path|
-          @routes[path] = Proxy.fetch(routes[path])
+      # updates the proxies hash
+      def update_proxies
+        @proxies = {}
+
+        # grab routes from manager (DRb)
+        routes = {}
+        begin
+          routes = @manager.available_routes
+        rescue => e
+          @logger.backtrace e.backtrace
         end
-        @routes
+
+        routes.each_key do |path|
+          # grab a proxy object for the route
+          begin
+            @proxies[path] = Proxy.fetch(routes[path])
+          rescue
+            @logger.backtrace e.backtrace
+          end
+        end
       end
     end
   end

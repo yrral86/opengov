@@ -1,6 +1,7 @@
 require 'rack'
 
-require "derailed/rack_app/controller"
+require 'derailed/rack_app/controller'
+require 'derailed/logger'
 
 module Derailed
   module RackApp
@@ -11,6 +12,7 @@ module Derailed
     class Middleware
       # initialize sets the app and creates a Client
       def initialize(app)
+        @logger = Logger.new 'RackAppMiddleware'
         @app = app
       end
 
@@ -32,8 +34,15 @@ module Derailed
       # after login, and the user is redirected to the login form.
       def authenticate(env)
         @authenticator ||= Service.get 'Authenticator'
-        if @authenticator.current_session(env) or
-            env[:controller].request.path == '/login'
+
+        # fetch current session
+        begin
+          current_session = @authenticator.current_session(env)
+        rescue => e
+          @logger.backtrace e.backtrace
+        end
+
+        if env[:controller].request.path == '/login' or current_session
           yield env
         else
           path = env[:controller].request.path
