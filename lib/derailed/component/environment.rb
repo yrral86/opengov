@@ -4,8 +4,6 @@ module Derailed
     # This module provides convenience functions to interact with the
     # Request and the Derailed::RackApp side session
     module Environment
-      private
-
       # env fetches the thread local variable set in aetup_env
       def env
         Thread.current[:env]
@@ -15,7 +13,7 @@ module Derailed
       # It will be a DRb object that is interacted with
       # over the socket
       def session
-        env['rack.session']
+        request.session
       end
 
       # params extracts the params from the request

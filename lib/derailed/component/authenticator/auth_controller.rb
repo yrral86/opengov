@@ -1,18 +1,11 @@
 module Derailed
   module Component
     class AuthController
-      def initialize
-        @env = Thread.current[:env]
-        @r = @env['rack.request']
-      end
-
-      def session
-        @r.session
-      end
+      include Environment
 
       def cookies
         return @c if @c
-        c = @r.cookies
+        c = request.cookies
         def c.delete(key, options = {})
           super(key)
         end
@@ -24,14 +17,10 @@ module Derailed
         false
       end
 
-      def params
-        @r.params
-      end
-
       # cookie_domain returns the HTTP_HOST header, which will be used to
       # set the domain for cookies (required by Authlogic)
       def cookie_domain
-        @env['HTTP_HOST']
+        env['HTTP_HOST']
       end
     end
   end
