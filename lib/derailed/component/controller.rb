@@ -52,7 +52,7 @@ module Derailed
       # we call crud.  Otherwise, it returns a 404.
       def method_missing(id, *args)
         if allowed?(id.to_s)
-          crud(Thread.current[:env])
+          crud(env)
         else
           not_found "Method #{id.to_s} not found in component " +
             @component.name

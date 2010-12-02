@@ -31,7 +31,7 @@ module Derailed
       # path(3):: 'test'
       # path(4):: 'path'
       def path(n)
-        Thread.current[:paths][n]
+        env[:paths][n]
       end
 
       # next_path gets the next portion of the path
@@ -41,7 +41,12 @@ module Derailed
       # 2nd call:: 'test'
       # 3rd call:: 'path'
       def next_path
-        Thread.current[:path_queue].shift
+        # copy the array, shift and copy back
+        # for some reason, env[:path_queue].shift doesn't remove the element
+        a = env[:path_queue].dup
+        p = a.shift
+        env[:path_queue] = a
+        p
       end
 
       # full_path returns the full request path

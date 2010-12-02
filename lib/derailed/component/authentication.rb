@@ -11,12 +11,6 @@ module Derailed
       # Derailed::Component::Controller)
       def setup_env(env)
         Thread.current[:env] = env
-        Thread.current[:paths] = full_path.split '/'
-        Thread.current[:path_queue] = Array.new Thread.current[:paths]
-        # The first element is blank, and the second is consumed by the
-        # RequestRouter
-        Thread.current[:path_queue].shift
-        Thread.current[:path_queue].shift
       end
 
       # current_session fetches the current session via

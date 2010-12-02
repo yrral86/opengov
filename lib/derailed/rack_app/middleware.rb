@@ -1,6 +1,5 @@
 require 'rack'
 
-require 'derailed/rack_app/controller'
 require 'derailed/logger'
 
 module Derailed
@@ -42,10 +41,10 @@ module Derailed
           @logger.backtrace e.backtrace
         end
 
-        if env[:controller].request.path == '/login' or current_session
+        if env['rack.request'].path == '/login' or current_session
           yield env
         else
-          path = env[:controller].request.path
+          path = env['rack.request'].path
           env['rack.session'][:onlogin] =
             path unless path == '/favicon.ico'
           Component::View.redirect('/login')
@@ -56,7 +55,10 @@ module Derailed
       def load_controller(env)
         env['rack.session'].extend(DRbUndumped)
         env['rack.request'] = Rack::Request.new(env)
-        env[:controller] = Controller.new(env)
+        env[:paths] = env['rack.request'].path.split '/'
+        env[:path_queue] = Array.new env[:paths]
+        # The first element is blank
+        env[:path_queue].shift
       end
 
       # commit_controller saves the session/cookies and returns the response

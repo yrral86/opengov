@@ -28,7 +28,7 @@ module Derailed
       def call(env)
         update_proxies if @proxies.empty?
 
-        path = env[:controller].next
+        path = env[:path_queue].shift
         if @proxies[path] == nil
           Component::View.not_found 'Not Found'
         else
