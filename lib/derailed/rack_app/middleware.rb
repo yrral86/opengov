@@ -55,6 +55,7 @@ module Derailed
       # load_controller creates a RackApp::Controller for the request
       def load_controller(env)
         env['rack.session'].extend(DRbUndumped)
+        env['rack.request'] = Rack::Request.new(env)
         env[:controller] = Controller.new(env)
       end
 

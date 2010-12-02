@@ -20,34 +20,33 @@ module Derailed
       def crud(env)
         model_name = path(2)
         id = path(3)
-        r = controller.request
 
         model = @component.model_by_url(model_name)
 
         if model
-          if r.post?
-            case r.params['_method']
+          if request.post?
+            case request.params['_method']
             when 'put' # UPDATE
-              update(model,r)
+              update(model,request)
             when 'delete' # DELETE
               delete(model,id)
             else # CREATE
-              create(model,r)
+              create(model,request)
             end
-          elsif r.get? # READ
+          elsif request.get? # READ
             if id == 'edit'
               if path(4)
-                update(model,r)
+                update(model,request)
               else
-                create(model,r)
+                create(model,request)
               end
             else
               read(model,id)
             end
-          elsif r.delete? # IN CASE WE EVER USE THE ACTUAL METHODS
+          elsif request.delete? # IN CASE WE EVER USE THE ACTUAL METHODS
             delete(model,id) # INSTEAD OF TUNNELING OVER POST
-          elsif r.put?
-            update(model,r)
+          elsif request.put?
+            update(model,request)
           else
             method_not_allowed
           end

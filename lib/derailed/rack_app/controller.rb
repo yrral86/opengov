@@ -10,8 +10,8 @@ module Derailed
       # path
       def initialize(env)
         @env = env
-        @r = Rack::Request.new(env)
-        @paths = @r.path.split '/'
+        r = @env['rack.request']
+        @paths = r.path.split '/'
         @queue = Array.new @paths
         @queue.shift
       end
@@ -40,12 +40,12 @@ module Derailed
       # request returns the request object created in initialize via
       # Rack::Request.new(env)
       def request
-        @r
+        @env['rack.request']
       end
 
       # params returns the request params
       def params
-        @r.params
+        request.params
       end
     end
   end

@@ -6,12 +6,6 @@ module Derailed
     module Environment
       private
 
-      # controller extracts the controller from the environment for the current
-      # thread (set in Derailed::Component::Authentication.setup_env)
-      def controller
-        env[:controller]
-      end
-
       def env
         Thread.current[:env]
       end
@@ -26,7 +20,7 @@ module Derailed
       # params extracts the params from the controller.
       # It will be copied
       def params
-        controller.params
+        request.params
       end
 
       # path(n) gets the nth string of the path, split by /
@@ -37,7 +31,7 @@ module Derailed
       # path(3):: 'test'
       # path(4):: 'path'
       def path(n)
-        controller.path(n)
+        Thread.current[:paths][n]
       end
 
       # next_path gets the next portion of the path
@@ -47,12 +41,16 @@ module Derailed
       # 3rd call:: 'test'
       # 4th call:: 'path'
       def next_path
-        controller.next
+        Thread.current[:path_queue].shift
       end
 
       # full_path returns the full request path
       def full_path
-        controller.request.path
+        request.path
+      end
+
+      def request
+        env['rack.request']
       end
     end
   end

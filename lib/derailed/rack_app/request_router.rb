@@ -34,7 +34,9 @@ module Derailed
         else
           begin
             @proxies[path].call(env)
-          rescue
+          rescue => e
+            @logger.debug e
+            @logger.backtrace e.backtrace
             @proxies = {}
             Component::View.internal_error("Error in component #{path}")
           end
