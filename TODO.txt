@@ -1,5 +1,3 @@
-Clean up RackApp
-- Middlware should be Controller... add DRb undumped procs to env
 Get selenium working
 make poller execute js
 - push location to map for a given logged in officer
