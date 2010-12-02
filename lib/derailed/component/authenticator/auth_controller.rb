@@ -7,8 +7,7 @@ module Derailed
       end
 
       def session
-#        @r.session
-        @env[:controller].session
+        @r.session
       end
 
       def cookies

@@ -16,14 +16,15 @@ module Derailed
         self
       end
 
-      # call handles the incoming request.  First, if we have no routes,
-      # we ask the Manager for them via Client.get_routes.
-      # We then choose the component via the first part of the path.
+      # call handles the incoming request.  First, if we have no proxies,
+      # we ask the Manager for them via update_proxies.
+      # We then choose the proxy via the first part of the path.
       # If we have a component to handle that path, we attempt to invoke its
       # call method, otherwise we return a 404 Not found.  If the invocation of
       # call on the component throws an error, we empty the routes hash (so the
-      # new list of routes are fetched on the next request... obviously at least
-      # one of the routes we had was invalid). We then return a 404.
+      # new list of routes are fetched on the next request... we assume an error
+      # means there was an error connecting to the component). We then return
+      # a 500.
       def call(env)
         update_proxies if @proxies.empty?
 

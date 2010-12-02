@@ -46,7 +46,7 @@ module Derailed
           yield env
         else
           path = env[:controller].request.path
-          env[:controller].session[:onlogin] =
+          env['rack.session'][:onlogin] =
             path unless path == '/favicon.ico'
           Component::View.redirect('/login')
         end
@@ -60,8 +60,8 @@ module Derailed
 
       # commit_controller saves the session/cookies and returns the response
       def commit_controller(env, status, headers, body)
-        response = Rack::Response.new(body, status, headers)
-        env[:controller].save_session(response)
+        # copy rack.session to new hash to get rid of DRbUndumped
+        env['rack.session'] = env['rack.session'].dup
         [status, headers, body]
       end
     end
