@@ -3,7 +3,7 @@ module Derailed
     class AuthController
       def initialize
         @env = Thread.current[:env]
-        @r = Rack::Request.new(@env)
+        @r = @env['rack.request']
       end
 
       def session
