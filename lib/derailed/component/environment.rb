@@ -2,23 +2,23 @@ module Derailed
   module Component
     # = Derailed::Component::Environment
     # This module provides convenience functions to interact with the
-    # Derailed::RequestRouter side controller (Derailed::RackApp::Controller)
+    # Request and the Derailed::RackApp side session
     module Environment
       private
 
+      # env fetches the thread local variable set in aetup_env
       def env
         Thread.current[:env]
       end
 
-      # session extracts the session from the controller.
+      # session extracts the session from the environment
       # It will be a DRb object that is interacted with
       # over the socket
       def session
         env['rack.session']
       end
 
-      # params extracts the params from the controller.
-      # It will be copied
+      # params extracts the params from the request
       def params
         request.params
       end
@@ -35,11 +35,11 @@ module Derailed
       end
 
       # next_path gets the next portion of the path
+      # the RequestRouter consumes the first portion
       # ===== example: /extra/long/test/path/
-      # 1st call:: 'extra'
-      # 2nd call:: 'long'
-      # 3rd call:: 'test'
-      # 4th call:: 'path'
+      # 1st call:: 'long'
+      # 2nd call:: 'test'
+      # 3rd call:: 'path'
       def next_path
         Thread.current[:path_queue].shift
       end
@@ -49,6 +49,7 @@ module Derailed
         request.path
       end
 
+      # request extracts the request from the environment
       def request
         env['rack.request']
       end
