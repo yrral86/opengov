@@ -7,12 +7,19 @@ end %>
 <%= javascript 'http://maps.google.com/maps/api/js?sensor=false&v=3.2' %>
 <%= javascript 'google_map' %>
 
-<div id="map" style="width: 500px; height: 400px">
-  <script type="text/javascript">
-    Event.observe(window, 'load',
+<div style="float: left">
+  <div id="map" style="width: 500px; height: 400px">
+    <script type="text/javascript">
+      Event.observe(window, 'load',
       google_map.init.bindAsEventListener(google_map), false);
-  </script>
+    </script>
+  </div>
+  <form id="add_address" action="javascript:google_map.add_address();">
+    Address: <input type="text" name="address" /> <input type="submit" value="Add">
+  </form>
 </div>
-<form id="add_address" action="javascript:google_map.add_address();">
-  Address: <input type="text" name="address" /> <input type="submit" value="Add">
-</form>
+<div style="float: right" id="locations">
+</div>
+<script type="text/javascript">
+//  poll_to_div('locations', '/map/locations');
+</script>
