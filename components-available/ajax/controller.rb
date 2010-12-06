@@ -39,9 +39,7 @@ eof
 
   def poller
     render_string <<eof
-<script type="text/javascript">
-poll_to_div('content','/ajax/poll');
-</script>
+#{run_js "poll_to_div('content','/ajax/poll');"}
 empty
 eof
   end

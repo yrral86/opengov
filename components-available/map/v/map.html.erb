@@ -20,6 +20,4 @@ end %>
 </div>
 <div style="float: right" id="locations">
 </div>
-<script type="text/javascript">
-  poll_to_div('locations', '/map/locations');
-</script>
+<%= run_js "poll_to_div('locations', '/map/locations');" %>
