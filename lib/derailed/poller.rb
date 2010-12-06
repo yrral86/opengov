@@ -15,9 +15,7 @@ module Derailed
     def render(user_id, &block)
       if @data[user_id]
         # if there is data, return it
-        data = @data[user_id]
-        @data.delete user_id
-        yield @data[user_id]
+        yield @data.delete user_id
       elsif params['_need_cookie_update']
         # The poll was the first request after the session cache died,
         # return an empty response so the cookie updates and we can authenticate
@@ -34,9 +32,7 @@ module Derailed
           @threads.delete(user_id)
           # check if we were woken, or timed out
           if slept< Derailed::Config::RequestTimeout
-            data = @data[user_id]
-            @data.delete user_id
-            yield data
+            yield @data.delete user_id
           else
             render_timeout
           end
