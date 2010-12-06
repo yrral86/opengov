@@ -9,10 +9,8 @@ end %>
 
 <div style="float: left">
   <div id="map" style="width: 500px; height: 400px">
-    <script type="text/javascript">
-      Event.observe(window, 'load',
-      google_map.init.bindAsEventListener(google_map), false);
-    </script>
+    <%= run_js "Event.observe(window, 'load',
+		google_map.init.bindAsEventListener(google_map), false);" %>
   </div>
   <form id="add_address" action="javascript:google_map.add_address();">
     Address: <input type="text" name="address" /> <input type="submit" value="Add">
