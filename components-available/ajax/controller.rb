@@ -1,9 +1,9 @@
+require 'derailed/poller'
+
 class AjaxController < Derailed::Component::Controller
   def initialize(component, manager)
     super(component, manager)
-    @polling_threads = {}
-    @polling_data = {}
-    @polling_mutexes = {}
+    @test_poller = Derailed::Poller.new
   end
 
   def table
@@ -48,48 +48,14 @@ eof
 
   def add_data
     user_id = @component.current_user.id
-    @polling_data[user_id] = params['data']
-    # on data receive, wake up thread
-    @polling_threads[user_id].run if @polling_threads[user_id] &&
-      @polling_threads[user_id].alive?
+    @test_poller.renderable(user_id, params['data'])
     render_string "data #{params['data']} added"
   end
 
   def poll
     user_id = @component.current_user.id
-
-    if @polling_data[user_id]
-      # if there is data return it
-      render_data user_id
-    elsif params['_need_cookie_update']
-      # The poll was the first request after the session cache died,
-      # return an empty response so the cookie updates and we can authenticate
-      # any new requests
-      render_string ''
-    else
-      env = Thread.current[:env]
-
-      # spawn response thread, sleep it
-      @polling_threads[user_id] = Thread.new do
-        response = nil
-        Thread.current[:env] = env
-        slept = sleep Derailed::Config::RequestTimeout
-        @polling_threads.delete(user_id)
-        if slept < Derailed::Config::RequestTimeout
-          render_data user_id
-        else
-          render_timeout
-        end
-      end
-
-      @polling_threads[user_id].value
+    @test_poller.render(user_id) do |data|
+      render_string data
     end
-  end
-
-  private
-  def render_data(user_id)
-    data = @polling_data[user_id]
-    @polling_data.delete user_id
-    render_string data
   end
 end
