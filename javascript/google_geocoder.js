@@ -42,7 +42,8 @@ var google_geocoder = {
 			address: address,
 			city: city,
 			state: state,
-			zip: zip
+			zip: zip,
+			title: result[0].formatted_address
 		    }
 		});
 	} else {

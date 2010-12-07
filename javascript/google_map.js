@@ -12,11 +12,9 @@ var google_map = {
     map_addresses: function() {
 	google_map.clear_markers();
 	google_map.addresses.each(function(pair) {
-		// TODO: add marker
+		google_map.new_marker(pair.key, pair.value);
 	    });
-	///FIXME: hackish, and only works when geocoding one address
-	// multiple simultaneous requests result in current_id being stomped on
-	setTimeout(google_map.set_bounds, 1000);
+	google_map.set_bounds();
     },
     set_bounds: function() {
 	var bounds = new google.maps.LatLngBounds();
@@ -24,13 +22,6 @@ var google_map = {
 		bounds.extend(pair.value.getPosition());
 	    });
 	google_map.map.fitBounds(bounds)
-    },
-    map_address: function(result, status) {
-        var options = {
-	    position: result[0].geometry.location,
-	    title: result[0].formatted_address
-        };
-	google_map.new_marker(google_map.current_id, options);
     },
     new_marker: function(id, options) {
 	options.map = google_map.map;
@@ -43,9 +34,12 @@ var google_map = {
 	    });
 	google_map.markers = new Hash();
     },
-    add_address: function(id, address) {
-        google_map.addresses.set(id, address);
-	google_map.map_addresses();
+    add_address: function(id, lat, lng, title) {
+	var value = {
+	    position: new google.maps.LatLng(lat, lng),
+	    title: title
+	};
+        google_map.addresses.set(id, value);
     },
     remove_address: function(id) {
 	google_map.addresses.unset(id);

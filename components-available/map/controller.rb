@@ -9,11 +9,7 @@ class MapController < Derailed::Component::Controller
   def index
     user = @component.current_user
     map = Map.find_or_create_by_user_id user.id
-    load_locations = ''
-    map.locations.each do |l|
-      load_locations +=
-        "google_map.add_address(#{l.id}, '#{l.formatted_address || l.coords}');"
-    end
+    load_locations = locations_js(map.locations)
     render 'map', binding
   end
 
@@ -44,5 +40,16 @@ class MapController < Derailed::Component::Controller
   private
   def locations_updated(user_id)
     @location_poller.renderable(user_id)
+  end
+
+  def locations_js(locations)
+    load = ''
+    locations.each do |l|
+      load +=
+        "google_map.add_address(#{l.id}, '#{l.latitude}', '#{l.longitude}'," +
+        "'#{l.title}');"
+    end
+    load += "google_map.map_addresses();"
+    load
   end
 end
