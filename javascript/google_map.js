@@ -1,5 +1,4 @@
 var google_map = {
-    geocoder: new google.maps.Geocoder(),
     addresses: new Hash(),
     markers: new Hash(),
     init: function() {
@@ -13,9 +12,7 @@ var google_map = {
     map_addresses: function() {
 	google_map.clear_markers();
 	google_map.addresses.each(function(pair) {
-		google_map.current_id = pair.key;
-		var request = {address: pair.value};
-		google_map.geocoder.geocode(request, google_map.map_address);
+		// TODO: add marker
 	    });
 	///FIXME: hackish, and only works when geocoding one address
 	// multiple simultaneous requests result in current_id being stomped on

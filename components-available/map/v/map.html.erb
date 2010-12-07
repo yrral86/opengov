@@ -1,18 +1,19 @@
 <h3>It's a map!</h3>
 <b>Locations:</b><br />
 <%= ul map.locations do |l|
-    "Title: #{l.title}, Latitude: #{l.latitude}, Longitude: #{l.longitude} " +
+    "#{l.formatted_address} " +
     object_details_link(l)
 end %>
 <%= javascript 'http://maps.google.com/maps/api/js?sensor=false&v=3.2' %>
 <%= javascript 'google_map' %>
+<%= javascript 'google_geocoder' %>
 
 <div style="float: left">
   <div id="map" style="width: 500px; height: 400px">
     <%= run_js "google_map.init();
 		#{load_locations}" %>
   </div>
-  <form id="add_address" action="javascript:alert('TODO: send to server, have server update locations list');">
+  <form id="add_address" action="javascript:google_geocoder.add_geocode();">
     Address: <input type="text" name="address" /> <input type="submit" value="Add">
   </form>
 </div>

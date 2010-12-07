@@ -8,7 +8,7 @@ class MapController < Derailed::Component::Controller
 
   def index
     user = @component.current_user
-    map = Map.find_or_create_by_user_id user[:id]
+    map = Map.find_or_create_by_user_id user.id
     load_locations = ''
     map.locations.each do |l|
       load_locations +=
@@ -20,7 +20,7 @@ class MapController < Derailed::Component::Controller
   def locations
     user = @component.current_user
     @location_poller.render(user.id) do
-      map = Map.find_or_create_by_user_id user[:id]
+      map = Map.find_or_create_by_user_id user.id
       objects = map.locations
       render 'locations', binding
     end
@@ -29,6 +29,16 @@ class MapController < Derailed::Component::Controller
   def update_locations
     locations_updated(@component.current_user.id)
     render_string "marked locations for update"
+  end
+
+  def update_address
+    attribs = params.dup
+    attribs.delete('_ajax');
+    user = @component.current_user
+    map = Map.find_or_create_by_user_id user.id
+    map.locations.create attribs
+    locations_updated user.id
+    render_string ''
   end
 
   private

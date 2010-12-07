@@ -44,8 +44,8 @@ module Derailed
 
     def renderable(user_id, data=true)
       @data[user_id] = data
-      # on data receive, wake up thread
-      @threads[user_id].wakeup if @threads[user_id] && @threads[user_id].alive?
+      # on data receive, run long poll thread
+      @threads[user_id].run if @threads[user_id] && @threads[user_id].alive?
     end
   end
 end
