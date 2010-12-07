@@ -1,60 +1,57 @@
 var google_map = {
-    geocode: new google.maps.Geocoder().geocode,
-    addresses: ['424 Evans Street, Morgantown, WV 26505','RR 1 Box 102, Glen Easton, WV 26039'],
-    markers: [],
-    address_count: 2,
-    current_address: 0,
+    geocoder: new google.maps.Geocoder(),
+    addresses: new Hash(),
+    markers: new Hash(),
     init: function() {
         options = {
-	    center: google.maps.LatLng(80,70),
+	    center: google.maps.LatLng(40,-81),
 	    zoom: 8,
 	    mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        this.map = new google.maps.Map($('map'),options);
-        this.map_addresses();
+        google_map.map = new google.maps.Map($('map'),options);
     },
     map_addresses: function() {
-        if (this.current_address == 0) {
-	    this.clear_markers();
-        }
-        if (this.current_address < this.address_count) {
-	    request = {address: this.addresses[this.current_address++]};
-	    this.geocode(request, this.map_address);
-	} else {
-	    this.current_address = 0;
-	    this.set_bounds();
-	}
+	google_map.clear_markers();
+	google_map.addresses.each(function(pair) {
+		google_map.current_id = pair.key;
+		var request = {address: pair.value};
+		google_map.geocoder.geocode(request, google_map.map_address);
+	    });
+	///FIXME: hackish, and only works when geocoding one address
+	// multiple simultaneous requests result in current_id being stomped on
+	setTimeout(google_map.set_bounds, 1000);
     },
     set_bounds: function() {
 	var bounds = new google.maps.LatLngBounds();
-	for (var i = 0; i < this.address_count; i++) {
-	    bounds.extend(this.markers[i].getPosition());
-	}
-	this.map.fitBounds(bounds)
+	google_map.markers.each(function(pair) {
+		bounds.extend(pair.value.getPosition());
+	    });
+	google_map.map.fitBounds(bounds)
     },
     map_address: function(result, status) {
         var options = {
 	    position: result[0].geometry.location,
 	    title: result[0].formatted_address
         };
-	google_map.new_marker(options);
+	google_map.new_marker(google_map.current_id, options);
     },
-    new_marker: function(options) {
-	options.map = this.map;
+    new_marker: function(id, options) {
+	options.map = google_map.map;
         var marker = new google.maps.Marker(options);
-	this.markers[this.current_address - 1] = marker;
-        this.map_addresses();
+	google_map.markers.set(id, marker);
     },
     clear_markers: function () {
-	for (var i = 0; i < this.address_count; i++) {
-	    var marker = this.markers[i];
-	    if (marker) {
-		marker.setMap(null);
-	    }
-	}
+	google_map.markers.each(function(pair) {
+		pair.value.setMap(null);
+	    });
+	google_map.markers = new Hash();
     },
-    add_address: function () {
-        this.addresses[this.address_count++] = $('add_address').address.value;
-        this.map_addresses();
+    add_address: function(id, address) {
+        google_map.addresses.set(id, address);
+	google_map.map_addresses();
+    },
+    remove_address: function(id) {
+	google_map.addresses.unset(id);
+	google_map.map_addresses();
     }
 }

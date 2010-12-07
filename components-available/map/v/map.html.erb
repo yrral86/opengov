@@ -9,10 +9,10 @@ end %>
 
 <div style="float: left">
   <div id="map" style="width: 500px; height: 400px">
-    <%= run_js "Event.observe(window, 'load',
-		google_map.init.bindAsEventListener(google_map), false);" %>
+    <%= run_js "google_map.init();
+		#{load_locations}" %>
   </div>
-  <form id="add_address" action="javascript:google_map.add_address();">
+  <form id="add_address" action="javascript:alert('TODO: send to server, have server update locations list');">
     Address: <input type="text" name="address" /> <input type="submit" value="Add">
   </form>
 </div>
