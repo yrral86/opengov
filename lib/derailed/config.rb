@@ -8,8 +8,8 @@ module Derailed
     ComponentDir = RootDir + '/components-enabled'
     LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
-    # RequestTimeout < SessionTimeout < DRbTimeout
     MaxComponentStart = 2
+    # RequestTimeout < SessionTimeout < DRbTimeout
     RequestTimeout = 10
     SessionTimeout = 2*RequestTimeout
     # PreviousSessionTimeout has to be long enough that all request made
