@@ -26,12 +26,12 @@ module Derailed
         # spawn response thread, sleep it
         @threads[user_id] = Thread.new do
           Thread.current[:env] = env
-          # sleep until we are woken for request times out
-          slept = sleep Derailed::Config::RequestTimeout
+          # sleep until we are woken or request times out
+          slept = sleep Config::RequestTimeout
           # clean up thread
           @threads.delete(user_id)
           # check if we were woken, or timed out
-          if slept< Derailed::Config::RequestTimeout
+          if slept< Config::RequestTimeout
             yield @data.delete user_id
           else
             render_timeout
@@ -44,7 +44,7 @@ module Derailed
 
     def renderable(user_id, data=true)
       @data[user_id] = data
-      # on data receive, run long poll thread
+      # on data receive, run long poll thread if it exists
       @threads[user_id].run if @threads[user_id] && @threads[user_id].alive?
     end
   end

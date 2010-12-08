@@ -29,6 +29,7 @@ function update_div(id, url) {
 }
 
 function poll_to_div(id, url) {
+    // NOTE: automatically reissues request on HTTP 408 (server timeout)
     new Ajax.Request(url, {
 	    method: "get",
             parameters: {_ajax: 'yes'},
@@ -39,8 +40,9 @@ function poll_to_div(id, url) {
 		}
 		poll_to_div(id, url);
 	    },
-	    on408: function(response) {
-		poll_to_div(id, url);
+	    onFailure: function(response) {
+		// request failed... wait 1 second before trying again
+		setTimeout(function() {poll_to_div(id, url);}, 1000);
 	    }
     });
 }
