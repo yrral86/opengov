@@ -17,7 +17,11 @@ deploy:
 	service apache2 stop
 	ENV=production rake db:migrate
 	rm -rf /var/www/opengov
+	rm -rf /tmp/opengov
 	mkdir -p /var/www/opengov
+	mkdir -p /tmp/opengov
+	chown root:www-data /tmp/opengov
+	chmod -R 775 /tmp/opengov
 	cp -a --parents $(FILES) /var/www/opengov
 	chown -R $(USER):$(USER) /var/www/opengov
 	cp config/opengov.httpd /etc/apache2/sites-available/opengov
