@@ -8,3 +8,4 @@ build-essential
 libpam0g-dev
 libxml2-dev
 libxslt1-dev
+libcurl4-openssl-dev
