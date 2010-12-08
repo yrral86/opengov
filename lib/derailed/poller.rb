@@ -9,30 +9,28 @@ module Derailed
     def initialize
       @threads = {}
       @data = {}
-      @mutexes = {}
     end
 
     def render(user_id, &block)
-      $stderr.puts "data for user = #{user_id} = #{@data[user_id]}"
       if @data[user_id]
         # if there is data, return it
-        yield @data.delete user_id
+        return yield @data.delete user_id
       elsif params['_need_cookie_update']
         # The poll was the first request after the session cache died,
         # return an empty response so the cookie updates and we can authenticate
         # any new requests
-        yield ''
+        return yield ''
       else
         env = Thread.current[:env]
         # spawn response thread, sleep it
         @threads[user_id] = Thread.new do
           Thread.current[:env] = env
           # sleep until we are woken or request times out
-          slept = sleep Config::RequestTimeout
+          sleep Config::RequestTimeout
           # clean up thread
           @threads.delete(user_id)
-          # check if we were woken, or timed out
-          if slept< Config::RequestTimeout
+          # check if we have data, or timed out
+          if @data[user_id]
             yield @data.delete user_id
           else
             render_timeout
@@ -44,10 +42,17 @@ module Derailed
     end
 
     def renderable(user_id, data=true)
-      @data[user_id] = data
-      $stderr.puts "data for user = #{user_id} = #{@data[user_id]}"
+      @data[user_id] = data if data
       # on data receive, run long poll thread if it exists
-      @threads[user_id].run if @threads[user_id] && @threads[user_id].alive?
+      if @threads[user_id] && @threads[user_id].alive?
+        @threads[user_id].join
+      end
+    end
+
+    def reset_user(user_id)
+      @data.delete user_id
+      renderable(user_id, false)
+      @threads.delete user_id
     end
   end
 end

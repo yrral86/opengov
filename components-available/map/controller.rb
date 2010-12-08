@@ -10,6 +10,7 @@ class MapController < Derailed::Component::Controller
     user = @component.current_user
     map = Map.find_or_create_by_user_id user.id
     load_locations = locations_js(map.locations)
+    @location_poller.reset_user user.id
     locations_updated user.id
     render 'map', binding
   end
@@ -40,7 +41,6 @@ class MapController < Derailed::Component::Controller
 
   private
   def locations_updated(user_id)
-    @logger.debug "locations_updated: request path = #{full_path}"
     @location_poller.renderable(user_id)
   end
 
