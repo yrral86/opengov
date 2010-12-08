@@ -13,6 +13,7 @@ module Derailed
     end
 
     def render(user_id, &block)
+      $stderr.puts "data for user = #{user_id} = #{@data[user_id]}"
       if @data[user_id]
         # if there is data, return it
         yield @data.delete user_id
@@ -44,6 +45,7 @@ module Derailed
 
     def renderable(user_id, data=true)
       @data[user_id] = data
+      $stderr.puts "data for user = #{user_id} = #{@data[user_id]}"
       # on data receive, run long poll thread if it exists
       @threads[user_id].run if @threads[user_id] && @threads[user_id].alive?
     end

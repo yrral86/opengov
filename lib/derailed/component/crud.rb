@@ -94,7 +94,7 @@ module Derailed
           render(model.name.downcase, binding)
         elsif id
           not_found "Record  ##{id} not found for model " +
-            "@{model.name} in component #{@component.name}"
+            "#{model.name} in component #{@component.name}"
         else
           objects = model.find :all
           render(model.name.downcase + 'list', binding)
