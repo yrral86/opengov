@@ -45,6 +45,7 @@ module Derailed
       @data[user_id] = data if data
       # on data receive, run long poll thread if it exists
       if @threads[user_id] && @threads[user_id].alive?
+        @threads[user_id].wakeup
         @threads[user_id].join
       end
     end

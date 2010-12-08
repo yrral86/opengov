@@ -10,7 +10,7 @@ module Derailed
     Environment = ENV['ENV'] || 'development'
     MaxComponentStart = 2
     # RequestTimeout < SessionTimeout < DRbTimeout
-    RequestTimeout = 10
+    RequestTimeout = 40
     SessionTimeout = 2*RequestTimeout
     # PreviousSessionTimeout has to be long enough that all request made
     # simultaneously will be  handled.  This only matters when the session
