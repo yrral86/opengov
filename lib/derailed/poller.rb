@@ -13,6 +13,7 @@ module Derailed
 
     def render(user_id, &block)
       if @data[user_id]
+        $stderr.puts "yielding data without thread"
         # if there is data, return it
         return yield @data.delete user_id
       elsif params['_need_cookie_update']
@@ -31,8 +32,10 @@ module Derailed
           @threads.delete(user_id)
           # check if we have data, or timed out
           if @data[user_id]
+            $stderr.puts "yielding data from thread"
             yield @data.delete user_id
           else
+            $stderr.puts "timing out from thread"
             render_timeout
           end
         end
