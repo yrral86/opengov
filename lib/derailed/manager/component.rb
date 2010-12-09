@@ -150,26 +150,30 @@ module Derailed
         @@started = nil
         @@to_start_mutex = Mutex.new
         @@started_mutex = Mutex.new
+        init_thread = Thread.current
+        first = true
         @@spawner = Thread.new do
           while true
             unless @@to_start
+              if first
+                first = false
+                init_thread.wakeup
+              end
               Thread.stop
             else
               @@to_start_mutex.synchronize do
                 name = @@to_start
+                old_stderr = $stderr
+                $stderr = STDERR
                 pid = fork do
-                  # necessary so component exit doesn't shut down all the other
-                  # components (see Manager::Interface.daemonize)
-                  at_exit { exit! }
-                  begin
-                    require 'derailed'
-                    component = Derailed::Component::Daemon.new(name)
-                    component.run
-                  rescue => e
-                    @@manager.logger.fatal "Component failed to start: #{e}"
-                    @@manager.logger.backtrace e.backtrace
+                  ObjectSpace.each_object(IO) do |io|
+                    unless [STDIN, STDOUT, STDERR].include?(io)
+                      io.close rescue nil
+                    end
                   end
+                  exec "#{Config::ControlScript} -rc #{name}"
                 end
+                $stderr = old_stderr
                 @@started_mutex.synchronize do
                   @@started = pid
                 end
@@ -182,7 +186,7 @@ module Derailed
           Thread.exit!
         end
         # wait for spawner to initilize
-        Thread.pass while !@@spawner.stop?
+        Thread.stop
       end
 
       # running? returns true if the component is running, and false otherwise

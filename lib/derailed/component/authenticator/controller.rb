@@ -35,7 +35,7 @@ module Derailed
         begin
           session.destroy if session
         rescue => e
-          @component.logger.backtrace e.backtrace
+          @component.logger.backtrace e
         end
         @component.logger.debug "session destroyed, redirecting"
         redirect "/login"

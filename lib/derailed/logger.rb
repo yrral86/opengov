@@ -2,34 +2,58 @@ require 'logger'
 
 module Derailed
   class Logger < ::Logger
-    def initialize(name)
-      $stderr = self
+    def initialize(name, server=false)
+      @server = server
+#   we aren't actually using these anywhere yet, but caching would be
+#   very beneficial in this case
+#      unless server
+#        @procs = {}
+#        @cache = {}
+
+#        [
+#         :debug?,
+#         :error?,
+#         :fatal?,
+#         :info?,
+#         :warn?
+#        ].each do |query|
+          # cache results of ? queries on client
+#          @procs[query] = proc {@cache[query] ||= @logger.__send__(query)}
+#        end
+#      end
+
+# also, we need to check log level on each call to debug, error, etc.
 
       init = proc do
-        super(Logger.log_file(name),
-              Config::LoggerShiftAge, Config::LoggerShiftSize)
+        if Config::Environment == 'testing'
+          STDERR
+        elsif server
+          super(Logger.log_file(name),
+                Config::LoggerShiftAge, Config::LoggerShiftSize)
+        else
+          @logger = Service.get_logger
+        end
       end
 
-      case Config::Environment
-      when 'production'
-        init.call
-      when 'testing'
-        # no need to log testing... if the tests fail we debug in development
-        # or, we change this
-        nil
-      when 'development'
-        init.call
-      end
+      $stderr = init.call
     end
 
-    alias :puts :error
-    alias :write :error
+    def puts(msg)
+      @puts_proc ||= (@server ? proc{|msg| self << msg} :
+                      proc{|msg| @logger << msg})
+      @puts_proc.call msg
+    end
+
+    alias :write :puts
     def flush; self; end
 
-    def backtrace(stack)
-      stack.each do |call|
-        self.error(call)
-      end
+    def backtrace(error)
+      @bt_proc ||= (@server ? proc do |error|
+                      self << error
+                      self << error.backtrace.join("\n")
+                    end :
+                    proc{ |error| @logger.backtrace error })
+      @bt_proc.call error
     end
 
     # log_file returns the filename of the component or Manager's log

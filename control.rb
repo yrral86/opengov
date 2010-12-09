@@ -5,6 +5,7 @@ require 'optparse'
 dir = File.expand_path(File.dirname(__FILE__))
 $:.unshift "#{dir}/lib"
 
+raw_component = false
 component = nil
 OptionParser.new do |opts|
   opts.on('-t', '--test', 'use test environment') do
@@ -23,6 +24,9 @@ OptionParser.new do |opts|
           'start/stop the specified component') do |c|
     component = c.downcase
   end
+  opts.on('-r', '--raw') do
+    raw_component = true
+  end
 end.parse!
 
 if component == :manager
@@ -33,24 +37,30 @@ if component == :manager
     Derailed::Manager::Interface.new.daemonize
   end
 elsif component
-  require 'derailed/service'
-  command = ARGV.first
-  begin
-    manager = Derailed::Service.get 'Manager'
-    unless command == 'run'
-      puts manager.component_command(component, command)
-    else
-      puts manager.component_command(component,'start')
-      name = manager.component_command(component, 'name')
-      require 'derailed/logger'
-      IO.popen ("tail -f #{Derailed::Logger.log_file(name)}") do |f|
-        while line = f.gets
-          puts line
+  if raw_component
+      require 'derailed'
+    component = Derailed::Component::Daemon.new(component)
+    component.run
+  else
+    require 'derailed/service'
+    command = ARGV.first
+    begin
+      manager = Derailed::Service.get 'Manager'
+      unless command == 'run'
+        puts manager.component_command(component, command)
+      else
+        puts manager.component_command(component,'start')
+        name = manager.component_command(component, 'name')
+        require 'derailed/logger'
+        IO.popen ("tail -f #{Derailed::Logger.log_file(name)}") do |f|
+          while line = f.gets
+            puts line
+          end
         end
       end
+    rescue DRb::DRbConnError
+      puts 'Manager is not running'
     end
-  rescue DRb::DRbConnError
-    puts 'Manager is not running'
   end
 else
   puts "You must specify -m or -c, see #{$0} -h"

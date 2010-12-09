@@ -19,7 +19,7 @@ module Derailed
         begin
           @authenticator.current_session(Thread.current[:env])
         rescue => e
-          @logger.backtrace e.backtrace
+          @logger.backtrace e
         end
       end
 

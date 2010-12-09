@@ -15,6 +15,8 @@ module Derailed
       # registration.rb
       def register_component; end
       def unregister_component; end
+      # allows fetching logger DRbObject
+      def logger; end
     end
   end
 end

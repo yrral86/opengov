@@ -39,5 +39,9 @@ module Derailed
       server, model = name.split '::'
       Service.get(server).model(model)
     end
+
+    def self.get_logger
+      Service.get('Manager').logger
+    end
   end
 end

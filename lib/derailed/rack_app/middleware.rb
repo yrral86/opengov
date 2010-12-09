@@ -38,7 +38,7 @@ module Derailed
         begin
           current_session = @authenticator.current_session(env)
         rescue => e
-          @logger.backtrace e.backtrace
+          @logger.backtrace e
         end
 
         if env['rack.request'].path == '/login' or current_session

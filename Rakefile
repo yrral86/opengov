@@ -1,3 +1,4 @@
+require 'bundler/setup'
 require 'rake/testtask'
 require 'cucumber/rake/task'
 require 'active_record'

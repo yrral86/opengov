@@ -35,8 +35,7 @@ module Derailed
           begin
             @proxies[path].call(env)
           rescue => e
-            @logger.debug e
-            @logger.backtrace e.backtrace
+            @logger.backtrace e
             @proxies = {}
             Component::View.internal_error("Error in component #{path}")
           end
@@ -53,15 +52,15 @@ module Derailed
         begin
           routes = @manager.available_routes
         rescue => e
-          @logger.backtrace e.backtrace
+          @logger.backtrace e
         end
 
         routes.each_key do |path|
           # grab a proxy object for the route
           begin
             @proxies[path] = Proxy.fetch(routes[path])
-          rescue
-            @logger.backtrace e.backtrace
+          rescue => e
+            @logger.backtrace e
           end
         end
       end

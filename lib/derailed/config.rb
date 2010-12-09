@@ -5,6 +5,7 @@ module Derailed
   # This module provides global configuration information
   module Config
     RootDir = File.expand_path(File.dirname(__FILE__) + '/../..')
+    ControlScript = RootDir + '/control.rb'
     ComponentDir = RootDir + '/components-enabled'
     LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
