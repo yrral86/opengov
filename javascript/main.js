@@ -34,11 +34,14 @@ function poll_to_div(id, url) {
 	    method: "get",
             parameters: {_ajax: 'yes'},
 	    onSuccess: function(response) {
-		if (response.responseText != '') {
+		if (response.responseText != '' &&
+		    response.status != 0) {
 		    $(id).replace('<div id="' + id + '">' +
 				  response.responseText + '</div>');
 		}
-		poll_to_div(id, url);
+		if (response.status != 0) {
+		    poll_to_div(id, url);
+		}
 	    },
 	    onFailure: function(response) {
 		// request failed... wait 1 second before trying again

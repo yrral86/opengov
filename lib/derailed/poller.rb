@@ -13,7 +13,6 @@ module Derailed
 
     def render(user_id, &block)
       if @data[user_id]
-        $stderr.puts "yielding data without thread"
         # if there is data, return it
         return yield @data.delete user_id
       elsif params['_need_cookie_update']
@@ -24,7 +23,7 @@ module Derailed
       else
         env = Thread.current[:env]
         # spawn response thread, sleep it
-        @threads[user_id] = Thread.new do
+        t = @threads[user_id] = Thread.new do
           Thread.current[:env] = env
           # sleep until we are woken or request times out
           sleep Config::RequestTimeout
@@ -32,15 +31,12 @@ module Derailed
           @threads.delete(user_id)
           # check if we have data, or timed out
           if @data[user_id]
-            $stderr.puts "yielding data from thread"
             yield @data.delete user_id
           else
-            $stderr.puts "timing out from thread"
             render_timeout
           end
         end
-
-        @threads[user_id].value
+        t.value
       end
     end
 
@@ -48,8 +44,9 @@ module Derailed
       @data[user_id] = data if data
       # on data receive, run long poll thread if it exists
       if @threads[user_id] && @threads[user_id].alive?
-        @threads[user_id].wakeup
-        @threads[user_id].join
+        t = @threads[user_id]
+        t.wakeup
+        t.join
       end
     end
 
