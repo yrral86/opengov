@@ -60,7 +60,14 @@ class MapController < Derailed::Component::Controller
     # if we don't have an address, the title could represent a rural route,
     # so this might not be the same.
     elsif location.latitude
-      map.locations.create attribs
+      # create a new entry unless the location we found is the same
+      unless location.latitude == attribs['latitude'] &&
+          location.longitude == attribs['longitude']
+        map.locations.create attribs
+      # if it is the same, update it and add it to the map
+      else
+        update_location_and_map location, attribs, map
+      end
     # Also, it might be new
     else
       update_location_and_map location, attribs, map
