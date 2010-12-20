@@ -16,8 +16,10 @@ include('prototype.js');
 function delete_object(id, url) {
     new Ajax.Request(url + '/' + id, {
 	    method:'delete',
-		onSuccess: function(response) {
-		document.location.href = url;
+            onSuccess: function(response) {
+		if (response.status == 302) {
+		    document.location.href = url;
+		}
 	    }
     });
 }
