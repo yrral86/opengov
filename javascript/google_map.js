@@ -41,10 +41,6 @@ var google_map = {
 	};
         google_map.addresses.set(id, value);
     },
-    remove_address: function(id) {
-	google_map.addresses.unset(id);
-	google_map.map_addresses();
-    },
     clear_addresses: function() {
 	google_map.addresses = new Hash();
     }
