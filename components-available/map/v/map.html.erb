@@ -10,8 +10,7 @@ end %>
 
 <div style="float: left">
   <div id="map" style="width: 500px; height: 400px">
-    <%= run_js "google_map.init();
-		#{load_locations}" %>
+    <%= run_js "google_map.init();" %>
   </div>
   <form id="add_address" action="javascript:google_geocoder.add_geocode();">
     Address: <input type="text" name="address" /> <input type="submit" value="Add">
