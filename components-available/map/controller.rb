@@ -20,11 +20,8 @@ class MapController < Derailed::Component::Controller
       id = path 3
       user = @component.current_user
       map = Map.find_or_create_by_user_id user.id
-      locations = MapLocation.find(:all, :conditions => {:location_id => id,
-                                     :map_id => map.id})
-      locations.each do |location|
-        location.delete if user.id == location.map.user_id
-      end
+      MapLocation.find(:first, :conditions => {:location_id => id,
+                         :map_id => map.id}).delete
       locations_updated user.id
       render_string "Location ##{id} Deleted"
     else
