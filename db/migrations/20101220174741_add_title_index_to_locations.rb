@@ -1,8 +1,9 @@
 class AddTitleIndexToLocations < ActiveRecord::Migration
   def self.up
+    add_index :locations, :title
   end
 
   def self.down
-    raise ActiveRecord::IrreversibleMigration
+    remove_index :locations, :title
   end
 end
