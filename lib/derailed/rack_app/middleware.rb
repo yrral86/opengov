@@ -55,6 +55,9 @@ module Derailed
       def load_controller(env)
         env['rack.session'].extend(DRbUndumped)
         env['rack.request'] = Rack::Request.new(env)
+        env[:params] = env['rack.request'].params.dup
+        # delete the _ added by prototype in webkit browsers
+        env[:params].delete '_'
         env[:paths] = env['rack.request'].path.split '/'
         env[:path_queue] = Array.new env[:paths]
         # The first element is blank

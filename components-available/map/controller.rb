@@ -71,7 +71,11 @@ class MapController < Derailed::Component::Controller
 
   private
   def update_location_and_map(location, attribs, map)
-    location.update_attributes attribs
+    begin
+      location.update_attributes attribs
+    rescue => e
+      $stderr.puts e.inspect
+    end
     location.maps << map
   end
 

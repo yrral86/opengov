@@ -18,7 +18,7 @@ module Derailed
 
       # params extracts the params from the request
       def params
-        request.params
+        env[:params]
       end
 
       # path(n) gets the nth string of the path, split by /
