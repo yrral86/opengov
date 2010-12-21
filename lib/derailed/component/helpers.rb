@@ -21,7 +21,7 @@ module Derailed
       end
 
       # record_list creates a table for the records in array
-      def record_list(attributes, style="default")
+      def record_list(attributes, actions=[:details, :edit, :delete], style="default")
         array = from_binding('objects')
         string = "<table class=\"#{style}\"><tr>"
         attributes.each {|a| string += "<th>#{a[1]}</th>"}
@@ -30,10 +30,12 @@ module Derailed
         array.each do |record|
           string += "<tr>"
           attributes.each {|a| string += "<td>#{record[a[0]]}</td>"}
-          string += "<td>#{object_details_link(record)}<br />" +
-            "#{object_edit_link(record)}<br />" +
-            "#{object_delete_link(record)}</td>"
-          string += "</tr>"
+          html_act = []
+          html_act << object_details_link(record) if actions.include? :details
+          html_act << object_edit_link(record) if actions.include? :edit
+          html_act << object_delete_link(record) if actions.include? :delete
+          html_act << object_share_link(record) if actions.include? :share
+          string += "<td>#{html_act.join '<br />'}</td></tr>"
         end
         string += "</table>"
         string += object_new_link
@@ -89,7 +91,7 @@ module Derailed
       def object_delete_link(object = nil)
         object_link(object) do |base_link, id|
           a "javascript:delete_object(" +
-            "'#{id}','#{base_link}')", "Delete"
+            "'#{id}','#{base_link}');", "Delete"
         end
       end
 
@@ -97,6 +99,13 @@ module Derailed
       def object_edit_link(object = nil)
         object_link(object) do |base_link, id|
           a "#{base_link}/edit/#{id}", "Edit"
+        end
+      end
+
+      def object_share_link(object = nil)
+        object_link(object) do |base_link, id|
+          a "javascript:share_object(" +
+            "'#{id}', '#{base_link}');", "Share"
         end
       end
 
