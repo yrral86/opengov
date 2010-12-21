@@ -27,8 +27,7 @@ function delete_object(id, url) {
 }
 
 function share_object(id, url) {
-    //    Modalbox.show(url + '_share'
-    Modalbox.show('<div>Sharing location with id '+ id + '</div>', {title: 'Test Title'});
+    Modalbox.show(url + '_share/' + id, {title: 'Share'});
 }
 
 function update_div(id, url) {

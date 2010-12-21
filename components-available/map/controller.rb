@@ -51,6 +51,12 @@ class MapController < Derailed::Component::Controller
     render_string ''
   end
 
+  def location_share
+    id = path 3
+    location = Location.find id
+    render 'location_share', binding
+  end
+
   private
   def locations_updated(user_id)
     @map_poller.renderable(user_id)
