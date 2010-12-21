@@ -1,6 +1,8 @@
 require 'derailed/poller'
 
 class MapController < Derailed::Component::Controller
+  include MapHelpers
+
   def initialize(component, manager)
     super(component, manager)
     @location_poller = Derailed::Poller.new
@@ -56,16 +58,5 @@ class MapController < Derailed::Component::Controller
   private
   def locations_updated(user_id)
     @location_poller.renderable(user_id)
-  end
-
-  def locations_js(locations)
-    load = 'google_map.clear_addresses();'
-    locations.each do |l|
-      load +=
-        "google_map.add_address(#{l.id}, '#{l.latitude}', '#{l.longitude}'," +
-        "'#{l.title}');"
-    end
-    load += "google_map.map_addresses();"
-    load
   end
 end
