@@ -27,7 +27,8 @@ function delete_object(id, url) {
 }
 
 function share_object(id, url) {
-    Modalbox.show(url + '_share/' + id, {title: 'Share'});
+    Modalbox.show(url + '_share/' + id, {title: 'Share',
+		params: { _ajax: 'yes' }});
 }
 
 function update_div(id, url) {
