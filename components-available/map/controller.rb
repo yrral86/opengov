@@ -8,7 +8,7 @@ class MapController < Derailed::Component::Controller
 
   def index
     user = @component.current_user
-    map = Map.find_or_create_by_user_id user.id
+    map = Map.from_user user.id
     @location_poller.reset_user user.id
     locations_updated user.id
     render 'map', binding
@@ -19,9 +19,8 @@ class MapController < Derailed::Component::Controller
         request.delete?
       id = path 3
       user = @component.current_user
-      map = Map.find_or_create_by_user_id user.id
-      MapLocation.find(:first, :conditions => {:location_id => id,
-                         :map_id => map.id}).delete
+      map = Map.from_user user.id
+      map.remove_location id
       locations_updated user.id
       render_string "Location ##{id} Deleted"
     else
@@ -32,7 +31,7 @@ class MapController < Derailed::Component::Controller
   def locations
     user = @component.current_user
     @location_poller.render(user.id) do
-      map = Map.find_or_create_by_user_id user.id
+      map = Map.from_user user.id
       objects = map.locations
       load_locations = locations_js(map.locations)
       render 'locations', binding
@@ -48,41 +47,13 @@ class MapController < Derailed::Component::Controller
     attribs = params.dup
     attribs.delete('_ajax');
     user = @component.current_user
-    map = Map.find_or_create_by_user_id user.id
-    location = Location.find_or_create_by_title attribs['title']
-    # if we have an address, the address is in the title, so we can assume
-    # this is the same
-    if location.address
-      update_location_and_map location, attribs, map
-    # if we don't have an address, the title could represent a rural route,
-    # so this might not be the same.
-    elsif location.latitude
-      # create a new entry unless the location we found is the same
-      unless location.latitude == attribs['latitude'] &&
-          location.longitude == attribs['longitude']
-        map.locations.create attribs
-      # if it is the same, update it and add it to the map
-      else
-        update_location_and_map location, attribs, map
-      end
-    # Also, it might be new
-    else
-      update_location_and_map location, attribs, map
-    end
+    map = Map.from_user user.id
+    map.add_location attribs
     locations_updated user.id
     render_string ''
   end
 
   private
-  def update_location_and_map(location, attribs, map)
-    begin
-      location.update_attributes attribs
-    rescue => e
-      $stderr.puts e.inspect
-    end
-    location.maps << map
-  end
-
   def locations_updated(user_id)
     @location_poller.renderable(user_id)
   end
