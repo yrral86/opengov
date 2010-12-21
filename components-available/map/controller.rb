@@ -17,16 +17,12 @@ class MapController < Derailed::Component::Controller
   end
 
   def location
-    if (request.post? && params['_method'] == 'delete') ||
-        request.delete?
-      id = path 3
+    delete_override do |id|
       user = @component.current_user
       map = Map.from_user user.id
       map.remove_location id
       locations_updated user.id
       render_string "Location ##{id} Deleted"
-    else
-      method_missing(:location)
     end
   end
 

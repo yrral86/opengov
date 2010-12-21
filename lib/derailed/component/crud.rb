@@ -144,6 +144,15 @@ module Derailed
             "in component #{@component.name}"
         end
       end
+
+      def delete_override
+        if (request.post? && params['_method'] == 'delete') ||
+          request.delete?
+          yield path(3)
+        else
+          method_missing(path(2).to_sym)
+        end
+      end
     end
   end
 end
