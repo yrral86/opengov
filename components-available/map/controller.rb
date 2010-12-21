@@ -5,13 +5,13 @@ class MapController < Derailed::Component::Controller
 
   def initialize(component, manager)
     super(component, manager)
-    @location_poller = Derailed::Poller.new
+    @map_poller = Derailed::Poller.new
   end
 
   def index
     user = @component.current_user
     map = Map.from_user user.id
-    @location_poller.reset_user user.id
+    @map_poller.reset_user user.id
     locations_updated user.id
     render 'map', binding
   end
@@ -28,7 +28,7 @@ class MapController < Derailed::Component::Controller
 
   def locations
     user = @component.current_user
-    @location_poller.render(user.id) do
+    @map_poller.render(user.id) do
       map = Map.from_user user.id
       objects = map.locations
       load_locations = locations_js(map.locations)
@@ -53,6 +53,6 @@ class MapController < Derailed::Component::Controller
 
   private
   def locations_updated(user_id)
-    @location_poller.renderable(user_id)
+    @map_poller.renderable(user_id)
   end
 end
