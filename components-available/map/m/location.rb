@@ -6,7 +6,7 @@ class Location < Derailed::Component::Model
     location = Location.find_or_create_by_title attribs['title']
     # if we have an existing location, but the latitude and longitude don't
     # match, create a new location
-    if locations.latitude && (location.latitude != attribs['latitude'] ||
+    if location.latitude && (location.latitude != attribs['latitude'] ||
                               location.longitude != attribs['longitude'])
       location = Location.create attribs
     # otherwise, same title and coordinates, update any other details
