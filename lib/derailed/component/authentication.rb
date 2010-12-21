@@ -28,6 +28,10 @@ module Derailed
         s = current_session
         s && s.record
       end
+
+      def current_officers
+        @authenticator.current_officers
+      end
     end
   end
 end

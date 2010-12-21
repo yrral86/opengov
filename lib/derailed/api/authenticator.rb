@@ -4,6 +4,7 @@ module Derailed
       include API::Models
       include API::RackComponent
       include API::Session
+      def current_officers; end
     end
   end
 end

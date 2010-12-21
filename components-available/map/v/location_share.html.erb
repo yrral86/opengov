@@ -1,3 +1,8 @@
 Share the location <%= location.title %><br />
-Select an officer:<br />
-List pending
+Available Officers:<br />
+<form id="location_share" action="/map/share" onsubmit="return false;">
+  <%= available_officers %><br />
+  <input type="hidden" name="location_id" value="<%= location.id %>" />
+  <input type="hidden" name="_ajax" value="yes" />
+  <input type="submit" value="Share" onclick="Modalbox.show('/map/share', {title: 'Sharing', params: Form.serialize('location_share')}); return false;" />
+</form>

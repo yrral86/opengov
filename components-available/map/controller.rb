@@ -57,6 +57,15 @@ class MapController < Derailed::Component::Controller
     render 'location_share', binding
   end
 
+  def share
+    location = Location.find params['location_id']
+    params['user_id'].each do |id|
+      location.share_with id
+      locations_updated id
+    end
+    render_string "Location #{location.title} shared"
+  end
+
   private
   def locations_updated(user_id)
     @map_poller.renderable(user_id)

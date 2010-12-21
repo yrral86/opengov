@@ -10,4 +10,12 @@ module MapHelpers
     load += "google_map.map_addresses();"
     load
   end
+
+  def available_officers
+    @component.current_officers.collect do |o|
+      <<eof
+<input type="checkbox" name="user_id[]" value="#{o.id}"/> #{o.username}
+eof
+    end.join '<br />'
+  end
 end

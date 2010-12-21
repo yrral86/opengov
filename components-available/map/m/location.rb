@@ -7,7 +7,7 @@ class Location < Derailed::Component::Model
     # if we have an existing location, but the latitude and longitude don't
     # match, create a new location
     if location.latitude && (location.latitude != attribs['latitude'] ||
-                              location.longitude != attribs['longitude'])
+                             location.longitude != attribs['longitude'])
       location = Location.create attribs
     # otherwise, same title and coordinates, update any other details
     # that may have been updated
@@ -15,5 +15,9 @@ class Location < Derailed::Component::Model
       location.update_attributes attribs
     end
     location
+  end
+
+  def share_with(id)
+    self.maps << Map.from_user(id)
   end
 end

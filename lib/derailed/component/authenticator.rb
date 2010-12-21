@@ -66,6 +66,14 @@ module Derailed
         UserSession.find
       end
 
+      def current_officers
+        officers = []
+        @sessions.each_value do |v|
+          officers << v.record if v
+        end
+        officers
+      end
+
       # call invokes Component::Base.call with a value of 1 for the
       # path_position
       def call(env)
