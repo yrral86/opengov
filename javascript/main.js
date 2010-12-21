@@ -12,6 +12,8 @@ function include(file) {
 };
 
 include('prototype.js');
+include('scriptaculous.js?load=builder,effects');
+include('modalbox.js');
 
 function delete_object(id, url) {
     new Ajax.Request(url + '/' + id, {
@@ -25,7 +27,8 @@ function delete_object(id, url) {
 }
 
 function share_object(id, url) {
-    
+    //    Modalbox.show(url + '_share'
+    Modalbox.show('<div>Sharing location with id '+ id + '</div>', {title: 'Test Title'});
 }
 
 function update_div(id, url) {

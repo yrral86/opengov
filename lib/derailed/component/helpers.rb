@@ -143,6 +143,11 @@ module Derailed
         end
       end
 
+      def stylesheets
+        '<link rel="stylesheet" href="/static/javascript/modalbox.css" ' +
+          'type="text/css" media="screen" />'
+      end
+
       # run_js returns the HTML to run the javascript code specified
       def run_js(code)
         "<script type=\"text/javascript\">#{code}</script>"
