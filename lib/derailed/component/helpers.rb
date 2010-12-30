@@ -134,23 +134,31 @@ module Derailed
       # javascript includes the main javascript file, which handles
       # including any other javascript we need
       def javascript(file='main')
-        unless path(1) == 'login'
+        unless_login do
           src = "/static/javascript/#{file}.js" unless file.match /^http:\/\//
           src = file unless src
           '<script type="text/javascript" src="' + src + '"></script>'
-        else
-          ''
         end
       end
 
       def stylesheets
-        '<link rel="stylesheet" href="/static/javascript/modalbox.css" ' +
-          'type="text/css" media="screen" />'
+        unless_login do
+          '<link rel="stylesheet" href="/static/javascript/modalbox.css" ' +
+            'type="text/css" media="screen" />'
+        end
       end
 
       # run_js returns the HTML to run the javascript code specified
       def run_js(code)
         "<script type=\"text/javascript\">#{code}</script>"
+      end
+
+      def unless_login
+        unless path(1) == 'login'
+          yield
+        else
+          ''
+        end
       end
     end
   end
