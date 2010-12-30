@@ -37,7 +37,8 @@ class MapController < Derailed::Component::Controller
   end
 
   def update_locations
-    locations_updated(@component.current_user.id)
+    id = params['id'] || @component.current_user.id
+    locations_updated(id)
     render_string "marked locations for update"
   end
 
