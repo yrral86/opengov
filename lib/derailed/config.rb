@@ -9,7 +9,7 @@ module Derailed
     ComponentDir = RootDir + '/components-enabled'
     LibDir = RootDir + '/lib'
     Environment = ENV['ENV'] || 'development'
-    MaxComponentStart = 2
+    MaxComponentStart = 10
     # RequestTimeout < SessionTimeout < DRbTimeout
     RequestTimeout = 40
     SessionTimeout = 2*RequestTimeout
