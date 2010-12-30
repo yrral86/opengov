@@ -12,6 +12,7 @@ module Derailed
     end
 
     def render(user_id, &block)
+      user_id = user_id.to_i
       if @data[user_id]
         # if there is data, return it
         return yield @data.delete user_id
@@ -41,6 +42,7 @@ module Derailed
     end
 
     def renderable(user_id, data=true)
+      user_id = user_id.to_i
       @data[user_id] = data if data
       # on data receive, run long poll thread if it exists
       if @threads[user_id] && @threads[user_id].alive?
@@ -51,6 +53,7 @@ module Derailed
     end
 
     def reset_user(user_id)
+      user_id = user_id.to_i
       @data.delete user_id
       renderable(user_id, false)
       @threads.delete user_id
