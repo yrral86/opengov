@@ -15,9 +15,11 @@ module MapHelpers
     officers = @component.current_officers
     officers.delete @component.current_user
     officers.collect do |o|
-      <<eof
+      if o
+        <<eof
 <input type="checkbox" name="user_id[]" value="#{o.id}"/> #{o.username}
 eof
+      end
     end.join '<br />'
   end
 end
