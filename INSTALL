@@ -6,10 +6,16 @@ bash < <( curl -L http://bit.ly/rvm-install-system-wide )
 # add this next line to end of /etc/profile
 [[ -s "/usr/local/lib/rvm" ]] && . "/usr/local/lib/rvm"  # This loads RVM into a shell session
 
-Don't use root... it screws with rvm, just make sure you are in rvm group:
+# Don't use root... it screws with rvm, just make sure you are in rvm group:
 rvm install 1.9.2
 gem install bundler
 bundle install
+# Rpam is broken in ruby 1.9, so we have to install manually from github
+git clone git://github.com/yrral86/rpam.git
+cd rpam/rpam-1.0-1/ext/Rpam
+ruby extconf.rb
+make
+make install
 passenger-install-apache2-module
 create symlink: /usr/local/rvm/gems/default -> ruby-1.9.2-p0
 (this should be added to rvm soon and kept up to date with the selected ruby)
