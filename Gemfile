@@ -1,3 +1,4 @@
+source :rubygems
 gem 'activerecord'
 gem 'rack-test'
 gem 'mysql'
