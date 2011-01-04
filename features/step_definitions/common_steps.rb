@@ -29,7 +29,7 @@ When /^I run '(.*)'(.*)$/ do |command, sync|
 #  debug "I run '#{command}'#{sync}"
   if sync == ' asynchronously'
     Process.detach(fork {exec "#{command} 2>/dev/null"})
-    sleep 1
+    sleep 3
   else
     `#{command}`
   end

@@ -20,7 +20,7 @@ Then /^I see the details of person '(.*)' via PersonLocator$/ do |name|
   assert_have_link_to "/personlocator/person/edit/#{person[:id]}"
   assert_have_link_to "/personlocator/person"
   assert_have_link_to "javascript:delete_object(" +
-    "'#{person[:id]}','/personlocator/person')"
+    "'#{person[:id]}','/personlocator/person');"
 end
 
 When /^I delete '(.*)' via PersonLocator$/ do |name|
