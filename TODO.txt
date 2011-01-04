@@ -1,7 +1,4 @@
 Get selenium working
-make poller execute js
-- push location to map for a given logged in officer
-
 
 better testing
 script/generate
