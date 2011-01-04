@@ -9,6 +9,7 @@ module Derailed
     def initialize
       @threads = {}
       @data = {}
+      @mutexes = {}
     end
 
     def render(user_id, &block)
@@ -22,13 +23,12 @@ module Derailed
         # any new requests
         return yield ''
       else
-        env = Thread.current[:env]
-        # spawn response thread, sleep it
-        t = @threads[user_id] = Thread.new do
-          Thread.current[:env] = env
-          # sleep until we are woken or request times out
-          sleep Config::RequestTimeout
-          # clean up thread
+        @mutexes[user_id] = Mutex.new
+        @threads[user_id] = Thread.current
+        # sleep until we are woken or request times out
+        sleep Config::RequestTimeout
+        # clean up thread
+        @mutexes[user_id].synchronize do
           @threads.delete(user_id)
           # check if we have data, or timed out
           if @data[user_id]
@@ -36,8 +36,7 @@ module Derailed
           else
             render_timeout
           end
-        end
-        t.value
+        end        
       end
     end
 
@@ -45,10 +44,15 @@ module Derailed
       user_id = user_id.to_i
       @data[user_id] = data if data
       # on data receive, run long poll thread if it exists
-      if @threads[user_id] && @threads[user_id].alive?
+      test = false
+      t = nil
+      @mutexes[user_id].synchronize do
         t = @threads[user_id]
+        test = t && t.alive?
+      end if @mutexes[user_id]
+      if test
         t.wakeup
-        t.join
+#        t.join
       end
     end
 
@@ -56,7 +60,10 @@ module Derailed
       user_id = user_id.to_i
       @data.delete user_id
       renderable(user_id, false)
-      @threads.delete user_id
+      @mutexes[user_id].synchronize do
+        @threads.delete user_id
+      end if @mutexes[user_id]
+      @mutexes.delete user_id
     end
   end
 end
