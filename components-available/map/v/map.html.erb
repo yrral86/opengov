@@ -1,9 +1,4 @@
 <h3>It's a map!</h3>
-<b>Locations:</b><br />
-<%= ul map.locations do |l|
-    "#{l.title} " +
-    object_details_link(l)
-end %>
 <%= javascript 'http://maps.google.com/maps/api/js?sensor=false&v=3.2' %>
 <%= javascript 'google_map' %>
 <%= javascript 'google_geocoder' %>
@@ -13,8 +8,19 @@ end %>
     <%= run_js "google_map.init();" %>
   </div>
   <form id="add_address" action="javascript:google_geocoder.add_geocode();">
-    Address: <input type="text" name="address" /> <input type="submit" value="Add">
+    Address: <input id="addressLookup" type="text" name="address" /> <input type="submit" value="Add"><img alt="Spinner" id="addressSpinner" src="/static/javascript/spinner.gif" style="display:none;"/>
   </form>
+  <div id="addressResults"></div>
+  <%= run_js <<eof
+new Form.Element.Observer('addressLookup', 1,
+		 function(element, value) {
+		 new Ajax.Updater('addressResults', '/map/address_lookup', {
+		 asynchronous: true, evalScripts:true,
+		 onComplete: function(request){Element.hide('addressSpinner');},
+		 onLoading: function(request){Element.show('addressSpinner');},
+		 method:'post', parameters:{q: value, _ajax: 'yes'}})});
+eof
+  %>
 </div>
 <div style="float: right" id="locations">
 </div>

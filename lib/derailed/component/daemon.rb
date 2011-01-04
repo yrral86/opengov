@@ -10,7 +10,6 @@ module Derailed
       # ActiveRecord
       def initialize(name)
         @config = Config.component_config(name)
-        @config['logger'] = Logger.new name
         @config['class_object'] = Component.const_get(@config['class'])
         @config['api_modules'] = apis.map {|api| API.const_get(api)}
         init_ar
@@ -27,7 +26,6 @@ module Derailed
       # init_ar initialize the ActiveRecord connection
       def init_ar
         config = Config.db_config(db)
-        Model.logger = @config['logger']
         Model.establish_connection(config)
       end
 

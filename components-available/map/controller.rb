@@ -8,6 +8,12 @@ class MapController < Derailed::Component::Controller
     @map_poller = Derailed::Poller.new
   end
 
+  def address_lookup
+    q = params['q']
+    objects = Location.limit(5).where("title LIKE ?", "%#{q}%")
+    render 'addresses', binding
+  end
+
   def index
     user = @component.current_user
     map = Map.from_user user.id
