@@ -31,6 +31,11 @@ function share_object(id, url) {
 		params: { _ajax: 'yes' }});
 }
 
+function add_object(id, url) {
+    new Ajax.Request(url + '_add/' + id, {
+	    parameters: { _ajax: 'yes' }});
+}
+
 function update_div(id, url) {
     new Ajax.Updater(id, url, {
 	    parameters: { _ajax: 'yes' }

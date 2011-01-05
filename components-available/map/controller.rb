@@ -64,6 +64,13 @@ class MapController < Derailed::Component::Controller
     render 'location_share', binding
   end
 
+  def location_add
+    id = path 3
+    current_map.locations << Location.find(id)
+    locations_updated @component.current_user.id
+    render_string ''
+  end
+
   def share
     location = Location.find params['location_id']
     params['user_id'].each do |id|
@@ -76,5 +83,9 @@ class MapController < Derailed::Component::Controller
   private
   def locations_updated(user_id)
     @map_poller.renderable(user_id)
+  end
+
+  def current_map
+    Map.from_user @component.current_user.id
   end
 end

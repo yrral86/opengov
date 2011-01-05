@@ -35,6 +35,7 @@ module Derailed
           html_act << object_edit_link(record) if actions.include? :edit
           html_act << object_delete_link(record) if actions.include? :delete
           html_act << object_share_link(record) if actions.include? :share
+          html_act << object_add_link(record) if actions.include? :add
           string += "<td>#{html_act.join '<br />'}</td></tr>"
         end
         string += "</table>"
@@ -106,6 +107,13 @@ module Derailed
         object_link(object) do |base_link, id|
           a "javascript:share_object(" +
             "'#{id}', '#{base_link}');", "Share"
+        end
+      end
+
+      def object_add_link(object = nil)
+        object_link(object) do |base_link, id|
+          a "javascript:add_object(" +
+            "'#{id}', '#{base_link}');", "Add"
         end
       end
 
