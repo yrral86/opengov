@@ -12,7 +12,7 @@ module MapHelpers
   end
 
   def available_officers
-    officers = @component.current_officers
+    officers = @component.all_officers
     officers.delete @component.current_user
     officers.collect do |o|
       if o

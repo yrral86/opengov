@@ -66,12 +66,24 @@ module Derailed
         UserSession.find
       end
 
-      def current_officers
+      def online_officers
         officers = []
         @sessions.each_value do |v|
           officers << v.record if v
         end
         officers
+      end
+
+      def offline_officers
+        officers = User.find(:all)
+        online = online_officers
+        officers.select do |o|
+          online.select {|on| on.id == o.id}.empty?
+        end
+      end
+
+      def all_officers
+        User.find(:all)
       end
 
       # call invokes Component::Base.call with a value of 1 for the

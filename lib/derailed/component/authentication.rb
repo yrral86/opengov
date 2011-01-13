@@ -29,8 +29,16 @@ module Derailed
         s && s.record
       end
 
-      def current_officers
-        @authenticator.current_officers
+      def online_officers
+        @authenticator.online_officers
+      end
+      
+      def offline_officers
+        @authenticator.offline_officers
+      end
+
+      def all_officers
+        @authenticator.all_officers
       end
     end
   end
