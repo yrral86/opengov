@@ -8,7 +8,7 @@ function include(file) {
     }
     document.write('<script type="text/javascript" src="' +
 		   src + '"></scr' + 'ipt>');
-    // close script tag has to be split do to IE7 bug
+    // close script tag has to be split due to IE7 bug
 };
 
 include('prototype.js');
