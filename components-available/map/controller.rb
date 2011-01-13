@@ -77,7 +77,9 @@ class MapController < Derailed::Component::Controller
       location.share_with id
       locations_updated id
     end
-    render_string "Location #{location.title} shared"
+    render_string "Location #{location.title} shared" + run_js('setTimeout("' +
+                                                               'Modalbox.hide' +
+                                                               '();", 1500);')
   end
 
   private
