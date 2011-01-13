@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20101220174741) do
+ActiveRecord::Schema.define(:version => 20110113171704) do
 
   create_table "addresses", :force => true do |t|
     t.string   "street_address"
@@ -51,6 +51,18 @@ ActiveRecord::Schema.define(:version => 20101220174741) do
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  create_table "messages", :force => true do |t|
+    t.string   "subject"
+    t.string   "message"
+    t.integer  "to_id"
+    t.integer  "from_id"
+    t.boolean  "read",       :default => false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "messages", ["to_id"], :name => "index_messages_on_to_id"
 
   create_table "people", :force => true do |t|
     t.string   "fname"

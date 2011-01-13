@@ -7,6 +7,7 @@ require 'authlogic'
  'environment',
  'loader',
  'model',
+ 'model_proxy',
  'models',
  'view'
 ].each do |library|

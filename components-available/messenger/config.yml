@@ -1,1 +1,2 @@
 name: Messenger
+apis: [RackComponent, Models]
