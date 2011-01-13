@@ -30,6 +30,7 @@ module Derailed
         elsif server
           super(Logger.log_file(name),
                 Config::LoggerShiftAge, Config::LoggerShiftSize)
+          self
         else
           @logger = Service.get_logger
         end
