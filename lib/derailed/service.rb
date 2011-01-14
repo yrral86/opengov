@@ -41,7 +41,7 @@ module Derailed
     end
 
     def self.get_logger
-      Service.get('Manager').logger
+      $stderr = Service.get('Manager').logger
     end
   end
 end

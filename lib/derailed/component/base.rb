@@ -32,9 +32,9 @@ module Derailed
       # initialize sets up the database from the config file, initializes the
       # list of models, checks for dependencies, and then registers the
       # component with the Manager
-      def initialize(config)#(name, apis, dependencies)
+      def initialize(config)
         @registered = false;
-        @logger = config['logger']
+        @logger = Service.get_logger
         @name = config['name']
         @dependencies = config['dependencies']
         config['api_modules'] << API::Base

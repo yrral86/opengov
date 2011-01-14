@@ -31,13 +31,11 @@ module Derailed
       # logut destroys the user's session and sends them to the login form
       def logout
         session = @component.current_session
-        @component.logger.debug "session fetched, destroying"
         begin
           session.destroy if session
         rescue => e
-          @component.logger.backtrace e
+          logger.backtrace e
         end
-        @component.logger.debug "session destroyed, redirecting"
         redirect "/login"
       end
 
