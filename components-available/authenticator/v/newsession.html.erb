@@ -1,7 +1,15 @@
-<h3>Login</h3>
-<%= error_box(user_session) %>
-<form action="/login" method="post">
-  Username: <input type="text" name="user_session[username]" value="<%= user_session.username %>" /><br />
-  Password: <input type="password" name="user_session[password]" /><br />
-  <input type="submit" value="login" />
-</form>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>OpenGov</title>
+  </head>
+  <body>
+    <h3>Login</h3>
+    <%= error_box(user_session) %>
+    <form action="/login" method="post">
+      Username: <input type="text" name="user_session[username]" value="<%= user_session.username %>" /><br />
+      Password: <input type="password" name="user_session[password]" /><br />
+      <input type="submit" value="login" />
+    </form>
+  </body>
+</html>

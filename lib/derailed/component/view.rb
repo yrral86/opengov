@@ -92,6 +92,7 @@ module Derailed
       # render_response renders the response in Rack format
       def render_response(body, status=200, headers={})
         if status == 200 &&
+            full_path != '/login' &&
             params['_ajax'] != 'yes' &&
             !headers.has_key?('Content-Type')
           body = template_wrap(body)
