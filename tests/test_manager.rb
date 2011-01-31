@@ -10,6 +10,7 @@ class OpenGovManagerTest < Derailed::TestCase
                   'Map::Location',
                   'Map::Map',
                   'Map::MapLocation',
+                  'Messenger::Message',
                   'PersonLocator::Address',
                   'PersonLocator::Person'],
                  sort_models
@@ -22,7 +23,8 @@ class OpenGovManagerTest < Derailed::TestCase
                   'Authenticator::UserSession',
                   'Map::Location',
                   'Map::Map',
-                  'Map::MapLocation'],
+                  'Map::MapLocation',
+                  'Messenger::Message'],
                  sort_models)
     @manager.register_component('PersonLocator')
   end

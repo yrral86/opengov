@@ -6,4 +6,4 @@ Feature: Map
   Scenario: Officer views map
     When I go to '/map'
     Then I should see 'It's a map!'
-    And I should see 'Locations:'
+    And I should see 'Address:'
