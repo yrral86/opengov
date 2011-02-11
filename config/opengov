@@ -26,18 +26,18 @@ USER=root
 case "$1" in
   start)
 	mkdir -p /tmp/opengov
-        su -c "$DAEMON -pm start" $USER
+        $DAEMON -pm start
         ;;
   stop)
-        su -c "$DAEMON -pm stop" $USER
+        $DAEMON -pm stop
         ;;
   restart)
-        su -c "$DAEMON -pm stop" $USER
+        $DAEMON -pm stop
 	sleep 5
-	su -c "$DAEMON -pm start" $USER
+	$DAEMON -pm start
         ;;
   status)
-	su -c "$DAEMON -pm status" $USER
+	$DAEMON -pm status
 	;;
   *)
         echo "Usage: $SCRIPT_NAME {start|status|stop|restart}" >&2

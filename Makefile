@@ -15,7 +15,7 @@ USER=root
 deploy:
 	service opengov stop
 	service apache2 stop
-	ENV=production rake db:migrate
+#	ENV=production rake db:migrate
 	rm -rf /var/www/opengov
 	rm -rf /tmp/opengov
 	mkdir -p /var/www/opengov
